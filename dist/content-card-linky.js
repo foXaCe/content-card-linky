@@ -9,9 +9,10 @@ window.customCards = window.customCards || [];
 window.customCards.push({
   type: "content-card-linky",
   name: "Carte Enedis",
-  description: "Carte pour l'intégration MyElectricalData.",
+  description: "Carte pour l'intégration MyElectricalData - Affichage moderne des données Linky avec évolutions colorées",
   preview: true,
   documentationURL: "https://github.com/MyElectricalData/content-card-linky",
+  version: "2.0.0"
 });
 const fireEvent = (node, type, detail, options) => {
   options = options || {};
@@ -61,8 +62,9 @@ function hasConfigOrEntityChanged(element, changedProps) {
 class ContentCardLinky extends LitElement {
   static get properties() {
     return {
-      config: {},
-      hass: {}
+      config: { attribute: false },
+      hass: { attribute: false },
+      _config: { state: true }
     };
   }
 
@@ -133,7 +135,9 @@ class ContentCardLinky extends LitElement {
                           <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.yearly_evolution < 0) ? '45' : ((attributes.yearly_evolution == 0) ? "0" : "-45")}deg)">
                          </ha-icon>
                         </span>
-                        <span class="percentage-value ${attributes.yearly_evolution > 0 ? 'percentage-positive' : attributes.yearly_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}">${Math.round(attributes.yearly_evolution)}<span class="unit"> %</span></span>
+                        <span class="percentage-value ${attributes.yearly_evolution > 0 ? 'percentage-positive' : attributes.yearly_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}" 
+                              aria-label="Évolution annuelle: ${Math.round(attributes.yearly_evolution)}%"
+                              role="text">${Math.round(attributes.yearly_evolution)}<span class="unit"> %</span></span>
                       </div>
                       <div class="tooltip">
                         <span class="year">vs ${this.previousYear()}</span>
@@ -150,7 +154,9 @@ class ContentCardLinky extends LitElement {
                           <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.monthly_evolution < 0) ? '45' : ((attributes.monthly_evolution == 0) ? "0" : "-45")}deg)">
                          </ha-icon>
                         </span>
-                        <span class="percentage-value ${attributes.monthly_evolution > 0 ? 'percentage-positive' : attributes.monthly_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}">${Math.round(attributes.monthly_evolution)}<span class="unit"> %</span></span>
+                        <span class="percentage-value ${attributes.monthly_evolution > 0 ? 'percentage-positive' : attributes.monthly_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}"
+                              aria-label="Évolution mensuelle: ${Math.round(attributes.monthly_evolution)}%"
+                              role="text">${Math.round(attributes.monthly_evolution)}<span class="unit"> %</span></span>
                       </div>
                       <div class="tooltip">
                         <span class="previous-month">vs ${this.previousMonth()}</span>
@@ -167,7 +173,9 @@ class ContentCardLinky extends LitElement {
                           <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.current_month_evolution < 0) ? '45' : ((attributes.current_month_evolution == 0) ? "0" : "-45")}deg)">
                          </ha-icon>
                         </span>
-                        <span class="percentage-value ${attributes.current_month_evolution > 0 ? 'percentage-positive' : attributes.current_month_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}">${Math.round(attributes.current_month_evolution)}<span class="unit"> %</span></span>
+                        <span class="percentage-value ${attributes.current_month_evolution > 0 ? 'percentage-positive' : attributes.current_month_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}"
+                              aria-label="Évolution du mois courant: ${Math.round(attributes.current_month_evolution)}%"
+                              role="text">${Math.round(attributes.current_month_evolution)}<span class="unit"> %</span></span>
                       </div>
                       <div class="tooltip">
                         <span class="current-month">vs ${this.currentMonth()}</span>
@@ -184,7 +192,9 @@ class ContentCardLinky extends LitElement {
                           <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.current_week_evolution < 0) ? '45' : ((attributes.current_week_evolution == 0) ? "0" : "-45")}deg)">
                           </ha-icon>
                         </span>
-                        <span class="percentage-value ${attributes.current_week_evolution > 0 ? 'percentage-positive' : attributes.current_week_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}">${Math.round(attributes.current_week_evolution)}<span class="unit"> %</span></span>
+                        <span class="percentage-value ${attributes.current_week_evolution > 0 ? 'percentage-positive' : attributes.current_week_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}"
+                              aria-label="Évolution hebdomadaire: ${Math.round(attributes.current_week_evolution)}%"
+                              role="text">${Math.round(attributes.current_week_evolution)}<span class="unit"> %</span></span>
                       </div>
                       <div class="tooltip">
                         <span class="previous-month">vs ${this.weekBefore()}</span>
@@ -201,7 +211,9 @@ class ContentCardLinky extends LitElement {
                           <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.yesterday_evolution < 0) ? '45' : ((attributes.yesterday_evolution == 0) ? "0" : "-45")}deg)">
                          </ha-icon>
                         </span>
-                        <span class="percentage-value ${attributes.yesterday_evolution > 0 ? 'percentage-positive' : attributes.yesterday_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}">${Math.round(attributes.yesterday_evolution)}<span class="unit"> %</span></span>
+                        <span class="percentage-value ${attributes.yesterday_evolution > 0 ? 'percentage-positive' : attributes.yesterday_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}"
+                              aria-label="Évolution quotidienne: ${Math.round(attributes.yesterday_evolution)}%"
+                              role="text">${Math.round(attributes.yesterday_evolution)}<span class="unit"> %</span></span>
                       </div>
                       <div class="tooltip">
                         <span class="previous-month">vs ${this.dayBeforeYesterday()}</span>
@@ -1060,16 +1072,16 @@ class ContentCardLinky extends LitElement {
         font-size: 1.1em;
       }
       
-      .percentage-positive {
-        color: #e74c3c; /* Rouge pour les valeurs positives (+) */
+      .variations-linky .percentage-value.percentage-positive {
+        color: var(--error-color, var(--red-color, #e74c3c));
       }
       
-      .percentage-negative {
-        color: #27ae60; /* Vert pour les valeurs négatives (-) */
+      .variations-linky .percentage-value.percentage-negative {
+        color: var(--success-color, var(--green-color, #27ae60));
       }
       
-      .percentage-neutral {
-        color: var(--primary-text-color, #333); /* Couleur par défaut pour 0 */
+      .variations-linky .percentage-value.percentage-neutral {
+        color: var(--primary-text-color, var(--text-primary-color, #212121));
       }
     
       .unit {
@@ -1132,8 +1144,8 @@ class ContentCardLinky extends LitElement {
       }
       .tooltip .tooltiptext {
         visibility: hidden;
-        background: var( --ha-card-background, var(--card-background-color, white) );
-        box-shadow: 2px 2px 6px -4px #999;
+        background: var(--ha-card-background, var(--card-background-color, var(--primary-background-color)));
+        box-shadow: var(--ha-card-box-shadow, 0px 2px 1px -1px rgba(0, 0, 0, 0.2));
         cursor: default;
         font-size: 14px;    
         opacity: 1;
@@ -1145,7 +1157,7 @@ class ContentCardLinky extends LitElement {
         z-index: 12;
         transition: 0.15s ease all;
         padding: 5px;
-        border: 1px solid #cecece;
+        border: 1px solid var(--divider-color, var(--outline-color, #e0e0e0));
         border-radius: 3px;
       }
       .tooltip .tooltiptext::after {
@@ -1156,7 +1168,7 @@ class ContentCardLinky extends LitElement {
         margin-left: -5px;
         border-width: 5px;
         border-style: solid;
-        border-color: #555 transparent transparent transparent;
+        border-color: var(--divider-color, var(--outline-color, #555)) transparent transparent transparent;
       }
       .tooltip:hover .tooltiptext {
         visibility: visible;
@@ -1224,21 +1236,21 @@ class ContentCardLinky extends LitElement {
       .tempo-blue {
         color: white;
 	text-align: center;
-        background: #009dfa;
+        background: var(--accent-color, var(--primary-color, #009dfa));
     	border: 2px solid var(--divider-color);
     	box-shadow: var(--ha-card-box-shadow,none);
 	text-transform: capitalize;
       }
 	  .tempoday-blue {
-        color: #009dfa;
+        color: var(--accent-color, var(--primary-color, #009dfa));
 		font-weight: bold;
 	text-align: center;
-        background: var( --ha-card-background, var(--card-background-color, white) );
+        background: var(--ha-card-background, var(--card-background-color, var(--primary-background-color)));
     	box-shadow: var(--ha-card-box-shadow,none);
 	text-transform: capitalize;
       }
       .tempo-white {
-        color: #002654;
+        color: var(--text-primary-color, var(--primary-text-color, #002654));
 	text-align: center;
         background: white;
     	border: 2px solid var(--divider-color);
@@ -1259,21 +1271,21 @@ class ContentCardLinky extends LitElement {
       .tempo-red {
         color: white;
 	text-align: center;
-        background: #ff2700;
+        background: var(--error-color, var(--red-color, #ff2700));
     	border: 2px solid var(--divider-color);
     	box-shadow: var(--ha-card-box-shadow,none);
      	text-transform: capitalize;
       }
 	  .tempoday-red {
-        color: #ff2700;
+        color: var(--error-color, var(--red-color, #ff2700));
 		font-weight: bold;
 	text-align: center;
-        background: var( --ha-card-background, var(--card-background-color, white) );
+        background: var(--ha-card-background, var(--card-background-color, var(--primary-background-color)));
     	box-shadow: var(--ha-card-box-shadow,none);
 	text-transform: capitalize;
       }
       .tempo-grey {
-        color: #002654;
+        color: var(--text-primary-color, var(--primary-text-color, #002654));
 	text-align: center;
         background: grey;
 	border: 2px solid var(--divider-color);
