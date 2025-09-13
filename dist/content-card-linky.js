@@ -540,11 +540,13 @@ class ContentCardLinky extends LitElement {
     const attributes = entity ? entity.attributes : {};
 
     // Prédiction mensuelle basée sur la tendance actuelle
-    const currentMonth = attributes['Current month'] || 0;
-    const monthlyPrediction = attributes['Current month'] ?
+    const currentMonth = parseFloat((attributes['current_month'] || 0).toString().replace(',', '.'));
+    console.log('DEBUG: Prédiction mensuelle - currentMonth:', currentMonth);
+    const monthlyPrediction = currentMonth > 0 ?
       (currentMonth / new Date().getDate()) * new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() :
       (weekTotal / 5) * 30;
     const monthlyCostPrediction = (weekCost / 5) * 30;
+    console.log('DEBUG: Prédiction mensuelle calculée:', monthlyPrediction, 'kWh');
 
     // Utiliser les évolutions directes de l'entité
     const weekEvolution = parseFloat((attributes['current_week_evolution'] || 0).toString().replace(',', '.'));
@@ -1215,7 +1217,7 @@ class ContentCardLinky extends LitElement {
   } 
 
 
-  // Cache buster: v20250913-001
+  // Cache buster: v20250913-002
   static get styles() {
     return css`
       .card {
