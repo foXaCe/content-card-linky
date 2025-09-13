@@ -460,11 +460,7 @@ class ContentCardLinky extends LitElement {
               <span class="week-summary-cost-value">${this.toFloat(weekCost, 2)}</span>
               <span class="week-summary-cost-unit">€</span>
             </div>
-          ` : html`
-            <div class="week-summary-debug" style="font-size: 0.8em; opacity: 0.7;">
-              Debug: Cost=${weekCost}, Data=${dailyweek_cost ? 'Available' : 'Missing'}
-            </div>
-          `}
+          ` : html``}
 
         </div>
       </div>
