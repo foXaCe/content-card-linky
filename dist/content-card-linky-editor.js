@@ -55,6 +55,10 @@ export class contentCardLinkyEditor extends LitElement {
   
   get _tempoEntity() {
     return this._config.tempoEntityInfo || "";
+  }
+
+  get _tempoEntityInfo() {
+    return this._config.tempoEntityInfo || "";
   }  
   
   get _tempoEntityJ0() {
@@ -275,7 +279,7 @@ get _showTempoColor() {
         </div>
 
         <div class="config-section">
-          <h3 class="section-title">Smart Insights & Évolutions</h3>
+          <h3 class="section-title">📊 Smart Insights & Évolutions</h3>
           <ul class="switches">
             ${this.renderSwitchOption("Afficher les insights intelligents", this._showSmartInsights, "showSmartInsights")}
             ${this.renderSwitchOption("Évolution annuelle", this._showYearRatio, "showYearRatio")}
