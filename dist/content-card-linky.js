@@ -394,10 +394,8 @@ class ContentCardLinky extends LitElement {
     console.log(`=== DEBUG CALCUL SEMAINE ===`);
     console.log(`Aujourd'hui: ${today.toLocaleDateString('fr-FR', {weekday: 'long'})} (jour ${today.getDay()})`);
     console.log(`Jours depuis lundi: ${daysSinceMonday}, total à sommer: ${daysToSum}`);
-    console.log(`Array daily (${daily.length} jours):`, daily);
 
     // HYPOTHÈSE: daily[0] = aujourd'hui, daily[1] = hier, etc.
-    // Pour la semaine: prendre daily[daysSinceMonday] à daily[0] (ordre inversé)
     for (let i = 0; i < daysToSum && i < daily.length; i++) {
       const consumption = parseFloat(daily[i]);
       const dayName = new Date(today.getTime() - (i * 24 * 60 * 60 * 1000)).toLocaleDateString('fr-FR', {weekday: 'short'});
