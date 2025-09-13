@@ -523,8 +523,6 @@ class ContentCardLinky extends LitElement {
             </div>
           ` : html``}
         </div>
-
-        ${this.renderSmartInsights(daily, weekTotal, weekCost)}
       </div>
     `;
   }
