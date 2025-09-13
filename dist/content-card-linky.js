@@ -872,6 +872,30 @@ class ContentCardLinky extends LitElement {
         position: relative;
         cursor: pointer;
       }
+      
+      @media (max-width: 768px) {
+        .card {
+          padding: 2em 1em 1em 1em;
+        }
+        .main-title {
+          font-size: 1.8em;
+        }
+        .conso-hp, .conso-hc {
+          font-size: 1.8em;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .card {
+          padding: 2.5em 0.8em 1em 0.8em;
+        }
+        .main-title {
+          font-size: 1.6em;
+        }
+        .conso-hp, .conso-hc {
+          font-size: 1.6em;
+        }
+      }
 	  
       ha-card ul {
         list-style: none;
@@ -888,10 +912,11 @@ class ContentCardLinky extends LitElement {
       }
       .main-info {
         display: flex;
-        overflow: hidden;
+        overflow: visible;
         align-items: center;
         justify-content: space-between;
-        height: 75px;
+        min-height: 75px;
+        padding: 0.5em 0;
       }
     
       .ha-icon {
