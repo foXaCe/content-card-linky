@@ -439,6 +439,13 @@ class ContentCardLinky extends LitElement {
     const mondayThisWeek = new Date(today);
     mondayThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
 
+    // Debug
+    console.log('=== DEBUG WEEK SUMMARY ===');
+    console.log('weekTotal:', weekTotal);
+    console.log('dailyweek_cost:', dailyweek_cost);
+    console.log('weekCost:', weekCost);
+    console.log('showWeekSummary:', this.config.showWeekSummary);
+
     return html`
       <div class="week-summary-card">
         <div class="week-summary-header">
@@ -456,7 +463,11 @@ class ContentCardLinky extends LitElement {
               <span class="week-summary-cost-value">${this.toFloat(weekCost, 2)}</span>
               <span class="week-summary-cost-unit">€</span>
             </div>
-          ` : ''}
+          ` : html`
+            <div class="week-summary-debug" style="font-size: 0.8em; opacity: 0.7;">
+              Debug: Cost=${weekCost}, Data=${dailyweek_cost ? 'Available' : 'Missing'}
+            </div>
+          `}
         </div>
       </div>
     `;
