@@ -530,10 +530,10 @@ class ContentCardLinky extends LitElement {
       (weekTotal / 5) * 30;
     const monthlyCostPrediction = (weekCost / 5) * 30;
 
-    // Utiliser les évolutions directes de l'entité
-    const weekEvolution = attributes['Current week evolution'] || 0;
-    const monthlyEvolution = attributes['Monthly evolution'] || 0;
-    const yearlyEvolution = attributes['Yearly evolution'] || 0;
+    // Utiliser les évolutions directes de l'entité (parser les virgules françaises)
+    const weekEvolution = parseFloat((attributes['Current week evolution'] || '0').toString().replace(',', '.'));
+    const monthlyEvolution = parseFloat((attributes['Monthly evolution'] || '0').toString().replace(',', '.'));
+    const yearlyEvolution = parseFloat((attributes['Yearly evolution'] || '0').toString().replace(',', '.'));
 
     // Insights intelligents avec données réelles
     const isGoodWeekTrend = weekEvolution < 0;
