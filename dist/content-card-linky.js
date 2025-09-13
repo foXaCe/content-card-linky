@@ -431,7 +431,7 @@ class ContentCardLinky extends LitElement {
         dayDate.setDate(dayDate.getDate() - i);
         const dayOfWeek = dayDate.getDay(); // 0=dimanche, 1=lundi, etc.
 
-        const cost = parseFloat(dailyCostArray[i]);
+        const cost = parseFloat(dailyCostArray[i].replace(',', '.'));
 
         // Ne prendre que lundi à vendredi (pas dimanche)
         if (dayOfWeek !== 0 && !isNaN(cost) && cost !== -1) {
