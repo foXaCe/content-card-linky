@@ -174,6 +174,10 @@ get _showTempoColor() {
     return this._config.titleName || "LINKY";
   }
 
+  get _kWhPrice() {
+    return this._config.kWhPrice || "";
+  }
+
   firstUpdated() {
     HELPERS.then(help => {
       if (help.importMoreInfoControl) {
@@ -191,6 +195,7 @@ get _showTempoColor() {
       <div class="card-config">
         <div>
 		  ${this.renderTextField("Titre", this._titleName, "titleName")}
+		  ${this.renderNumberField("Prix kWh (€)", this._kWhPrice, "kWhPrice")}
           ${this.renderSensorPicker("Entity", this._entity, "entity")}
 		  ${this.renderSensorPicker("EcoWatt", this._ewEntity, "ewEntity")}
 		  ${this.renderSensorPicker("EcoWattJ1", this._ewEntityJ1, "ewEntityJ1")}
