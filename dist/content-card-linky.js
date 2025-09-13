@@ -391,14 +391,20 @@ class ContentCardLinky extends LitElement {
 
     let weekTotal = 0;
 
+    console.log(`DEBUG: Calcul hebdomadaire - aujourd'hui ${today.toLocaleDateString('fr-FR', {weekday: 'long'})}`);
+    console.log(`DEBUG: daily array:`, daily);
+    console.log(`DEBUG: Prendre ${daysToSum} derniers jours (index ${Math.max(0, daily.length - daysToSum)} à ${daily.length-1})`);
 
     const startIndex = Math.max(0, daily.length - daysToSum);
     for (let i = startIndex; i < daily.length; i++) {
       const consumption = parseFloat(daily[i]);
+      console.log(`DEBUG: Jour ${i}: ${consumption} kWh`);
       if (!isNaN(consumption) && consumption !== -1) {
         weekTotal += consumption;
       }
     }
+
+    console.log(`DEBUG: Total calculé: ${weekTotal} kWh`);
     return weekTotal;
   }
 
