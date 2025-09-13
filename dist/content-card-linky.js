@@ -391,30 +391,14 @@ class ContentCardLinky extends LitElement {
 
     let weekTotal = 0;
 
-    console.log(`=== DEBUG CALCUL SEMAINE v2 ===`);
-    console.log(`Aujourd'hui: ${today.toLocaleDateString('fr-FR', {weekday: 'long'})} (jour ${today.getDay()})`);
-    console.log(`Jours depuis lundi: ${daysSinceMonday}, total à sommer: ${daysToSum}`);
-    console.log(`dailyweek contient:`, dailyweek);
-    console.log(`dailyweek length:`, dailyweek.toString().split(",").length);
-
-    // TEMPORAIRE: revenir à daily pour éviter le problème, mais ajouter des logs pour comprendre
-    console.log(`daily contient:`, daily);
-    console.log(`daily length:`, daily.length);
 
     const startIndex = Math.max(0, daily.length - daysToSum);
     for (let i = startIndex; i < daily.length; i++) {
       const consumption = parseFloat(daily[i]);
-      const dayIndex = i - startIndex;
-      const dayName = new Date(today.getTime() - ((daysToSum - 1 - dayIndex) * 24 * 60 * 60 * 1000)).toLocaleDateString('fr-FR', {weekday: 'short'});
-
-      console.log(`Jour ${i} (${dayName}): ${consumption} kWh`);
-
       if (!isNaN(consumption) && consumption !== -1) {
         weekTotal += consumption;
       }
     }
-
-    console.log(`Total semaine: ${weekTotal} kWh`);
     return weekTotal;
   }
 
@@ -427,25 +411,13 @@ class ContentCardLinky extends LitElement {
 
     const dailyCostArray = dailyweek_cost.toString().split(",");
     let weekCost = 0;
-
-    console.log(`=== DEBUG COÛT SEMAINE ===`);
-    console.log(`Array coûts (${dailyCostArray.length} jours):`, dailyCostArray);
-
-    // CORRECTION: dailyCostArray[0] = jour le plus ancien, donc prendre les DERNIERS éléments
     const startIndex = Math.max(0, dailyCostArray.length - daysToSum);
     for (let i = startIndex; i < dailyCostArray.length; i++) {
       const cost = parseFloat(dailyCostArray[i]);
-      const dayIndex = i - startIndex;
-      const dayName = new Date(today.getTime() - ((daysToSum - 1 - dayIndex) * 24 * 60 * 60 * 1000)).toLocaleDateString('fr-FR', {weekday: 'short'});
-
-      console.log(`Jour ${i} (${dayName}): ${cost} €`);
-
       if (!isNaN(cost) && cost !== -1) {
         weekCost += cost;
       }
     }
-
-    console.log(`Total coût semaine: ${weekCost} €`);
     return weekCost;
   }
 
@@ -458,12 +430,6 @@ class ContentCardLinky extends LitElement {
     const mondayThisWeek = new Date(today);
     mondayThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
 
-    // Debug
-    console.log('=== DEBUG WEEK SUMMARY ===');
-    console.log('weekTotal:', weekTotal);
-    console.log('dailyweek_cost:', dailyweek_cost);
-    console.log('weekCost:', weekCost);
-    console.log('showWeekSummary:', this.config.showWeekSummary);
 
     return html`
       <div class="week-summary-card">
