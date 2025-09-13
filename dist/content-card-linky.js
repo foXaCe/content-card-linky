@@ -523,8 +523,22 @@ class ContentCardLinky extends LitElement {
     const monthlyPrediction = (weekTotal / 5) * 30; // Moyenne journalière * 30 jours
     const monthlyCostPrediction = (weekCost / 5) * 30;
 
-    // Comparaison avec semaine précédente
-    const lastWeekTotal = daily.slice(5, 10).reduce((sum, day) => sum + parseFloat(day || 0), 0);
+    // Comparaison avec semaine précédente (7 jours avant)
+    // Cette semaine: index 4,3,2,1,0 (lundi à vendredi)
+    // Semaine dernière: index 11,10,9,8,7 (lundi à vendredi d'avant)
+    let lastWeekTotal = 0;
+    if (daily.length >= 12) {
+      // Prendre les mêmes jours de la semaine d'avant (décalage de 7 jours)
+      for (let i = 11; i >= 7; i--) {
+        if (i < daily.length) {
+          const consumption = parseFloat(daily[i]);
+          if (!isNaN(consumption) && consumption !== -1) {
+            lastWeekTotal += consumption;
+          }
+        }
+      }
+    }
+
     const weekComparison = weekTotal - lastWeekTotal;
     const comparisonPercent = lastWeekTotal > 0 ? ((weekComparison / lastWeekTotal) * 100).toFixed(1) : 0;
 
