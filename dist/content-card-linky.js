@@ -543,14 +543,14 @@ class ContentCardLinky extends LitElement {
     console.log('DEBUG Smart Insights - ALL ATTRIBUTES:', Object.keys(attributes));
     console.log('DEBUG Smart Insights - Full attributes object:', attributes);
 
-    // Utiliser les évolutions directes de l'entité (parser les virgules françaises)
-    console.log('DEBUG Smart Insights - Weekly evolution raw:', attributes['Weekly evolution']);
-    console.log('DEBUG Smart Insights - Monthly evolution raw:', attributes['Monthly evolution']);
-    console.log('DEBUG Smart Insights - Yearly evolution raw:', attributes['Yearly evolution']);
+    // Utiliser les évolutions directes de l'entité (noms d'attributs corrects)
+    console.log('DEBUG Smart Insights - Week evolution raw:', attributes['current_week_evolution']);
+    console.log('DEBUG Smart Insights - Monthly evolution raw:', attributes['monthly_evolution']);
+    console.log('DEBUG Smart Insights - Yearly evolution raw:', attributes['yearly_evolution']);
 
-    const weekEvolution = parseFloat((attributes['Weekly evolution'] || '0').toString().replace(',', '.'));
-    const monthlyEvolution = parseFloat((attributes['Monthly evolution'] || '0').toString().replace(',', '.'));
-    const yearlyEvolution = parseFloat((attributes['Yearly evolution'] || '0').toString().replace(',', '.'));
+    const weekEvolution = parseFloat((attributes['current_week_evolution'] || '0').toString().replace(',', '.'));
+    const monthlyEvolution = parseFloat((attributes['monthly_evolution'] || '0').toString().replace(',', '.'));
+    const yearlyEvolution = parseFloat((attributes['yearly_evolution'] || '0').toString().replace(',', '.'));
 
     console.log('DEBUG Smart Insights - Week parsed:', weekEvolution);
     console.log('DEBUG Smart Insights - Month parsed:', monthlyEvolution);
