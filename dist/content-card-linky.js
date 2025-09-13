@@ -71,6 +71,26 @@ class ContentCardLinky extends LitElement {
     return document.createElement("content-card-linky-editor");
   }
 
+  static getStubConfig() {
+    return {
+      type: "custom:content-card-linky",
+      entity: "sensor.linky_consumption",
+      titleName: "LINKY",
+      nbJoursAffichage: "7",
+      showIcon: true,
+      showHistory: true,
+      showPrice: true,
+      showDayPrice: true,
+      showCurrentMonthRatio: true,
+      showWeekRatio: true,
+      showDayName: "long",
+      showDayMaxPower: true,
+      showTitleLine: true,
+      showEcoWatt: true,
+      showTempo: false
+    };
+  }
+
   render() {
     if (!this.config || !this.hass) {
       return html``;
