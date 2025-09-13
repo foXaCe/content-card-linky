@@ -544,7 +544,7 @@ class ContentCardLinky extends LitElement {
       }
   }
   getTempoColorForDay(valueC, dayNumber, dayDate) {
-    // Récupération depuis les données Tempo transmises
+    // Récupération depuis les données Tempo transmises (format original)
     if (valueC && valueC.toString() !== "undefined") {
       const valeurColor = valueC.toString().split(",")[dayNumber-1];
       if (valeurColor && valeurColor !== "-1") {
@@ -552,17 +552,26 @@ class ContentCardLinky extends LitElement {
       }
     }
 
-    // Fallback : essayer de récupérer depuis le sensor tempo pour aujourd'hui
-    const tempoSensor = this.hass.states['sensor.rte_tempo_today'];
-    if (tempoSensor && dayDate) {
-      const today = new Date();
+    // Fallback : utiliser les entités tempo configurées
+    if (dayDate) {
       const targetDate = new Date(dayDate);
+      const today = new Date();
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
 
-      // Si c'est aujourd'hui, utiliser la valeur du sensor
+      // Vérifier si c'est aujourd'hui
       if (targetDate.toDateString() === today.toDateString()) {
-        const tempoValue = tempoSensor.state;
-        if (tempoValue && tempoValues.has(tempoValue)) {
-          return tempoValues.get(tempoValue);
+        const tempoJ0 = this.hass.states[this.config.tempoEntityJ0 || 'sensor.rte_tempo_today'];
+        if (tempoJ0 && tempoJ0.state && tempoValues.has(tempoJ0.state)) {
+          return tempoValues.get(tempoJ0.state);
+        }
+      }
+
+      // Vérifier si c'est demain
+      if (targetDate.toDateString() === tomorrow.toDateString()) {
+        const tempoJ1 = this.hass.states[this.config.tempoEntityJ1 || 'sensor.rte_tempo_tomorrow'];
+        if (tempoJ1 && tempoJ1.state && tempoValues.has(tempoJ1.state)) {
+          return tempoValues.get(tempoJ1.state);
         }
       }
     }
@@ -917,6 +926,9 @@ class ContentCardLinky extends LitElement {
 	  showTempo: false,
 	  showTempoColor: true,
       showWeekSummary: true,
+      tempoEntityInfo: "sensor.edf_tempo_info",
+      tempoEntityJ0: "sensor.rte_tempo_today",
+      tempoEntityJ1: "sensor.rte_tempo_tomorrow",
       titleName: "LINKY",
       nbJoursAffichage: "7",
       kWhPrice: undefined,
