@@ -404,13 +404,22 @@ class ContentCardLinky extends LitElement {
       values: []
     };
 
-    // Parcourir de lundi (index daysSinceMonday) à aujourd'hui (index 0)
+    // Parcourir de lundi à aujourd'hui
+    // Si on est samedi (daysSinceMonday=5), on veut index 5,4,3,2,1,0
+    // Mais attention: index 5 pourrait être dimanche, il faut vérifier
     for (let i = daysSinceMonday; i >= 0; i--) {
       if (i < daily.length) {
+        // Calculer quel jour de la semaine correspond à cet index
+        const dayDate = new Date();
+        dayDate.setDate(dayDate.getDate() - i);
+        const dayOfWeek = dayDate.getDay(); // 0=dimanche, 1=lundi, etc.
+
         const consumption = parseFloat(daily[i]);
-        console.log(`DEBUG: Index ${i} (il y a ${i} jours): ${consumption} kWh`);
-        this._debugWeeklyDetails.values.push({index: i, value: consumption, daysAgo: i});
-        if (!isNaN(consumption) && consumption !== -1) {
+        console.log(`DEBUG: Index ${i} (il y a ${i} jours, ${dayOfWeek === 0 ? 'dimanche' : dayOfWeek === 1 ? 'lundi' : dayOfWeek === 2 ? 'mardi' : dayOfWeek === 3 ? 'mercredi' : dayOfWeek === 4 ? 'jeudi' : dayOfWeek === 5 ? 'vendredi' : 'samedi'}): ${consumption} kWh`);
+        this._debugWeeklyDetails.values.push({index: i, value: consumption, daysAgo: i, dayOfWeek: dayOfWeek});
+
+        // Ne prendre que lundi à dimanche (pas dimanche)
+        if (dayOfWeek !== 0 && !isNaN(consumption) && consumption !== -1) {
           weekTotal += consumption;
         }
       }
@@ -479,7 +488,7 @@ class ContentCardLinky extends LitElement {
               <div>${this._debugWeeklyDetails.today} - Jours depuis lundi: ${this._debugWeeklyDetails.daysSinceMonday}</div>
               <div>Array length: ${this._debugWeeklyDetails.dailyLength}, prendre index ${this._debugWeeklyDetails.daysSinceMonday} à 0</div>
               <div style="margin-top: 4px;">
-                ${this._debugWeeklyDetails.values.map(v => html`<div>Index ${v.index} (il y a ${v.daysAgo} jours): ${v.value} kWh</div>`)}
+                ${this._debugWeeklyDetails.values.map(v => html`<div>Index ${v.index} (${v.dayOfWeek === 0 ? 'dimanche' : v.dayOfWeek === 1 ? 'lundi' : v.dayOfWeek === 2 ? 'mardi' : v.dayOfWeek === 3 ? 'mercredi' : v.dayOfWeek === 4 ? 'jeudi' : v.dayOfWeek === 5 ? 'vendredi' : 'samedi'}): ${v.value} kWh ${v.dayOfWeek === 0 ? '(EXCLU)' : '(INCLUS)'}</div>`)}
               </div>
               <div><strong>Total: ${this._debugWeeklyDetails.total} kWh</strong></div>
             </div>
