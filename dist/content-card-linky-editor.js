@@ -149,7 +149,12 @@ export class contentCardLinkyEditor extends LitElement {
   }
 get _showTempoColor() {
     return this._config.showTempoColor !== false;
-  }  
+  }
+
+  get _showSmartInsights() {
+    return this._config.showSmartInsights !== false;
+  }
+
   get _title() {
     return this._config.showTitle !== false;
   }
@@ -193,44 +198,102 @@ get _showTempoColor() {
 
     return html`
       <div class="card-config">
-        <div>
-		  ${this.renderTextField("Titre", this._titleName, "titleName")}
-		  ${this.renderNumberField("Prix kWh (€)", this._kWhPrice, "kWhPrice")}
-          ${this.renderSensorPicker("Entity", this._entity, "entity")}
-		  ${this.renderSensorPicker("EcoWatt", this._ewEntity, "ewEntity")}
-		  ${this.renderSensorPicker("EcoWattJ1", this._ewEntityJ1, "ewEntityJ1")}
-          ${this.renderSensorPicker("EcoWattJ2", this._ewEntityJ2, "ewEntityJ2")}
-		  ${this.renderSensorPicker("TempoInfo", this._tempoEntityInfo, "tempoEntityInfo")}		  
-		  ${this.renderSensorPicker("TempoJ0", this._tempoEntityJ0, "tempoEntityJ0")}
-		  ${this.renderSensorPicker("TempoJ1", this._tempoEntityJ1, "tempoEntityJ1")}
-		  ${this.renderSelectField("Nombre jours", "nbJoursAffichage", [{value: "1", label: "1"}, {value: "2", label: "2"}, {value: "3", label: "3"}, {value: "4", label: "4"}, {value: "5", label: "5"}, {value: "6", label: "6"}, {value: "7", label: "7"}],this._nbJoursAffichage)}
-		  ${this.renderSelectField("Format jour", "showDayName", [{value: "long", label: "Long"}, {value: "short", label: "Short"}, {value: "narrow", label: "Narrow"}],this._showDayName)}
-          <!-- Switches -->
+        <div class="config-section">
+          <h3 class="section-title">Configuration générale</h3>
+          ${this.renderTextField("Titre de la carte", this._titleName, "titleName")}
+          ${this.renderNumberField("Prix du kWh (€)", this._kWhPrice, "kWhPrice")}
+          ${this.renderSelectField("Nombre de jours à afficher", "nbJoursAffichage", [
+            {value: "1", label: "1 jour"}, {value: "2", label: "2 jours"}, {value: "3", label: "3 jours"},
+            {value: "4", label: "4 jours"}, {value: "5", label: "5 jours"}, {value: "6", label: "6 jours"},
+            {value: "7", label: "7 jours"}
+          ], this._nbJoursAffichage)}
+          ${this.renderSelectField("Format des jours", "showDayName", [
+            {value: "long", label: "Complet (Lundi)"}, {value: "short", label: "Abrégé (Lun)"}, {value: "narrow", label: "Minimal (L)"}
+          ], this._showDayName)}
+        </div>
+
+        <div class="config-section">
+          <h3 class="section-title">Entités Linky</h3>
+          ${this.renderSensorPicker("Entité principale Linky", this._entity, "entity")}
+        </div>
+
+        <div class="config-section">
+          <h3 class="section-title">EcoWatt (RTE)</h3>
+          ${this.renderSensorPicker("EcoWatt aujourd'hui", this._ewEntity, "ewEntity")}
+          ${this.renderSensorPicker("EcoWatt J+1", this._ewEntityJ1, "ewEntityJ1")}
+          ${this.renderSensorPicker("EcoWatt J+2", this._ewEntityJ2, "ewEntityJ2")}
+        </div>
+
+        <div class="config-section">
+          <h3 class="section-title">Tempo (EDF)</h3>
+          ${this.renderSensorPicker("Tempo informations", this._tempoEntityInfo, "tempoEntityInfo")}
+          ${this.renderSensorPicker("Tempo aujourd'hui", this._tempoEntityJ0, "tempoEntityJ0")}
+          ${this.renderSensorPicker("Tempo demain", this._tempoEntityJ1, "tempoEntityJ1")}
+        </div>
+
+        <div class="config-section">
+          <h3 class="section-title">Affichage général</h3>
           <ul class="switches">
-            ${this.renderSwitchOption("Show icon", this._showIcon, "showIcon")}
-            ${this.renderSwitchOption("Show titre", this._showTitle, "showTitle")}
-            ${this.renderSwitchOption("Show history", this._showHistory, "showHistory")}
-            ${this.renderSwitchOption("Show Heures Creuses", this._showPeakOffPeak, "showPeakOffPeak")}
-            ${this.renderSwitchOption("Show unité", this._showInTableUnit, "showInTableUnit")}
-            ${this.renderSwitchOption("Show prix/jour", this._showDayPrice, "showDayPrice")}
-            ${this.renderSwitchOption("Show prix HC/HP", this._showDayPriceHCHP, "showDayPriceHCHP")}
-            ${this.renderSwitchOption("Show prix", this._showPrice, "showPrice")}
-            ${this.renderSwitchOption("Show jours HC/HP", this._showDayHCHP, "showDayHCHP")}
-			${this.renderSwitchOption("Show jours Max Puissance", this._showDayMaxPower, "showDayMaxPower")}
-            ${this.renderSwitchOption("Show ratio year", this._showYearRatio, "showYearRatio")}
-            ${this.renderSwitchOption("Show ratio mois", this._showCurrentMonthRatio, "showCurrentMonthRatio")}
-            ${this.renderSwitchOption("Show ratio mois precedent", this._showMonthRatio, "showMonthRatio")}
-            ${this.renderSwitchOption("Show ratio semaine", this._showWeekRatio, "showWeekRatio")}
-            ${this.renderSwitchOption("Show ratio hier", this._showYesterdayRatio, "showYesterdayRatio")}
-            ${this.renderSwitchOption("Show titre ligne", this._showTitleLign, "showTitleLign")}
-            ${this.renderSwitchOption("Show error", this._showError, "showError")}
-            ${this.renderSwitchOption("Show header", this._showHeader, "showHeader")}
-            ${this.renderSwitchOption("Show EcoWatt J", this._showEcoWatt, "showEcoWatt")}
-			${this.renderSwitchOption("Show EcoWatt J+1 et J+2", this._showEcoWattJ12, "showEcoWattJ12")}
-			${this.renderSwitchOption("Show Tempo", this._showTempo, "showTempo")}
-			${this.renderSwitchOption("Show Tempo Color Day", this._showTempoColor, "showTempoColor")}
+            ${this.renderSwitchOption("Afficher l'icône", this._showIcon, "showIcon")}
+            ${this.renderSwitchOption("Afficher le titre", this._showTitle, "showTitle")}
+            ${this.renderSwitchOption("Afficher l'en-tête", this._showHeader, "showHeader")}
+            ${this.renderSwitchOption("Afficher les erreurs", this._showError, "showError")}
           </ul>
-          <!-- -->
+        </div>
+
+        <div class="config-section">
+          <h3 class="section-title">Historique & Données</h3>
+          <ul class="switches">
+            ${this.renderSwitchOption("Afficher l'historique", this._showHistory, "showHistory")}
+            ${this.renderSwitchOption("Afficher les unités", this._showInTableUnit, "showInTableUnit")}
+            ${this.renderSwitchOption("Afficher les titres de ligne", this._showTitleLign, "showTitleLign")}
+          </ul>
+        </div>
+
+        <div class="config-section">
+          <h3 class="section-title">Prix & Coûts</h3>
+          <ul class="switches">
+            ${this.renderSwitchOption("Afficher les prix", this._showPrice, "showPrice")}
+            ${this.renderSwitchOption("Afficher le prix par jour", this._showDayPrice, "showDayPrice")}
+            ${this.renderSwitchOption("Afficher les prix HC/HP", this._showDayPriceHCHP, "showDayPriceHCHP")}
+          </ul>
+        </div>
+
+        <div class="config-section">
+          <h3 class="section-title">Heures Creuses/Pleines</h3>
+          <ul class="switches">
+            ${this.renderSwitchOption("Afficher le ratio HC/HP", this._showPeakOffPeak, "showPeakOffPeak")}
+            ${this.renderSwitchOption("Afficher les jours HC/HP", this._showDayHCHP, "showDayHCHP")}
+          </ul>
+        </div>
+
+        <div class="config-section">
+          <h3 class="section-title">Puissance maximale</h3>
+          <ul class="switches">
+            ${this.renderSwitchOption("Afficher la puissance max quotidienne", this._showDayMaxPower, "showDayMaxPower")}
+          </ul>
+        </div>
+
+        <div class="config-section">
+          <h3 class="section-title">Smart Insights & Évolutions</h3>
+          <ul class="switches">
+            ${this.renderSwitchOption("Afficher les insights intelligents", this._showSmartInsights, "showSmartInsights")}
+            ${this.renderSwitchOption("Évolution annuelle", this._showYearRatio, "showYearRatio")}
+            ${this.renderSwitchOption("Évolution mois courant", this._showCurrentMonthRatio, "showCurrentMonthRatio")}
+            ${this.renderSwitchOption("Évolution mois précédent", this._showMonthRatio, "showMonthRatio")}
+            ${this.renderSwitchOption("Évolution hebdomadaire", this._showWeekRatio, "showWeekRatio")}
+            ${this.renderSwitchOption("Évolution quotidienne", this._showYesterdayRatio, "showYesterdayRatio")}
+          </ul>
+        </div>
+
+        <div class="config-section">
+          <h3 class="section-title">EcoWatt & Tempo</h3>
+          <ul class="switches">
+            ${this.renderSwitchOption("Afficher EcoWatt du jour", this._showEcoWatt, "showEcoWatt")}
+            ${this.renderSwitchOption("Afficher EcoWatt J+1/J+2", this._showEcoWattJ12, "showEcoWattJ12")}
+            ${this.renderSwitchOption("Afficher Tempo", this._showTempo, "showTempo")}
+            ${this.renderSwitchOption("Couleurs Tempo du jour", this._showTempoColor, "showTempoColor")}
+          </ul>
         </div>
       </div>
     `;
@@ -331,21 +394,83 @@ get _showTempoColor() {
 
   static get styles() {
     return css`
+      .card-config {
+        padding: 16px;
+      }
+
+      .config-section {
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--divider-color, #e0e0e0);
+        padding-bottom: 16px;
+      }
+
+      .config-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+
+      .section-title {
+        margin: 0 0 12px 0;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--primary-text-color);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      ha-textfield,
+      ha-select,
+      ha-entity-picker {
+        display: block;
+        margin-bottom: 16px;
+        width: 100%;
+      }
+
       .switches {
-        margin: 8px 0;
+        margin: 8px 0 0 0;
         display: flex;
         flex-flow: row wrap;
         list-style: none;
         padding: 0;
+        gap: 8px;
       }
+
       .switch {
         display: flex;
         align-items: center;
-        width: 50%;
-        height: 40px;
+        width: calc(50% - 4px);
+        min-height: 40px;
+        background: var(--card-background-color, #fff);
+        border: 1px solid var(--divider-color, #e0e0e0);
+        border-radius: 8px;
+        padding: 8px 12px;
+        transition: border-color 0.2s ease;
       }
+
+      .switch:hover {
+        border-color: var(--primary-color);
+      }
+
       .switches span {
-        padding: 0 16px;
+        padding: 0 12px;
+        font-size: 13px;
+        color: var(--primary-text-color);
+        line-height: 1.4;
+        flex: 1;
+      }
+
+      ha-switch {
+        flex-shrink: 0;
+      }
+
+      @media (max-width: 600px) {
+        .switch {
+          width: 100%;
+        }
+
+        .switches {
+          flex-direction: column;
+        }
       }
     `;
   }

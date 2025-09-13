@@ -232,8 +232,12 @@ class ContentCardLinky extends LitElement {
                       </span>`
                     : html ``
                    }
-                  
+
                 </div>
+                ${this.config.showSmartInsights !== false
+                  ? this.renderSmartInsights(attributes.daily, 0, 0)
+                  : html``
+                }
                 ${this.renderHistory(attributes.daily, attributes.unit_of_measurement, attributes.dailyweek, attributes.dailyweek_cost, attributes.dailyweek_costHC, attributes.dailyweek_costHP, attributes.dailyweek_HC, attributes.dailyweek_HP, attributes.dailyweek_MP, attributes.dailyweek_MP_over, attributes.dailyweek_MP_time, attributes.dailyweek_Tempo, this.config)}
                 ${this.renderEcoWatt(attributes, this.config)}
 				${this.renderTempo(attributes, this.config)}
@@ -479,15 +483,7 @@ class ContentCardLinky extends LitElement {
   }
 
   renderWeekSummary(daily, unit_of_measurement, dailyweek, dailyweek_cost, config) {
-    console.log('DEBUG: renderWeekSummary appelé', {
-      showWeekSummary: this.config.showWeekSummary,
-      daily: daily,
-      dailyweek: dailyweek,
-      dailyweek_cost: dailyweek_cost
-    });
-
     if (!this.config.showWeekSummary && this.config.showWeekSummary !== undefined) {
-      console.log('DEBUG: renderWeekSummary - Sortie anticipée car showWeekSummary=false');
       return html``;
     }
 
@@ -546,22 +542,9 @@ class ContentCardLinky extends LitElement {
     const monthlyCostPrediction = (weekCost / 5) * 30;
 
     // Utiliser les évolutions directes de l'entité (parser les virgules françaises)
-    console.log('DEBUG Evolution attributes:', {
-      'Current week evolution': attributes['Current week evolution'],
-      'Monthly evolution': attributes['Monthly evolution'],
-      'Yearly evolution': attributes['Yearly evolution'],
-      'All attributes keys': Object.keys(attributes)
-    });
-
     const weekEvolution = parseFloat((attributes['Current week evolution'] || '0').toString().replace(',', '.'));
     const monthlyEvolution = parseFloat((attributes['Monthly evolution'] || '0').toString().replace(',', '.'));
     const yearlyEvolution = parseFloat((attributes['Yearly evolution'] || '0').toString().replace(',', '.'));
-
-    console.log('DEBUG Parsed values:', {
-      weekEvolution,
-      monthlyEvolution,
-      yearlyEvolution
-    });
 
     // Insights intelligents avec données réelles
     const isGoodWeekTrend = weekEvolution < 0;
