@@ -133,10 +133,10 @@ class ContentCardLinky extends LitElement {
                           <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.yearly_evolution < 0) ? '45' : ((attributes.yearly_evolution == 0) ? "0" : "-45")}deg)">
                          </ha-icon>
                         </span>
-                        <span class="percentage-value">${Math.round(attributes.yearly_evolution)}<span class="unit"> %</span></span>
+                        <span class="percentage-value ${attributes.yearly_evolution > 0 ? 'percentage-positive' : attributes.yearly_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}">${Math.round(attributes.yearly_evolution)}<span class="unit"> %</span></span>
                       </div>
                       <div class="tooltip">
-                        <span class="year"><span class="text-desktop">par rapport à ${this.previousYear()}</span><span class="text-mobile">vs ${this.previousYear()}</span></span>
+                        <span class="year">vs ${this.previousYear()}</span>
                         <span class="tooltiptext">A-1 : ${attributes.current_year_last_year}<br>A : ${attributes.current_year}</span>
                       </div>
                     </span>`
@@ -150,10 +150,10 @@ class ContentCardLinky extends LitElement {
                           <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.monthly_evolution < 0) ? '45' : ((attributes.monthly_evolution == 0) ? "0" : "-45")}deg)">
                          </ha-icon>
                         </span>
-                        <span class="percentage-value">${Math.round(attributes.monthly_evolution)}<span class="unit"> %</span></span>
+                        <span class="percentage-value ${attributes.monthly_evolution > 0 ? 'percentage-positive' : attributes.monthly_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}">${Math.round(attributes.monthly_evolution)}<span class="unit"> %</span></span>
                       </div>
                       <div class="tooltip">
-                        <span class="previous-month"><span class="text-desktop">par rapport à ${this.previousMonth()}</span><span class="text-mobile">vs ${this.previousMonth()}</span></span>
+                        <span class="previous-month">vs ${this.previousMonth()}</span>
                         <span class="tooltiptext">Mois Precedent A-1 : ${attributes.last_month_last_year}<br>Mois Precedent : ${attributes.last_month}</span>
                       </div>
                     </span>`
@@ -167,10 +167,10 @@ class ContentCardLinky extends LitElement {
                           <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.current_month_evolution < 0) ? '45' : ((attributes.current_month_evolution == 0) ? "0" : "-45")}deg)">
                          </ha-icon>
                         </span>
-                        <span class="percentage-value">${Math.round(attributes.current_month_evolution)}<span class="unit"> %</span></span>
+                        <span class="percentage-value ${attributes.current_month_evolution > 0 ? 'percentage-positive' : attributes.current_month_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}">${Math.round(attributes.current_month_evolution)}<span class="unit"> %</span></span>
                       </div>
                       <div class="tooltip">
-                        <span class="current-month"><span class="text-desktop">par rapport à ${this.currentMonth()}</span><span class="text-mobile">vs ${this.currentMonth()}</span></span>
+                        <span class="current-month">vs ${this.currentMonth()}</span>
                         <span class="tooltiptext">Mois  A-1 : ${attributes.current_month_last_year}<br>Mois  : ${attributes.current_month}</span>
                       </div>
                     </span>`
@@ -184,10 +184,10 @@ class ContentCardLinky extends LitElement {
                           <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.current_week_evolution < 0) ? '45' : ((attributes.current_week_evolution == 0) ? "0" : "-45")}deg)">
                           </ha-icon>
                         </span>
-                        <span class="percentage-value">${Math.round(attributes.current_week_evolution)}<span class="unit"> %</span></span>
+                        <span class="percentage-value ${attributes.current_week_evolution > 0 ? 'percentage-positive' : attributes.current_week_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}">${Math.round(attributes.current_week_evolution)}<span class="unit"> %</span></span>
                       </div>
                       <div class="tooltip">
-                        <span class="previous-month"><span class="text-desktop">par rapport à ${this.weekBefore()}</span><span class="text-mobile">vs ${this.weekBefore()}</span></span>
+                        <span class="previous-month">vs ${this.weekBefore()}</span>
                         <span class="tooltiptext">Semaine dernière : ${attributes.last_week}<br>Semaine courante : ${attributes.current_week}</span>
                       </div>
                     </span>`
@@ -201,10 +201,10 @@ class ContentCardLinky extends LitElement {
                           <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.yesterday_evolution < 0) ? '45' : ((attributes.yesterday_evolution == 0) ? "0" : "-45")}deg)">
                          </ha-icon>
                         </span>
-                        <span class="percentage-value">${Math.round(attributes.yesterday_evolution)}<span class="unit"> %</span></span>
+                        <span class="percentage-value ${attributes.yesterday_evolution > 0 ? 'percentage-positive' : attributes.yesterday_evolution < 0 ? 'percentage-negative' : 'percentage-neutral'}">${Math.round(attributes.yesterday_evolution)}<span class="unit"> %</span></span>
                       </div>
                       <div class="tooltip">
-                        <span class="previous-month"><span class="text-desktop">par rapport à ${this.dayBeforeYesterday()}</span><span class="text-mobile">vs ${this.dayBeforeYesterday()}</span></span>
+                        <span class="previous-month">vs ${this.dayBeforeYesterday()}</span>
                         <span class="tooltiptext">Avant-hier : ${attributes.day_2}<br>Hier : ${attributes.yesterday}</span>
                       </div>
                     </span>`
@@ -895,11 +895,11 @@ class ContentCardLinky extends LitElement {
         cursor: pointer;
       }
       
-      /* Desktop - masquer les versions mobiles */
-      .titre-mobile, .text-mobile {
+      /* Desktop - masquer les titres mobiles */
+      .titre-mobile {
         display: none;
       }
-      .titre-desktop, .text-desktop {
+      .titre-desktop {
         display: inline;
       }
       
@@ -917,11 +917,11 @@ class ContentCardLinky extends LitElement {
         .day {
           font-size: 0.9em;
         }
-        /* Afficher versions mobiles sur tablette */
-        .titre-mobile, .text-mobile {
+        /* Afficher titres mobiles sur tablette */
+        .titre-mobile {
           display: inline;
         }
-        .titre-desktop, .text-desktop {
+        .titre-desktop {
           display: none;
         }
         /* Réduire la taille des textes de pourcentage */
@@ -951,16 +951,16 @@ class ContentCardLinky extends LitElement {
           font-size: 0.8em;
           line-height: 1.6;
         }
-        /* S'assurer que les versions mobiles sont affichées */
-        .titre-mobile, .text-mobile {
+        /* S'assurer que les titres mobiles sont affichés */
+        .titre-mobile {
           display: inline;
         }
-        .titre-desktop, .text-desktop {
+        .titre-desktop {
           display: none;
         }
-        /* Réduire encore plus les textes de pourcentage sur mobile */
+        /* Ajuster les textes de pourcentage sur mobile */
         .year, .previous-month, .current-month {
-          font-size: 0.6em !important;
+          font-size: 0.75em !important;
           white-space: nowrap;
         }
         .variations-linky {
@@ -1058,6 +1058,18 @@ class ContentCardLinky extends LitElement {
       .percentage-value {
         font-weight: 500;
         font-size: 1.1em;
+      }
+      
+      .percentage-positive {
+        color: #e74c3c; /* Rouge pour les valeurs positives (+) */
+      }
+      
+      .percentage-negative {
+        color: #27ae60; /* Vert pour les valeurs négatives (-) */
+      }
+      
+      .percentage-neutral {
+        color: var(--primary-text-color, #333); /* Couleur par défaut pour 0 */
       }
     
       .unit {
