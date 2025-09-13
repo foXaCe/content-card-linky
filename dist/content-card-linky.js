@@ -388,8 +388,15 @@ class ContentCardLinky extends LitElement {
   }
   renderDailyWeekTitre( maConfig, monTitre ){
     if (maConfig === true) {
+       // Version mobile pour les titres longs
+       const titresMobiles = {
+         "Prix HC": "€ HC", 
+         "Prix HP": "€ HP"
+       };
+       const titreMobile = titresMobiles[monTitre] || monTitre;
+       
        return html
-       `${monTitre}<br>
+       `<span class="titre-desktop">${monTitre}</span><span class="titre-mobile">${titreMobile}</span><br>
        `
       }
     else{
@@ -873,6 +880,14 @@ class ContentCardLinky extends LitElement {
         cursor: pointer;
       }
       
+      /* Desktop - masquer les titres mobiles */
+      .titre-mobile {
+        display: none;
+      }
+      .titre-desktop {
+        display: inline;
+      }
+      
       @media (max-width: 768px) {
         .card {
           padding: 2.5em 1em 1em 1em;
@@ -882,6 +897,17 @@ class ContentCardLinky extends LitElement {
         }
         .conso-hp, .conso-hc {
           font-size: 1.8em;
+        }
+        /* Titres colonnes plus petits sur tablette */
+        .day {
+          font-size: 0.9em;
+        }
+        /* Afficher titres mobiles sur tablette si nécessaire */
+        .titre-mobile {
+          display: inline;
+        }
+        .titre-desktop {
+          display: none;
         }
       }
       
@@ -894,6 +920,18 @@ class ContentCardLinky extends LitElement {
         }
         .conso-hp, .conso-hc {
           font-size: 1.6em;
+        }
+        /* Titres colonnes encore plus petits sur mobile */
+        .day {
+          font-size: 0.8em;
+          line-height: 1.6;
+        }
+        /* S'assurer que les titres mobiles sont affichés */
+        .titre-mobile {
+          display: inline;
+        }
+        .titre-desktop {
+          display: none;
         }
       }
 	  
