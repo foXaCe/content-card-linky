@@ -540,21 +540,17 @@ class ContentCardLinky extends LitElement {
     const monthlyCostPrediction = (weekCost / 5) * 30;
 
     // Utiliser les évolutions directes de l'entité (parser les virgules françaises)
-    console.log('DEBUG Smart Insights - Raw attributes:', {
-      'Weekly evolution': attributes['Weekly evolution'],
-      'Monthly evolution': attributes['Monthly evolution'],
-      'Yearly evolution': attributes['Yearly evolution']
-    });
+    console.log('DEBUG Smart Insights - Weekly evolution raw:', attributes['Weekly evolution']);
+    console.log('DEBUG Smart Insights - Monthly evolution raw:', attributes['Monthly evolution']);
+    console.log('DEBUG Smart Insights - Yearly evolution raw:', attributes['Yearly evolution']);
 
     const weekEvolution = parseFloat((attributes['Weekly evolution'] || '0').toString().replace(',', '.'));
     const monthlyEvolution = parseFloat((attributes['Monthly evolution'] || '0').toString().replace(',', '.'));
     const yearlyEvolution = parseFloat((attributes['Yearly evolution'] || '0').toString().replace(',', '.'));
 
-    console.log('DEBUG Smart Insights - Parsed values:', {
-      weekEvolution,
-      monthlyEvolution,
-      yearlyEvolution
-    });
+    console.log('DEBUG Smart Insights - Week parsed:', weekEvolution);
+    console.log('DEBUG Smart Insights - Month parsed:', monthlyEvolution);
+    console.log('DEBUG Smart Insights - Year parsed:', yearlyEvolution);
 
     // Insights intelligents avec données réelles
     const isGoodWeekTrend = weekEvolution < 0;
