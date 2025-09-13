@@ -384,33 +384,35 @@ class ContentCardLinky extends LitElement {
   calculateWeekTotal(daily, dailyweek) {
     if (!daily) return 0;
 
-    // Samedi = on veut lundi(5 jours avant) à samedi(0 jours avant)
     const today = new Date();
     const daysSinceMonday = today.getDay() === 0 ? 6 : today.getDay() - 1;
-    const daysToSum = daysSinceMonday + 1;
 
     let weekTotal = 0;
 
+    // Dans daily[], index 0 = aujourd'hui, index 1 = hier, etc.
+    // Pour calculer lundi à aujourd'hui, on va de l'index daysSinceMonday à l'index 0
+
     console.log(`DEBUG: Calcul hebdomadaire - aujourd'hui ${today.toLocaleDateString('fr-FR', {weekday: 'long'})}`);
     console.log(`DEBUG: daily array:`, daily);
-    console.log(`DEBUG: Prendre ${daysToSum} derniers jours (index ${Math.max(0, daily.length - daysToSum)} à ${daily.length-1})`);
+    console.log(`DEBUG: Jours depuis lundi: ${daysSinceMonday}, donc prendre index ${daysSinceMonday} à 0`);
 
     // Stocker les détails pour affichage debug dans UI
     this._debugWeeklyDetails = {
       today: today.toLocaleDateString('fr-FR', {weekday: 'long'}),
       daysSinceMonday: daysSinceMonday,
-      daysToSum: daysToSum,
       dailyLength: daily.length,
       values: []
     };
 
-    const startIndex = Math.max(0, daily.length - daysToSum);
-    for (let i = startIndex; i < daily.length; i++) {
-      const consumption = parseFloat(daily[i]);
-      console.log(`DEBUG: Jour ${i}: ${consumption} kWh`);
-      this._debugWeeklyDetails.values.push({index: i, value: consumption});
-      if (!isNaN(consumption) && consumption !== -1) {
-        weekTotal += consumption;
+    // Parcourir de lundi (index daysSinceMonday) à aujourd'hui (index 0)
+    for (let i = daysSinceMonday; i >= 0; i--) {
+      if (i < daily.length) {
+        const consumption = parseFloat(daily[i]);
+        console.log(`DEBUG: Index ${i} (il y a ${i} jours): ${consumption} kWh`);
+        this._debugWeeklyDetails.values.push({index: i, value: consumption, daysAgo: i});
+        if (!isNaN(consumption) && consumption !== -1) {
+          weekTotal += consumption;
+        }
       }
     }
 
@@ -475,9 +477,9 @@ class ContentCardLinky extends LitElement {
             <div class="week-debug-info" style="font-size: 0.7em; background: rgba(255,255,255,0.1); padding: 8px; margin-top: 8px; border-radius: 4px;">
               <div><strong>Debug Calcul:</strong></div>
               <div>${this._debugWeeklyDetails.today} - Jours depuis lundi: ${this._debugWeeklyDetails.daysSinceMonday}</div>
-              <div>Prendre ${this._debugWeeklyDetails.daysToSum} valeurs (array length: ${this._debugWeeklyDetails.dailyLength})</div>
+              <div>Array length: ${this._debugWeeklyDetails.dailyLength}, prendre index ${this._debugWeeklyDetails.daysSinceMonday} à 0</div>
               <div style="margin-top: 4px;">
-                ${this._debugWeeklyDetails.values.map(v => html`<div>Index ${v.index}: ${v.value} kWh</div>`)}
+                ${this._debugWeeklyDetails.values.map(v => html`<div>Index ${v.index} (il y a ${v.daysAgo} jours): ${v.value} kWh</div>`)}
               </div>
               <div><strong>Total: ${this._debugWeeklyDetails.total} kWh</strong></div>
             </div>
