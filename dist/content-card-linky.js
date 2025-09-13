@@ -875,7 +875,7 @@ class ContentCardLinky extends LitElement {
       
       @media (max-width: 768px) {
         .card {
-          padding: 2em 1em 1em 1em;
+          padding: 2.5em 1em 1em 1em;
         }
         .main-title {
           font-size: 1.8em;
@@ -887,7 +887,7 @@ class ContentCardLinky extends LitElement {
       
       @media (max-width: 480px) {
         .card {
-          padding: 2.5em 0.8em 1em 0.8em;
+          padding: 3em 0.8em 1em 0.8em;
         }
         .main-title {
           font-size: 1.6em;
@@ -936,6 +936,7 @@ class ContentCardLinky extends LitElement {
         font-weight: 300;
         font-size: 1.2em;
         display: inline-block;
+        white-space: nowrap;
       }
     
       .conso-hp, .conso-hc {
@@ -946,6 +947,7 @@ class ContentCardLinky extends LitElement {
       .conso-unit-hc, .conso-unit-hp {
         font-weight: 100;
         font-size: 1em;
+        white-space: nowrap;
       }
       
       .more-unit {
@@ -994,6 +996,7 @@ class ContentCardLinky extends LitElement {
     
       .cons-val {
         //font-weight: bold;
+        white-space: nowrap;
       }
       
       .year {
