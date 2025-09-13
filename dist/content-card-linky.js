@@ -381,16 +381,64 @@ class ContentCardLinky extends LitElement {
     }
   }
 
+  calculateWeekTotal(daily, dailyweek) {
+    if (!dailyweek || !daily) return 0;
+
+    const today = new Date();
+    const mondayThisWeek = new Date(today);
+    mondayThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
+    mondayThisWeek.setHours(0, 0, 0, 0);
+
+    const dailyWeekArray = dailyweek.toString().split(",");
+    let weekTotal = 0;
+
+    for (let i = 0; i < Math.min(daily.length, dailyWeekArray.length); i++) {
+      const dayDate = new Date(dailyWeekArray[daily.length - 1 - i]);
+      if (dayDate >= mondayThisWeek && dayDate <= today) {
+        const consumption = parseFloat(daily[daily.length - 1 - i]);
+        if (!isNaN(consumption) && consumption !== -1) {
+          weekTotal += consumption;
+        }
+      }
+    }
+
+    return weekTotal;
+  }
+
+  renderWeekSummary(daily, unit_of_measurement, dailyweek, config) {
+    if (!this.config.showWeekSummary && this.config.showWeekSummary !== undefined) return html``;
+
+    const weekTotal = this.calculateWeekTotal(daily, dailyweek);
+    const today = new Date();
+    const mondayThisWeek = new Date(today);
+    mondayThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
+
+    return html`
+      <div class="week-summary-card">
+        <div class="week-summary-header">
+          <ha-icon icon="mdi:calendar-week" class="week-summary-icon"></ha-icon>
+          <span class="week-summary-title">Semaine en cours</span>
+          <span class="week-summary-period">depuis ${mondayThisWeek.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'})}</span>
+        </div>
+        <div class="week-summary-content">
+          <span class="week-summary-value">${this.toFloat(weekTotal, 1)}</span>
+          <span class="week-summary-unit">${unit_of_measurement}</span>
+        </div>
+      </div>
+    `;
+  }
+
   renderHistory(daily, unit_of_measurement, dailyweek, dailyweek_cost, dailyweek_costHC, dailyweek_costHP, dailyweek_HC, dailyweek_HP, dailyweek_MP, dailyweek_MP_over, dailyweek_MP_time, dailyweek_Tempo, config) {
     if (this.config.showHistory === true) {
       if ( dailyweek != undefined){
-        var nbJours = dailyweek.toString().split(",").length ; 
+        var nbJours = dailyweek.toString().split(",").length ;
         if ( config.nbJoursAffichage <= nbJours ) { nbJours = config.nbJoursAffichage }
         return html
           `
+            ${this.renderWeekSummary(daily, unit_of_measurement, dailyweek, config)}
             <div class="week-history">
             ${this.renderTitreLigne(config)}
-            ${daily.slice(0, nbJours).reverse().map((day, index) => this.renderDay(day, nbJours-index, unit_of_measurement, dailyweek, dailyweek_cost, dailyweek_costHC, dailyweek_costHP, 
+            ${daily.slice(0, nbJours).reverse().map((day, index) => this.renderDay(day, nbJours-index, unit_of_measurement, dailyweek, dailyweek_cost, dailyweek_costHC, dailyweek_costHP,
                dailyweek_HC, dailyweek_HP, dailyweek_MP, dailyweek_MP_over, dailyweek_MP_time, dailyweek_Tempo, config))}
             </div>
           `
@@ -499,12 +547,12 @@ class ContentCardLinky extends LitElement {
 	if (config.showTempoColor) {
 		const valeurColor = valueC.toString().split(",")[dayNumber-1] ;
 		if ( valeurColor === "-1" ) {
-			valueC = "color" ;
+			valueC = "grey" ;
 		}
 		else {
 		valueC = valeurColor.toLowerCase() ;
 		}
-	}  
+	}
 	else {
 		valueC = "white";
 	}
@@ -846,6 +894,7 @@ class ContentCardLinky extends LitElement {
 	  showEcoWattJ12: false,
 	  showTempo: false,
 	  showTempoColor: false,
+      showWeekSummary: true,
       titleName: "LINKY",
       nbJoursAffichage: "7",
       kWhPrice: undefined,
@@ -905,6 +954,15 @@ class ContentCardLinky extends LitElement {
         padding: 1.5em 1em 1em 1em;
         position: relative;
         cursor: pointer;
+        background: var(--ha-card-background, var(--card-background-color, var(--primary-background-color)));
+        border-radius: var(--ha-card-border-radius, 12px);
+        box-shadow: var(--ha-card-box-shadow, 0 4px 8px 0 rgba(0,0,0,0.1));
+        transition: all 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--ha-card-box-shadow, 0 8px 16px 0 rgba(0,0,0,0.15));
       }
       
       /* Desktop - masquer les titres mobiles */
@@ -1006,7 +1064,12 @@ class ContentCardLinky extends LitElement {
         align-items: center;
         justify-content: space-between;
         min-height: 75px;
-        padding: 0.5em 0;
+        padding: 1em;
+        background: linear-gradient(135deg, var(--primary-color, #1976d2), var(--accent-color, #03dac6));
+        border-radius: 12px;
+        margin-bottom: 1em;
+        color: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       }
     
       .ha-icon {
@@ -1019,7 +1082,8 @@ class ContentCardLinky extends LitElement {
   
       .cout {
         font-weight: 300;
-        font-size: 3.5em;
+        font-size: clamp(2.5em, 5vw, 3.5em);
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
       }
     
       .cout-unit {
@@ -1046,17 +1110,31 @@ class ContentCardLinky extends LitElement {
       }
     
       .variations {
-        display: flex;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 0.5em;
         overflow: hidden;
+        margin-bottom: 1em;
       }
 
       .variations-linky {
-        display: inline-block;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         font-weight: 300;
-        margin: 0px 0px 5px;
+        margin: 0;
         overflow: hidden;
         text-align: center;
+        background: var(--ha-card-background, var(--card-background-color, white));
+        border-radius: 8px;
+        padding: 0.5em;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: all 0.2s ease;
+      }
+
+      .variations-linky:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
       }
       
       .percentage-line {
@@ -1065,6 +1143,14 @@ class ContentCardLinky extends LitElement {
         justify-content: center;
         gap: 5px;
         margin-bottom: 2px;
+      }
+
+      .percentage-line ha-icon {
+        transition: transform 0.3s ease;
+      }
+
+      .variations-linky:hover .percentage-line ha-icon {
+        transform: scale(1.2);
       }
       
       .percentage-value {
@@ -1091,6 +1177,10 @@ class ContentCardLinky extends LitElement {
       .week-history {
         display: flex;
         overflow: hidden;
+        background: var(--ha-card-background, var(--card-background-color, white));
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-top: 0.5em;
       }
     
       .day {
@@ -1099,6 +1189,14 @@ class ContentCardLinky extends LitElement {
         border-right: .1em solid var(--divider-color);
         line-height: 2;
         box-sizing: border-box;
+        transition: all 0.2s ease;
+        padding: 0.5em 0.2em;
+      }
+
+      .day:hover {
+        background: var(--primary-color, #1976d2);
+        color: white;
+        transform: scale(1.02);
       }
     
       .dayname {
@@ -1111,8 +1209,9 @@ class ContentCardLinky extends LitElement {
       }
     
       .cons-val {
-        //font-weight: bold;
+        font-weight: 500;
         white-space: nowrap;
+        transition: all 0.2s ease;
       }
       
       .year {
@@ -1293,7 +1392,168 @@ class ContentCardLinky extends LitElement {
 	background-image: linear-gradient(45deg, #d6d6d6 25%, #dedede 25%, #dedede 50%, #d6d6d6 50%, #d6d6d6 75%, #dedede 75%, #dedede 100%);
 	background-size: 28.28px 28.28px;
 	text-transform: capitalize;
-      }	  
+      }
+
+      /* Week Summary Card */
+      .week-summary-card {
+        background: linear-gradient(135deg, var(--primary-color, #1976d2) 0%, var(--accent-color, #03dac6) 100%);
+        border-radius: 12px;
+        padding: 1em;
+        margin-bottom: 1em;
+        color: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+      }
+
+      .week-summary-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      }
+
+      .week-summary-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        margin-bottom: 0.5em;
+      }
+
+      .week-summary-icon {
+        font-size: 1.2em;
+        opacity: 0.9;
+      }
+
+      .week-summary-title {
+        font-weight: 500;
+        font-size: 1.1em;
+      }
+
+      .week-summary-period {
+        font-size: 0.9em;
+        opacity: 0.8;
+        margin-left: auto;
+      }
+
+      .week-summary-content {
+        display: flex;
+        align-items: baseline;
+        gap: 0.3em;
+      }
+
+      .week-summary-value {
+        font-size: 2.5em;
+        font-weight: 300;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+
+      .week-summary-unit {
+        font-size: 1.2em;
+        opacity: 0.9;
+      }
+
+      /* Responsive improvements */
+      @media (max-width: 768px) {
+        .variations {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.3em;
+        }
+
+        .week-summary-value {
+          font-size: 2em;
+        }
+
+        .week-summary-header {
+          flex-wrap: wrap;
+        }
+
+        .week-summary-period {
+          margin-left: 0;
+          order: 3;
+          flex: 100%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .variations {
+          grid-template-columns: 1fr;
+        }
+
+        .week-summary-card {
+          padding: 0.8em;
+        }
+
+        .week-summary-value {
+          font-size: 1.8em;
+        }
+      }
+
+      /* Dark mode improvements */
+      @media (prefers-color-scheme: dark) {
+        .week-summary-card {
+          background: linear-gradient(135deg, var(--primary-color, #2196f3) 0%, var(--accent-color, #00bcd4) 100%);
+        }
+
+        .variations-linky {
+          background: var(--ha-card-background, var(--card-background-color, #1e1e1e));
+          border: 1px solid var(--divider-color, #333);
+        }
+
+        .week-history {
+          background: var(--ha-card-background, var(--card-background-color, #1e1e1e));
+          border: 1px solid var(--divider-color, #333);
+        }
+
+        .day:hover {
+          background: var(--primary-color, #2196f3);
+        }
+      }
+
+      /* Container queries for better responsive design */
+      @container (max-width: 400px) {
+        .variations {
+          grid-template-columns: 1fr;
+          gap: 0.2em;
+        }
+
+        .week-summary-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.2em;
+        }
+
+        .week-summary-period {
+          margin-left: 0;
+        }
+      }
+
+      /* Enhanced animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .week-summary-card,
+      .variations-linky,
+      .week-history {
+        animation: fadeInUp 0.3s ease-out;
+      }
+
+      .variations-linky:nth-child(2) { animation-delay: 0.1s; }
+      .variations-linky:nth-child(3) { animation-delay: 0.2s; }
+      .variations-linky:nth-child(4) { animation-delay: 0.3s; }
+      .variations-linky:nth-child(5) { animation-delay: 0.4s; }
+
+      /* Focus states for accessibility */
+      .variations-linky:focus,
+      .day:focus {
+        outline: 2px solid var(--accent-color, #03dac6);
+        outline-offset: 2px;
+      }
       `;
   }
 }
