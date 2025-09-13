@@ -543,6 +543,43 @@ class ContentCardLinky extends LitElement {
         `;
       }
   }
+  findTempoEntities() {
+    // Recherche intelligente des entités tempo disponibles
+    const tempoPatterns = [
+      'sensor.rte_tempo_today',
+      'sensor.edf_tempo_today',
+      'sensor.tempo_today',
+      'sensor.rte_tempo_tomorrow',
+      'sensor.edf_tempo_tomorrow',
+      'sensor.tempo_tomorrow'
+    ];
+
+    const availableEntities = {};
+
+    for (const pattern of tempoPatterns) {
+      if (this.hass.states[pattern]) {
+        const entity = this.hass.states[pattern];
+        if (entity.state && tempoValues.has(entity.state)) {
+          if (pattern.includes('today')) {
+            availableEntities.today = pattern;
+          } else if (pattern.includes('tomorrow')) {
+            availableEntities.tomorrow = pattern;
+          }
+        }
+      }
+    }
+
+    // Si une entité est configurée, l'utiliser en priorité
+    if (this.config.tempoEntity && this.hass.states[this.config.tempoEntity]) {
+      const entity = this.hass.states[this.config.tempoEntity];
+      if (entity.state && tempoValues.has(entity.state)) {
+        availableEntities.today = this.config.tempoEntity;
+      }
+    }
+
+    return availableEntities;
+  }
+
   getTempoColorForDay(valueC, dayNumber, dayDate) {
     // Récupération depuis les données Tempo transmises (format original)
     if (valueC && valueC.toString() !== "undefined") {
@@ -552,26 +589,30 @@ class ContentCardLinky extends LitElement {
       }
     }
 
-    // Fallback : utiliser les entités tempo configurées
-    if (dayDate) {
+    // Utiliser la détection automatique d'entités tempo
+    const tempoEntities = this.findTempoEntities();
+
+    if (dayDate && Object.keys(tempoEntities).length > 0) {
       const targetDate = new Date(dayDate);
       const today = new Date();
       const tomorrow = new Date();
       tomorrow.setDate(today.getDate() + 1);
 
       // Vérifier si c'est aujourd'hui
-      if (targetDate.toDateString() === today.toDateString()) {
-        const tempoJ0 = this.hass.states[this.config.tempoEntityJ0 || 'sensor.rte_tempo_today'];
-        if (tempoJ0 && tempoJ0.state && tempoValues.has(tempoJ0.state)) {
-          return tempoValues.get(tempoJ0.state);
+      if (targetDate.toDateString() === today.toDateString() && tempoEntities.today) {
+        const tempoEntity = this.hass.states[tempoEntities.today];
+        if (tempoEntity && tempoEntity.state && tempoValues.has(tempoEntity.state)) {
+          console.log(`Tempo détecté pour aujourd'hui: ${tempoEntity.state} depuis ${tempoEntities.today}`);
+          return tempoValues.get(tempoEntity.state);
         }
       }
 
       // Vérifier si c'est demain
-      if (targetDate.toDateString() === tomorrow.toDateString()) {
-        const tempoJ1 = this.hass.states[this.config.tempoEntityJ1 || 'sensor.rte_tempo_tomorrow'];
-        if (tempoJ1 && tempoJ1.state && tempoValues.has(tempoJ1.state)) {
-          return tempoValues.get(tempoJ1.state);
+      if (targetDate.toDateString() === tomorrow.toDateString() && tempoEntities.tomorrow) {
+        const tempoEntity = this.hass.states[tempoEntities.tomorrow];
+        if (tempoEntity && tempoEntity.state && tempoValues.has(tempoEntity.state)) {
+          console.log(`Tempo détecté pour demain: ${tempoEntity.state} depuis ${tempoEntities.tomorrow}`);
+          return tempoValues.get(tempoEntity.state);
         }
       }
     }
@@ -581,17 +622,23 @@ class ContentCardLinky extends LitElement {
 
   renderDailyWeek(value, valueC, dayNumber, config) {
     const dayDate = value.toString().split(",")[dayNumber-1];
-    let finalColor = "white";
+    let finalColor = "grey";
 
     if (config.showTempoColor) {
       finalColor = this.getTempoColorForDay(valueC, dayNumber, dayDate);
-      // Debug log
-      console.log(`Jour ${dayNumber}, date: ${dayDate}, couleur tempo: ${finalColor}`);
+      // Debug log détaillé
+      console.log(`=== DEBUG TEMPO ===`);
+      console.log(`Jour ${dayNumber}, date: ${dayDate}`);
+      console.log(`Entités tempo trouvées:`, this.findTempoEntities());
+      console.log(`Couleur finale: ${finalColor}`);
+      console.log(`Classe CSS: tempoday-${finalColor}`);
     }
 
     return html
     `
-    <span class="tempoday-${finalColor}" title="Tempo: ${finalColor}">${new Date(dayDate).toLocaleDateString('fr-FR', {weekday: config.showDayName})}</span>
+    <span class="tempo-day-wrapper">
+      <span class="tempoday-${finalColor}" style="display: inline-block;" title="Tempo: ${finalColor} - Date: ${dayDate}">${new Date(dayDate).toLocaleDateString('fr-FR', {weekday: config.showDayName})}</span>
+    </span>
     `;
   }
   renderNoData(){
@@ -928,9 +975,7 @@ class ContentCardLinky extends LitElement {
 	  showTempo: false,
 	  showTempoColor: true,
       showWeekSummary: true,
-      tempoEntityInfo: "sensor.edf_tempo_info",
-      tempoEntityJ0: "sensor.rte_tempo_today",
-      tempoEntityJ1: "sensor.rte_tempo_tomorrow",
+      tempoEntity: "sensor.rte_tempo_today",
       titleName: "LINKY",
       nbJoursAffichage: "7",
       kWhPrice: undefined,
@@ -1505,7 +1550,7 @@ class ContentCardLinky extends LitElement {
       /* Responsive improvements */
       @media (max-width: 768px) {
         .variations {
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
           gap: 0.3em;
         }
 
@@ -1526,7 +1571,8 @@ class ContentCardLinky extends LitElement {
 
       @media (max-width: 480px) {
         .variations {
-          grid-template-columns: 1fr;
+          grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+          gap: 0.2em;
         }
 
         .week-summary-card {
@@ -1605,6 +1651,49 @@ class ContentCardLinky extends LitElement {
       .day:focus {
         outline: 2px solid var(--accent-color, #03dac6);
         outline-offset: 2px;
+      }
+
+      /* Wrapper for tempo day styling */
+      .tempo-day-wrapper {
+        display: inline-block;
+        width: 100%;
+      }
+
+      /* Force tempo colors to override any conflicting styles */
+      .tempo-day-wrapper .tempoday-blue,
+      .tempo-day-wrapper .tempoday-white,
+      .tempo-day-wrapper .tempoday-red,
+      .tempo-day-wrapper .tempoday-grey {
+        all: unset;
+        display: inline-block !important;
+        text-align: center !important;
+        font-weight: bold !important;
+        text-transform: capitalize !important;
+        border-radius: 4px !important;
+        padding: 2px 4px !important;
+        margin: 1px !important;
+        box-sizing: border-box !important;
+      }
+
+      .tempo-day-wrapper .tempoday-blue {
+        color: white !important;
+        background: #009dfa !important;
+      }
+
+      .tempo-day-wrapper .tempoday-white {
+        color: #002654 !important;
+        background: white !important;
+        border: 1px solid #ccc !important;
+      }
+
+      .tempo-day-wrapper .tempoday-red {
+        color: white !important;
+        background: #ff2700 !important;
+      }
+
+      .tempo-day-wrapper .tempoday-grey {
+        color: white !important;
+        background: #666 !important;
       }
       `;
   }
