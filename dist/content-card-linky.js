@@ -235,7 +235,7 @@ class ContentCardLinky extends LitElement {
 
                 </div>
                 ${this.config.showSmartInsights !== false
-                  ? this.renderSmartInsights(attributes.daily, 0, 0)
+                  ? this.renderSmartInsights(attributes.daily, attributes.dailyweek, attributes.dailyweek_cost)
                   : html``
                 }
                 ${this.renderHistory(attributes.daily, attributes.unit_of_measurement, attributes.dailyweek, attributes.dailyweek_cost, attributes.dailyweek_costHC, attributes.dailyweek_costHP, attributes.dailyweek_HC, attributes.dailyweek_HP, attributes.dailyweek_MP, attributes.dailyweek_MP_over, attributes.dailyweek_MP_time, attributes.dailyweek_Tempo, this.config)}
@@ -528,6 +528,8 @@ class ContentCardLinky extends LitElement {
   }
 
   renderSmartInsights(daily, weekTotal, weekCost) {
+    console.log('=== DEBUG renderSmartInsights APPELÉ ===');
+    console.log('DEBUG Paramètres reçus:', { daily, weekTotal, weekCost });
     // Utiliser les données réelles de l'entité si disponibles
     console.log('DEBUG Entity name:', this.config.entity);
     const entity = this.hass.states[this.config.entity];
@@ -539,13 +541,23 @@ class ContentCardLinky extends LitElement {
     } : 'NO ENTITY');
     const attributes = entity ? entity.attributes : {};
 
+    // Calculer weekTotal à partir des données reçues
+    const calculatedWeekTotal = weekTotal && Array.isArray(weekTotal) ?
+      weekTotal.reduce((sum, day) => sum + parseFloat(day || 0), 0) : 0;
+    const calculatedWeekCost = weekCost && Array.isArray(weekCost) ?
+      weekCost.reduce((sum, day) => sum + parseFloat(day || 0), 0) : 0;
+
+    console.log('DEBUG: Données semaine calculées:', { calculatedWeekTotal, calculatedWeekCost });
+
     // Prédiction mensuelle basée sur la tendance actuelle
     const currentMonth = parseFloat((attributes['current_month'] || 0).toString().replace(',', '.'));
     console.log('DEBUG: Prédiction mensuelle - currentMonth:', currentMonth);
+    console.log('DEBUG: Jour du mois actuel:', new Date().getDate());
+
     const monthlyPrediction = currentMonth > 0 ?
       (currentMonth / new Date().getDate()) * new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() :
-      (weekTotal / 5) * 30;
-    const monthlyCostPrediction = (weekCost / 5) * 30;
+      calculatedWeekTotal > 0 ? (calculatedWeekTotal / 7) * 30 : 0;
+    const monthlyCostPrediction = calculatedWeekCost > 0 ? (calculatedWeekCost / 7) * 30 : 0;
     console.log('DEBUG: Prédiction mensuelle calculée:', monthlyPrediction, 'kWh');
 
     // Utiliser les évolutions directes de l'entité
@@ -1217,7 +1229,7 @@ class ContentCardLinky extends LitElement {
   } 
 
 
-  // Cache buster: v20250913-002
+  // Cache buster: v20250913-003
   static get styles() {
     return css`
       .card {
