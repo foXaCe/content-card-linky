@@ -419,15 +419,24 @@ class ContentCardLinky extends LitElement {
 
     const today = new Date();
     const daysSinceMonday = today.getDay() === 0 ? 6 : today.getDay() - 1;
-    const daysToSum = daysSinceMonday + 1;
 
     const dailyCostArray = dailyweek_cost.toString().split(",");
     let weekCost = 0;
-    const startIndex = Math.max(0, dailyCostArray.length - daysToSum);
-    for (let i = startIndex; i < dailyCostArray.length; i++) {
-      const cost = parseFloat(dailyCostArray[i]);
-      if (!isNaN(cost) && cost !== -1) {
-        weekCost += cost;
+
+    // Même logique que calculateWeekTotal : de lundi à vendredi (exclure dimanche)
+    for (let i = Math.min(daysSinceMonday-1, dailyCostArray.length-1); i >= 0; i--) {
+      if (i < dailyCostArray.length) {
+        // Calculer quel jour correspond à cet index
+        const dayDate = new Date();
+        dayDate.setDate(dayDate.getDate() - i);
+        const dayOfWeek = dayDate.getDay(); // 0=dimanche, 1=lundi, etc.
+
+        const cost = parseFloat(dailyCostArray[i]);
+
+        // Ne prendre que lundi à vendredi (pas dimanche)
+        if (dayOfWeek !== 0 && !isNaN(cost) && cost !== -1) {
+          weekCost += cost;
+        }
       }
     }
     return weekCost;
