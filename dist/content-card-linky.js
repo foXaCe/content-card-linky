@@ -479,13 +479,28 @@ class ContentCardLinky extends LitElement {
   }
 
   renderWeekSummary(daily, unit_of_measurement, dailyweek, dailyweek_cost, config) {
-    if (!this.config.showWeekSummary && this.config.showWeekSummary !== undefined) return html``;
+    console.log('DEBUG: renderWeekSummary appelé', {
+      showWeekSummary: this.config.showWeekSummary,
+      daily: daily,
+      dailyweek: dailyweek,
+      dailyweek_cost: dailyweek_cost
+    });
+
+    if (!this.config.showWeekSummary && this.config.showWeekSummary !== undefined) {
+      console.log('DEBUG: renderWeekSummary - Sortie anticipée car showWeekSummary=false');
+      return html``;
+    }
 
     const weekTotal = this.calculateWeekTotal(daily, dailyweek);
     const weekCost = this.calculateWeekCost(dailyweek_cost, dailyweek);
     const today = new Date();
     const mondayThisWeek = new Date(today);
     mondayThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
+
+    console.log('DEBUG: Totaux calculés', {
+      weekTotal,
+      weekCost
+    });
 
     // Calcul de la moyenne pour gradient dynamique
     const avgWeekly = daily.slice(0, 7).reduce((sum, day) => sum + parseFloat(day || 0), 0) / 7 * 5;
