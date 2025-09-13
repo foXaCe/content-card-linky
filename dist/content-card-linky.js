@@ -133,7 +133,7 @@ class ContentCardLinky extends LitElement {
                        </ha-icon>
                       </span>
                       <div class="tooltip">
-                      ${Math.round(attributes.yearly_evolution)}<span class="unit"> %</span><span class="year">par rapport à ${this.previousYear()}</span>
+                      ${Math.round(attributes.yearly_evolution)}<span class="unit"> %</span><span class="year"><span class="text-desktop">par rapport à ${this.previousYear()}</span><span class="text-mobile">vs ${this.previousYear()}</span></span>
                           <span class="tooltiptext">A-1 : ${attributes.current_year_last_year}<br>A : ${attributes.current_year}</span>
                       </div>
                     </span>`
@@ -147,7 +147,7 @@ class ContentCardLinky extends LitElement {
                        </ha-icon>
                       </span>
                       <div class="tooltip">
-                      ${Math.round(attributes.monthly_evolution)}<span class="unit"> %</span><span class="previous-month">par rapport à ${this.previousMonth()}</span>
+                      ${Math.round(attributes.monthly_evolution)}<span class="unit"> %</span><span class="previous-month"><span class="text-desktop">par rapport à ${this.previousMonth()}</span><span class="text-mobile">vs ${this.previousMonth()}</span></span>
                           <span class="tooltiptext">Mois Precedent A-1 : ${attributes.last_month_last_year}<br>Mois Precedent : ${attributes.last_month}</span>
                       </div>
                     </span>`
@@ -161,7 +161,7 @@ class ContentCardLinky extends LitElement {
                        </ha-icon>
                       </span>
                       <div class="tooltip">
-                      ${Math.round(attributes.current_month_evolution)}<span class="unit"> %</span><span class="current-month">par rapport à ${this.currentMonth()}</span>
+                      ${Math.round(attributes.current_month_evolution)}<span class="unit"> %</span><span class="current-month"><span class="text-desktop">par rapport à ${this.currentMonth()}</span><span class="text-mobile">vs ${this.currentMonth()}</span></span>
                           <span class="tooltiptext">Mois  A-1 : ${attributes.current_month_last_year}<br>Mois  : ${attributes.current_month}</span>
                       </div>
                     </span>`
@@ -175,7 +175,7 @@ class ContentCardLinky extends LitElement {
                           </ha-icon>
                         </span>
                         <div class="tooltip">
-                        ${Math.round(attributes.current_week_evolution)}<span class="unit"> %</span><span class="previous-month">par rapport à ${this.weekBefore()}</span>
+                        ${Math.round(attributes.current_week_evolution)}<span class="unit"> %</span><span class="previous-month"><span class="text-desktop">par rapport à ${this.weekBefore()}</span><span class="text-mobile">vs ${this.weekBefore()}</span></span>
                         <span class="tooltiptext">Semaine dernière : ${attributes.last_week}<br>Semaine courante : ${attributes.current_week}</span>
                     </div>
                       </span>`
@@ -189,7 +189,7 @@ class ContentCardLinky extends LitElement {
                          </ha-icon>
                         </span>
                         <div class="tooltip">
-                        ${Math.round(attributes.yesterday_evolution)}<span class="unit"> %</span><span class="previous-month">par rapport à ${this.dayBeforeYesterday()}</span>
+                        ${Math.round(attributes.yesterday_evolution)}<span class="unit"> %</span><span class="previous-month"><span class="text-desktop">par rapport à ${this.dayBeforeYesterday()}</span><span class="text-mobile">vs ${this.dayBeforeYesterday()}</span></span>
                         <span class="tooltiptext">Avant-hier : ${attributes.day_2}<br>Hier : ${attributes.yesterday}</span>
                     </div>
                       </span>`
@@ -880,11 +880,11 @@ class ContentCardLinky extends LitElement {
         cursor: pointer;
       }
       
-      /* Desktop - masquer les titres mobiles */
-      .titre-mobile {
+      /* Desktop - masquer les versions mobiles */
+      .titre-mobile, .text-mobile {
         display: none;
       }
-      .titre-desktop {
+      .titre-desktop, .text-desktop {
         display: inline;
       }
       
@@ -902,12 +902,19 @@ class ContentCardLinky extends LitElement {
         .day {
           font-size: 0.9em;
         }
-        /* Afficher titres mobiles sur tablette si nécessaire */
-        .titre-mobile {
+        /* Afficher versions mobiles sur tablette */
+        .titre-mobile, .text-mobile {
           display: inline;
         }
-        .titre-desktop {
+        .titre-desktop, .text-desktop {
           display: none;
+        }
+        /* Réduire la taille des textes de pourcentage */
+        .year, .previous-month, .current-month {
+          font-size: 0.7em !important;
+        }
+        .variations-linky {
+          font-size: 0.9em;
         }
       }
       
@@ -926,12 +933,24 @@ class ContentCardLinky extends LitElement {
           font-size: 0.8em;
           line-height: 1.6;
         }
-        /* S'assurer que les titres mobiles sont affichés */
-        .titre-mobile {
+        /* S'assurer que les versions mobiles sont affichées */
+        .titre-mobile, .text-mobile {
           display: inline;
         }
-        .titre-desktop {
+        .titre-desktop, .text-desktop {
           display: none;
+        }
+        /* Réduire encore plus les textes de pourcentage sur mobile */
+        .year, .previous-month, .current-month {
+          font-size: 0.6em !important;
+          white-space: nowrap;
+        }
+        .variations-linky {
+          font-size: 0.8em;
+        }
+        /* Forcer le nowrap pour éviter les retours à la ligne */
+        .tooltip {
+          white-space: nowrap;
         }
       }
 	  
