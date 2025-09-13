@@ -173,19 +173,19 @@ get _showTempoColor() {
   }
 
   get _nbJoursAffichage() {
-    return this._config.nbJoursAffichage || "7";
+    return (this._config && this._config.nbJoursAffichage) || "7";
   }
 
   get _showDayName() {
-    return this._config.showDayName || "long";
+    return (this._config && this._config.showDayName) || "long";
   }
   
   get _titleName() {
-    return this._config.titleName || "LINKY";
+    return (this._config && this._config.titleName) || "LINKY";
   }
 
   get _kWhPrice() {
-    return this._config.kWhPrice || "";
+    return (this._config && this._config.kWhPrice) || "";
   }
 
   firstUpdated() {
@@ -197,7 +197,7 @@ get _showTempoColor() {
   }
 
   render() {
-    if (!this.hass) {
+    if (!this.hass || !this._config) {
       return html``;
     }
 
