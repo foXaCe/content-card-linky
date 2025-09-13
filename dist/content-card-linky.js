@@ -409,6 +409,7 @@ class ContentCardLinky extends LitElement {
     if (!this.config.showWeekSummary && this.config.showWeekSummary !== undefined) return html``;
 
     const weekTotal = this.calculateWeekTotal(daily, dailyweek);
+    const weekCost = this.config.kWhPrice ? weekTotal * this.config.kWhPrice : null;
     const today = new Date();
     const mondayThisWeek = new Date(today);
     mondayThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
@@ -421,8 +422,16 @@ class ContentCardLinky extends LitElement {
           <span class="week-summary-period">depuis ${mondayThisWeek.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'})}</span>
         </div>
         <div class="week-summary-content">
-          <span class="week-summary-value">${this.toFloat(weekTotal, 1)}</span>
-          <span class="week-summary-unit">${unit_of_measurement}</span>
+          <div class="week-summary-main">
+            <span class="week-summary-value">${this.toFloat(weekTotal, 1)}</span>
+            <span class="week-summary-unit">${unit_of_measurement}</span>
+          </div>
+          ${weekCost ? html`
+            <div class="week-summary-cost">
+              <span class="week-summary-cost-value">${this.toFloat(weekCost, 2)}</span>
+              <span class="week-summary-cost-unit">€</span>
+            </div>
+          ` : ''}
         </div>
       </div>
     `;
@@ -1532,6 +1541,13 @@ class ContentCardLinky extends LitElement {
 
       .week-summary-content {
         display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1em;
+      }
+
+      .week-summary-main {
+        display: flex;
         align-items: baseline;
         gap: 0.3em;
       }
@@ -1547,6 +1563,25 @@ class ContentCardLinky extends LitElement {
         opacity: 0.9;
       }
 
+      .week-summary-cost {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .week-summary-cost-value {
+        font-size: 1.8em;
+        font-weight: 500;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      }
+
+      .week-summary-cost-unit {
+        font-size: 1em;
+        opacity: 0.9;
+        margin-top: -0.2em;
+      }
+
       /* Responsive improvements */
       @media (max-width: 768px) {
         .variations {
@@ -1558,6 +1593,10 @@ class ContentCardLinky extends LitElement {
           font-size: 2em;
         }
 
+        .week-summary-cost-value {
+          font-size: 1.5em;
+        }
+
         .week-summary-header {
           flex-wrap: wrap;
         }
@@ -1566,6 +1605,10 @@ class ContentCardLinky extends LitElement {
           margin-left: 0;
           order: 3;
           flex: 100%;
+        }
+
+        .week-summary-content {
+          gap: 0.5em;
         }
       }
 
@@ -1581,6 +1624,20 @@ class ContentCardLinky extends LitElement {
 
         .week-summary-value {
           font-size: 1.8em;
+        }
+
+        .week-summary-cost-value {
+          font-size: 1.3em;
+        }
+
+        .week-summary-content {
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5em;
+        }
+
+        .week-summary-cost {
+          margin-top: 0.2em;
         }
       }
 
