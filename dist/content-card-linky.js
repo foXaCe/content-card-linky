@@ -128,13 +128,16 @@ class ContentCardLinky extends LitElement {
                   ${this.config.showYearRatio 
                     ? html `
                     <span class="variations-linky">
-                      <span class="ha-icon">
-                        <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.yearly_evolution < 0) ? '45' : ((attributes.yearly_evolution == 0) ? "0" : "-45")}deg)">
-                       </ha-icon>
-                      </span>
+                      <div class="percentage-line">
+                        <span class="ha-icon">
+                          <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.yearly_evolution < 0) ? '45' : ((attributes.yearly_evolution == 0) ? "0" : "-45")}deg)">
+                         </ha-icon>
+                        </span>
+                        <span class="percentage-value">${Math.round(attributes.yearly_evolution)}<span class="unit"> %</span></span>
+                      </div>
                       <div class="tooltip">
-                      ${Math.round(attributes.yearly_evolution)}<span class="unit"> %</span><span class="year"><span class="text-desktop">par rapport à ${this.previousYear()}</span><span class="text-mobile">vs ${this.previousYear()}</span></span>
-                          <span class="tooltiptext">A-1 : ${attributes.current_year_last_year}<br>A : ${attributes.current_year}</span>
+                        <span class="year"><span class="text-desktop">par rapport à ${this.previousYear()}</span><span class="text-mobile">vs ${this.previousYear()}</span></span>
+                        <span class="tooltiptext">A-1 : ${attributes.current_year_last_year}<br>A : ${attributes.current_year}</span>
                       </div>
                     </span>`
                     : html ``
@@ -142,13 +145,16 @@ class ContentCardLinky extends LitElement {
                   ${this.config.showMonthRatio 
                     ? html `
                     <span class="variations-linky">
-                      <span class="ha-icon">
-                        <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.monthly_evolution < 0) ? '45' : ((attributes.monthly_evolution == 0) ? "0" : "-45")}deg)">
-                       </ha-icon>
-                      </span>
+                      <div class="percentage-line">
+                        <span class="ha-icon">
+                          <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.monthly_evolution < 0) ? '45' : ((attributes.monthly_evolution == 0) ? "0" : "-45")}deg)">
+                         </ha-icon>
+                        </span>
+                        <span class="percentage-value">${Math.round(attributes.monthly_evolution)}<span class="unit"> %</span></span>
+                      </div>
                       <div class="tooltip">
-                      ${Math.round(attributes.monthly_evolution)}<span class="unit"> %</span><span class="previous-month"><span class="text-desktop">par rapport à ${this.previousMonth()}</span><span class="text-mobile">vs ${this.previousMonth()}</span></span>
-                          <span class="tooltiptext">Mois Precedent A-1 : ${attributes.last_month_last_year}<br>Mois Precedent : ${attributes.last_month}</span>
+                        <span class="previous-month"><span class="text-desktop">par rapport à ${this.previousMonth()}</span><span class="text-mobile">vs ${this.previousMonth()}</span></span>
+                        <span class="tooltiptext">Mois Precedent A-1 : ${attributes.last_month_last_year}<br>Mois Precedent : ${attributes.last_month}</span>
                       </div>
                     </span>`
                     : html ``
@@ -156,13 +162,16 @@ class ContentCardLinky extends LitElement {
                   ${this.config.showCurrentMonthRatio 
                     ? html `
                     <span class="variations-linky">
-                      <span class="ha-icon">
-                        <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.current_month_evolution < 0) ? '45' : ((attributes.current_month_evolution == 0) ? "0" : "-45")}deg)">
-                       </ha-icon>
-                      </span>
+                      <div class="percentage-line">
+                        <span class="ha-icon">
+                          <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.current_month_evolution < 0) ? '45' : ((attributes.current_month_evolution == 0) ? "0" : "-45")}deg)">
+                         </ha-icon>
+                        </span>
+                        <span class="percentage-value">${Math.round(attributes.current_month_evolution)}<span class="unit"> %</span></span>
+                      </div>
                       <div class="tooltip">
-                      ${Math.round(attributes.current_month_evolution)}<span class="unit"> %</span><span class="current-month"><span class="text-desktop">par rapport à ${this.currentMonth()}</span><span class="text-mobile">vs ${this.currentMonth()}</span></span>
-                          <span class="tooltiptext">Mois  A-1 : ${attributes.current_month_last_year}<br>Mois  : ${attributes.current_month}</span>
+                        <span class="current-month"><span class="text-desktop">par rapport à ${this.currentMonth()}</span><span class="text-mobile">vs ${this.currentMonth()}</span></span>
+                        <span class="tooltiptext">Mois  A-1 : ${attributes.current_month_last_year}<br>Mois  : ${attributes.current_month}</span>
                       </div>
                     </span>`
                     : html ``
@@ -170,29 +179,35 @@ class ContentCardLinky extends LitElement {
                   ${this.config.showWeekRatio 
                     ? html `
                     <span class="variations-linky">
+                      <div class="percentage-line">
                         <span class="ha-icon">
                           <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.current_week_evolution < 0) ? '45' : ((attributes.current_week_evolution == 0) ? "0" : "-45")}deg)">
                           </ha-icon>
                         </span>
-                        <div class="tooltip">
-                        ${Math.round(attributes.current_week_evolution)}<span class="unit"> %</span><span class="previous-month"><span class="text-desktop">par rapport à ${this.weekBefore()}</span><span class="text-mobile">vs ${this.weekBefore()}</span></span>
+                        <span class="percentage-value">${Math.round(attributes.current_week_evolution)}<span class="unit"> %</span></span>
+                      </div>
+                      <div class="tooltip">
+                        <span class="previous-month"><span class="text-desktop">par rapport à ${this.weekBefore()}</span><span class="text-mobile">vs ${this.weekBefore()}</span></span>
                         <span class="tooltiptext">Semaine dernière : ${attributes.last_week}<br>Semaine courante : ${attributes.current_week}</span>
-                    </div>
-                      </span>`
+                      </div>
+                    </span>`
                     : html ``
                    }
                   ${this.config.showYesterdayRatio
                     ? html `
                     <span class="variations-linky">
+                      <div class="percentage-line">
                         <span class="ha-icon">
                           <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${(attributes.yesterday_evolution < 0) ? '45' : ((attributes.yesterday_evolution == 0) ? "0" : "-45")}deg)">
                          </ha-icon>
                         </span>
-                        <div class="tooltip">
-                        ${Math.round(attributes.yesterday_evolution)}<span class="unit"> %</span><span class="previous-month"><span class="text-desktop">par rapport à ${this.dayBeforeYesterday()}</span><span class="text-mobile">vs ${this.dayBeforeYesterday()}</span></span>
+                        <span class="percentage-value">${Math.round(attributes.yesterday_evolution)}<span class="unit"> %</span></span>
+                      </div>
+                      <div class="tooltip">
+                        <span class="previous-month"><span class="text-desktop">par rapport à ${this.dayBeforeYesterday()}</span><span class="text-mobile">vs ${this.dayBeforeYesterday()}</span></span>
                         <span class="tooltiptext">Avant-hier : ${attributes.day_2}<br>Hier : ${attributes.yesterday}</span>
-                    </div>
-                      </span>`
+                      </div>
+                    </span>`
                     : html ``
                    }
                   ${this.config.showPeakOffPeak 
@@ -916,6 +931,9 @@ class ContentCardLinky extends LitElement {
         .variations-linky {
           font-size: 0.9em;
         }
+        .percentage-value {
+          font-size: 1em;
+        }
       }
       
       @media (max-width: 480px) {
@@ -947,6 +965,9 @@ class ContentCardLinky extends LitElement {
         }
         .variations-linky {
           font-size: 0.8em;
+        }
+        .percentage-value {
+          font-size: 0.9em;
         }
         /* Forcer le nowrap pour éviter les retours à la ligne */
         .tooltip {
@@ -1022,7 +1043,21 @@ class ContentCardLinky extends LitElement {
         display: inline-block;
         font-weight: 300;
         margin: 0px 0px 5px;
-        overflow: hidden; 
+        overflow: hidden;
+        text-align: center;
+      }
+      
+      .percentage-line {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        margin-bottom: 2px;
+      }
+      
+      .percentage-value {
+        font-weight: 500;
+        font-size: 1.1em;
       }
     
       .unit {
