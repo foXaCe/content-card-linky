@@ -539,6 +539,10 @@ class ContentCardLinky extends LitElement {
       (weekTotal / 5) * 30;
     const monthlyCostPrediction = (weekCost / 5) * 30;
 
+    // Debug : afficher tous les attributs disponibles
+    console.log('DEBUG Smart Insights - ALL ATTRIBUTES:', Object.keys(attributes));
+    console.log('DEBUG Smart Insights - Full attributes object:', attributes);
+
     // Utiliser les évolutions directes de l'entité (parser les virgules françaises)
     console.log('DEBUG Smart Insights - Weekly evolution raw:', attributes['Weekly evolution']);
     console.log('DEBUG Smart Insights - Monthly evolution raw:', attributes['Monthly evolution']);
