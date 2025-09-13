@@ -391,7 +391,7 @@ class ContentCardLinky extends LitElement {
 
     let weekTotal = 0;
 
-    console.log(`=== DEBUG CALCUL SEMAINE ===`);
+    console.log(`=== DEBUG CALCUL SEMAINE v2 ===`);
     console.log(`Aujourd'hui: ${today.toLocaleDateString('fr-FR', {weekday: 'long'})} (jour ${today.getDay()})`);
     console.log(`Jours depuis lundi: ${daysSinceMonday}, total à sommer: ${daysToSum}`);
     console.log(`dailyweek contient:`, dailyweek);
