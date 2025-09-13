@@ -1671,9 +1671,9 @@ class ContentCardLinky extends LitElement {
         }
 
         .week-summary-content {
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
+          flex-direction: row !important;
+          justify-content: space-between !important;
+          align-items: center !important;
           gap: 0.5em;
         }
 
