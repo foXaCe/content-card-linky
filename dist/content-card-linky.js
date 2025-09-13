@@ -543,22 +543,44 @@ class ContentCardLinky extends LitElement {
         `;
       }
   }
+  getTempoColorForDay(valueC, dayNumber, dayDate) {
+    // Récupération depuis les données Tempo transmises
+    if (valueC && valueC.toString() !== "undefined") {
+      const valeurColor = valueC.toString().split(",")[dayNumber-1];
+      if (valeurColor && valeurColor !== "-1") {
+        return valeurColor.toLowerCase();
+      }
+    }
+
+    // Fallback : essayer de récupérer depuis le sensor tempo pour aujourd'hui
+    const tempoSensor = this.hass.states['sensor.rte_tempo_today'];
+    if (tempoSensor && dayDate) {
+      const today = new Date();
+      const targetDate = new Date(dayDate);
+
+      // Si c'est aujourd'hui, utiliser la valeur du sensor
+      if (targetDate.toDateString() === today.toDateString()) {
+        const tempoValue = tempoSensor.state;
+        if (tempoValue && tempoValues.has(tempoValue)) {
+          return tempoValues.get(tempoValue);
+        }
+      }
+    }
+
+    return "grey"; // Couleur par défaut si pas de données
+  }
+
   renderDailyWeek(value, valueC, dayNumber, config) {
-	if (config.showTempoColor) {
-		const valeurColor = valueC.toString().split(",")[dayNumber-1] ;
-		if ( valeurColor === "-1" ) {
-			valueC = "grey" ;
-		}
-		else {
-		valueC = valeurColor.toLowerCase() ;
-		}
-	}
-	else {
-		valueC = "white";
-	}
+    const dayDate = value.toString().split(",")[dayNumber-1];
+    let finalColor = "white";
+
+    if (config.showTempoColor) {
+      finalColor = this.getTempoColorForDay(valueC, dayNumber, dayDate);
+    }
+
     return html
     `
-    <span class="tempoday-${valueC}">${new Date(value.toString().split(",")[dayNumber-1]).toLocaleDateString('fr-FR', {weekday: config.showDayName})}</span>
+    <span class="tempoday-${finalColor}">${new Date(dayDate).toLocaleDateString('fr-FR', {weekday: config.showDayName})}</span>
     `;
   }
   renderNoData(){
@@ -893,7 +915,7 @@ class ContentCardLinky extends LitElement {
       showEcoWatt: false,
 	  showEcoWattJ12: false,
 	  showTempo: false,
-	  showTempoColor: false,
+	  showTempoColor: true,
       showWeekSummary: true,
       titleName: "LINKY",
       nbJoursAffichage: "7",
