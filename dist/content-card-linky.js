@@ -442,6 +442,42 @@ class ContentCardLinky extends LitElement {
     return weekCost;
   }
 
+  getDynamicGradient(consumption, averageConsumption = 50) {
+    const ratio = consumption / averageConsumption;
+
+    if (ratio <= 0.7) {
+      // Très économique - Vert
+      return 'linear-gradient(135deg, #4caf50 0%, #8bc34a 100%)';
+    } else if (ratio <= 1.0) {
+      // Normal - Bleu
+      return 'linear-gradient(135deg, #2196f3 0%, #03dac6 100%)';
+    } else if (ratio <= 1.3) {
+      // Élevé - Orange
+      return 'linear-gradient(135deg, #ff9800 0%, #ffc107 100%)';
+    } else {
+      // Très élevé - Rouge
+      return 'linear-gradient(135deg, #f44336 0%, #e91e63 100%)';
+    }
+  }
+
+  getSeasonalTheme() {
+    const month = new Date().getMonth();
+
+    if (month >= 2 && month <= 4) {
+      // Printemps - Vert tendre
+      return { primary: '#66bb6a', accent: '#81c784', icon: 'mdi:flower' };
+    } else if (month >= 5 && month <= 7) {
+      // Été - Bleu océan
+      return { primary: '#42a5f5', accent: '#29b6f6', icon: 'mdi:white-balance-sunny' };
+    } else if (month >= 8 && month <= 10) {
+      // Automne - Orange/Marron
+      return { primary: '#ff7043', accent: '#ffab40', icon: 'mdi:leaf' };
+    } else {
+      // Hiver - Bleu froid
+      return { primary: '#5c6bc0', accent: '#7986cb', icon: 'mdi:snowflake' };
+    }
+  }
+
   renderWeekSummary(daily, unit_of_measurement, dailyweek, dailyweek_cost, config) {
     if (!this.config.showWeekSummary && this.config.showWeekSummary !== undefined) return html``;
 
@@ -451,11 +487,16 @@ class ContentCardLinky extends LitElement {
     const mondayThisWeek = new Date(today);
     mondayThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
 
+    // Calcul de la moyenne pour gradient dynamique
+    const avgWeekly = daily.slice(0, 7).reduce((sum, day) => sum + parseFloat(day || 0), 0) / 7 * 5;
+    const dynamicGradient = this.getDynamicGradient(weekTotal, avgWeekly);
+    const seasonalTheme = this.getSeasonalTheme();
+
 
     return html`
-      <div class="week-summary-card">
+      <div class="week-summary-card" style="background: ${dynamicGradient}">
         <div class="week-summary-header">
-          <ha-icon icon="mdi:calendar-week" class="week-summary-icon"></ha-icon>
+          <ha-icon icon="${seasonalTheme.icon}" class="week-summary-icon"></ha-icon>
           <span class="week-summary-title">Semaine en cours</span>
           <span class="week-summary-period">depuis ${mondayThisWeek.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'})}</span>
         </div>
@@ -470,7 +511,48 @@ class ContentCardLinky extends LitElement {
               <span class="week-summary-cost-unit">€</span>
             </div>
           ` : html``}
+        </div>
 
+        ${this.renderSmartInsights(daily, weekTotal, weekCost)}
+      </div>
+    `;
+  }
+
+  renderSmartInsights(daily, weekTotal, weekCost) {
+    // Prédiction mensuelle basée sur la tendance actuelle
+    const monthlyPrediction = (weekTotal / 5) * 30; // Moyenne journalière * 30 jours
+    const monthlyCostPrediction = (weekCost / 5) * 30;
+
+    // Comparaison avec semaine précédente
+    const lastWeekTotal = daily.slice(5, 10).reduce((sum, day) => sum + parseFloat(day || 0), 0);
+    const weekComparison = weekTotal - lastWeekTotal;
+    const comparisonPercent = lastWeekTotal > 0 ? ((weekComparison / lastWeekTotal) * 100).toFixed(1) : 0;
+
+    // Insights intelligents
+    const isGoodTrend = weekComparison < 0;
+    const trendIcon = isGoodTrend ? 'mdi:trending-down' : 'mdi:trending-up';
+    const trendColor = isGoodTrend ? '#4caf50' : '#f44336';
+
+    return html`
+      <div class="smart-insights">
+        <div class="insight-row">
+          <div class="insight-item">
+            <ha-icon icon="mdi:calendar-month" class="insight-icon"></ha-icon>
+            <div class="insight-content">
+              <div class="insight-label">Prédiction mensuelle</div>
+              <div class="insight-value">${monthlyPrediction.toFixed(0)} kWh • ${monthlyCostPrediction.toFixed(0)}€</div>
+            </div>
+          </div>
+
+          <div class="insight-item">
+            <ha-icon icon="${trendIcon}" class="insight-icon" style="color: ${trendColor}"></ha-icon>
+            <div class="insight-content">
+              <div class="insight-label">vs semaine dernière</div>
+              <div class="insight-value" style="color: ${trendColor}">
+                ${comparisonPercent > 0 ? '+' : ''}${comparisonPercent}%
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     `;
@@ -1623,6 +1705,50 @@ class ContentCardLinky extends LitElement {
         font-size: 1.2em;
         opacity: 0.9;
         white-space: nowrap;
+      }
+
+      /* Smart Insights */
+      .smart-insights {
+        margin-top: 1em;
+        padding-top: 1em;
+        border-top: 1px solid rgba(255,255,255,0.2);
+      }
+
+      .insight-row {
+        display: flex;
+        gap: 1.5em;
+        flex-wrap: wrap;
+      }
+
+      .insight-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        flex: 1;
+        min-width: 140px;
+      }
+
+      .insight-icon {
+        font-size: 1.1em;
+        opacity: 0.9;
+      }
+
+      .insight-content {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .insight-label {
+        font-size: 0.7em;
+        opacity: 0.8;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .insight-value {
+        font-size: 0.9em;
+        font-weight: 500;
+        margin-top: 2px;
       }
 
       /* Responsive improvements */
