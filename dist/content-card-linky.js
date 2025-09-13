@@ -405,11 +405,36 @@ class ContentCardLinky extends LitElement {
     return weekTotal;
   }
 
-  renderWeekSummary(daily, unit_of_measurement, dailyweek, config) {
+  calculateWeekCost(dailyweek_cost, dailyweek) {
+    if (!dailyweek || !dailyweek_cost) return 0;
+
+    const today = new Date();
+    const mondayThisWeek = new Date(today);
+    mondayThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
+    mondayThisWeek.setHours(0, 0, 0, 0);
+
+    const dailyWeekArray = dailyweek.toString().split(",");
+    const dailyCostArray = dailyweek_cost.toString().split(",");
+    let weekCost = 0;
+
+    for (let i = 0; i < Math.min(dailyCostArray.length, dailyWeekArray.length); i++) {
+      const dayDate = new Date(dailyWeekArray[dailyCostArray.length - 1 - i]);
+      if (dayDate >= mondayThisWeek && dayDate <= today) {
+        const cost = parseFloat(dailyCostArray[dailyCostArray.length - 1 - i]);
+        if (!isNaN(cost) && cost !== -1) {
+          weekCost += cost;
+        }
+      }
+    }
+
+    return weekCost;
+  }
+
+  renderWeekSummary(daily, unit_of_measurement, dailyweek, dailyweek_cost, config) {
     if (!this.config.showWeekSummary && this.config.showWeekSummary !== undefined) return html``;
 
     const weekTotal = this.calculateWeekTotal(daily, dailyweek);
-    const weekCost = this.config.kWhPrice ? weekTotal * this.config.kWhPrice : null;
+    const weekCost = this.calculateWeekCost(dailyweek_cost, dailyweek);
     const today = new Date();
     const mondayThisWeek = new Date(today);
     mondayThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
@@ -426,7 +451,7 @@ class ContentCardLinky extends LitElement {
             <span class="week-summary-value">${this.toFloat(weekTotal, 1)}</span>
             <span class="week-summary-unit">${unit_of_measurement}</span>
           </div>
-          ${weekCost ? html`
+          ${weekCost > 0 ? html`
             <div class="week-summary-cost">
               <span class="week-summary-cost-value">${this.toFloat(weekCost, 2)}</span>
               <span class="week-summary-cost-unit">€</span>
@@ -444,7 +469,7 @@ class ContentCardLinky extends LitElement {
         if ( config.nbJoursAffichage <= nbJours ) { nbJours = config.nbJoursAffichage }
         return html
           `
-            ${this.renderWeekSummary(daily, unit_of_measurement, dailyweek, config)}
+            ${this.renderWeekSummary(daily, unit_of_measurement, dailyweek, dailyweek_cost, config)}
             <div class="week-history">
             ${this.renderTitreLigne(config)}
             ${daily.slice(0, nbJours).reverse().map((day, index) => this.renderDay(day, nbJours-index, unit_of_measurement, dailyweek, dailyweek_cost, dailyweek_costHC, dailyweek_costHP,
