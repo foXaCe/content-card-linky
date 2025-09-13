@@ -384,29 +384,38 @@ class ContentCardLinky extends LitElement {
   calculateWeekTotal(daily, dailyweek) {
     if (!daily) return 0;
 
-    // Calculer le nombre de jours depuis lundi
+    // Samedi = on veut lundi(5 jours avant) à samedi(0 jours avant)
     const today = new Date();
-    const daysSinceMonday = today.getDay() === 0 ? 6 : today.getDay() - 1; // 0 = dimanche
-    const daysToSum = daysSinceMonday + 1; // +1 pour inclure aujourd'hui
+    const daysSinceMonday = today.getDay() === 0 ? 6 : today.getDay() - 1;
+    const daysToSum = daysSinceMonday + 1;
 
     let weekTotal = 0;
 
-    // Prendre les X derniers jours (depuis lundi jusqu'à aujourd'hui)
-    for (let i = 0; i < Math.min(daysToSum, daily.length); i++) {
+    console.log(`=== DEBUG CALCUL SEMAINE ===`);
+    console.log(`Aujourd'hui: ${today.toLocaleDateString('fr-FR', {weekday: 'long'})} (jour ${today.getDay()})`);
+    console.log(`Jours depuis lundi: ${daysSinceMonday}, total à sommer: ${daysToSum}`);
+    console.log(`Array daily (${daily.length} jours):`, daily);
+
+    // HYPOTHÈSE: daily[0] = aujourd'hui, daily[1] = hier, etc.
+    // Pour la semaine: prendre daily[daysSinceMonday] à daily[0] (ordre inversé)
+    for (let i = 0; i < daysToSum && i < daily.length; i++) {
       const consumption = parseFloat(daily[i]);
+      const dayName = new Date(today.getTime() - (i * 24 * 60 * 60 * 1000)).toLocaleDateString('fr-FR', {weekday: 'short'});
+
+      console.log(`Jour -${i} (${dayName}): ${consumption} kWh`);
+
       if (!isNaN(consumption) && consumption !== -1) {
         weekTotal += consumption;
       }
     }
 
-    console.log(`Jours depuis lundi: ${daysSinceMonday}, jours à sommer: ${daysToSum}, total: ${weekTotal}`);
+    console.log(`Total semaine: ${weekTotal} kWh`);
     return weekTotal;
   }
 
   calculateWeekCost(dailyweek_cost, dailyweek) {
     if (!dailyweek_cost) return 0;
 
-    // Calculer le nombre de jours depuis lundi
     const today = new Date();
     const daysSinceMonday = today.getDay() === 0 ? 6 : today.getDay() - 1;
     const daysToSum = daysSinceMonday + 1;
@@ -414,15 +423,21 @@ class ContentCardLinky extends LitElement {
     const dailyCostArray = dailyweek_cost.toString().split(",");
     let weekCost = 0;
 
-    // Prendre les X derniers jours
-    for (let i = 0; i < Math.min(daysToSum, dailyCostArray.length); i++) {
+    console.log(`=== DEBUG COÛT SEMAINE ===`);
+    console.log(`Array coûts (${dailyCostArray.length} jours):`, dailyCostArray);
+
+    for (let i = 0; i < daysToSum && i < dailyCostArray.length; i++) {
       const cost = parseFloat(dailyCostArray[i]);
+      const dayName = new Date(today.getTime() - (i * 24 * 60 * 60 * 1000)).toLocaleDateString('fr-FR', {weekday: 'short'});
+
+      console.log(`Jour -${i} (${dayName}): ${cost} €`);
+
       if (!isNaN(cost) && cost !== -1) {
         weekCost += cost;
       }
     }
 
-    console.log(`Coûts depuis lundi: jours=${daysToSum}, total=${weekCost}, données=${dailyCostArray.slice(0, daysToSum)}`);
+    console.log(`Total coût semaine: ${weekCost} €`);
     return weekCost;
   }
 
@@ -1597,8 +1612,8 @@ class ContentCardLinky extends LitElement {
 
       .week-summary-cost {
         display: flex;
-        flex-direction: column;
-        align-items: center;
+        align-items: baseline;
+        gap: 0.2em;
         text-align: center;
       }
 
@@ -1606,12 +1621,13 @@ class ContentCardLinky extends LitElement {
         font-size: 1.8em;
         font-weight: 500;
         text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        white-space: nowrap;
       }
 
       .week-summary-cost-unit {
-        font-size: 1em;
+        font-size: 1.2em;
         opacity: 0.9;
-        margin-top: -0.2em;
+        white-space: nowrap;
       }
 
       /* Responsive improvements */
