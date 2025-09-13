@@ -392,17 +392,6 @@ class ContentCardLinky extends LitElement {
     // Dans daily[], index 0 = aujourd'hui, index 1 = hier, etc.
     // Pour calculer lundi à aujourd'hui, on va de l'index daysSinceMonday à l'index 0
 
-    console.log(`DEBUG: Calcul hebdomadaire - aujourd'hui ${today.toLocaleDateString('fr-FR', {weekday: 'long'})}`);
-    console.log(`DEBUG: daily array:`, daily);
-    console.log(`DEBUG: Jours depuis lundi: ${daysSinceMonday}, donc prendre index ${daysSinceMonday} à 0`);
-
-    // Stocker les détails pour affichage debug dans UI
-    this._debugWeeklyDetails = {
-      today: today.toLocaleDateString('fr-FR', {weekday: 'long'}),
-      daysSinceMonday: daysSinceMonday,
-      dailyLength: daily.length,
-      values: []
-    };
 
     // Parcourir de lundi à vendredi (exclure dimanche, aujourd'hui n'existe pas encore)
     // Si on est samedi (daysSinceMonday=5), prendre index 4,3,2,1,0 (lundi à vendredi)
@@ -414,18 +403,14 @@ class ContentCardLinky extends LitElement {
         const dayOfWeek = dayDate.getDay(); // 0=dimanche, 1=lundi, etc.
 
         const consumption = parseFloat(daily[i]);
-        console.log(`DEBUG: Index ${i} (il y a ${i} jours, ${dayOfWeek === 0 ? 'dimanche' : dayOfWeek === 1 ? 'lundi' : dayOfWeek === 2 ? 'mardi' : dayOfWeek === 3 ? 'mercredi' : dayOfWeek === 4 ? 'jeudi' : dayOfWeek === 5 ? 'vendredi' : 'samedi'}): ${consumption} kWh`);
-        this._debugWeeklyDetails.values.push({index: i, value: consumption, daysAgo: i, dayOfWeek: dayOfWeek});
 
-        // Ne prendre que lundi à vendredi (pas dimanche ni aujourd'hui)
+        // Ne prendre que lundi à vendredi (pas dimanche)
         if (dayOfWeek !== 0 && !isNaN(consumption) && consumption !== -1) {
           weekTotal += consumption;
         }
       }
     }
 
-    console.log(`DEBUG: Total calculé: ${weekTotal} kWh`);
-    this._debugWeeklyDetails.total = weekTotal;
     return weekTotal;
   }
 
@@ -481,17 +466,6 @@ class ContentCardLinky extends LitElement {
             </div>
           `}
 
-          ${this._debugWeeklyDetails ? html`
-            <div class="week-debug-info" style="font-size: 0.7em; background: rgba(255,255,255,0.1); padding: 8px; margin-top: 8px; border-radius: 4px;">
-              <div><strong>Debug Calcul:</strong></div>
-              <div>${this._debugWeeklyDetails.today} - Jours depuis lundi: ${this._debugWeeklyDetails.daysSinceMonday}</div>
-              <div>Array length: ${this._debugWeeklyDetails.dailyLength}, prendre index ${this._debugWeeklyDetails.daysSinceMonday-1} à 0 (lundi à vendredi)</div>
-              <div style="margin-top: 4px;">
-                ${this._debugWeeklyDetails.values.map(v => html`<div>Index ${v.index} (${v.dayOfWeek === 0 ? 'dimanche' : v.dayOfWeek === 1 ? 'lundi' : v.dayOfWeek === 2 ? 'mardi' : v.dayOfWeek === 3 ? 'mercredi' : v.dayOfWeek === 4 ? 'jeudi' : v.dayOfWeek === 5 ? 'vendredi' : 'samedi'}): ${v.value} kWh ${v.dayOfWeek === 0 ? '(EXCLU)' : '(INCLUS)'}</div>`)}
-              </div>
-              <div><strong>Total: ${this._debugWeeklyDetails.total} kWh</strong></div>
-            </div>
-          ` : html``}
         </div>
       </div>
     `;
