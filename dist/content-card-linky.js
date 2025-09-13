@@ -529,7 +529,14 @@ class ContentCardLinky extends LitElement {
 
   renderSmartInsights(daily, weekTotal, weekCost) {
     // Utiliser les données réelles de l'entité si disponibles
+    console.log('DEBUG Entity name:', this.config.entity);
     const entity = this.hass.states[this.config.entity];
+    console.log('DEBUG Entity found:', !!entity);
+    console.log('DEBUG Evolution attrs:', entity ? {
+      current_week_evolution: entity.attributes.current_week_evolution,
+      monthly_evolution: entity.attributes.monthly_evolution,
+      yearly_evolution: entity.attributes.yearly_evolution
+    } : 'NO ENTITY');
     const attributes = entity ? entity.attributes : {};
 
     // Prédiction mensuelle basée sur la tendance actuelle
@@ -539,22 +546,10 @@ class ContentCardLinky extends LitElement {
       (weekTotal / 5) * 30;
     const monthlyCostPrediction = (weekCost / 5) * 30;
 
-    // Debug : afficher tous les attributs disponibles
-    console.log('DEBUG Smart Insights - ALL ATTRIBUTES:', Object.keys(attributes));
-    console.log('DEBUG Smart Insights - Full attributes object:', attributes);
-
-    // Utiliser les évolutions directes de l'entité (noms d'attributs corrects)
-    console.log('DEBUG Smart Insights - Week evolution raw:', attributes['current_week_evolution']);
-    console.log('DEBUG Smart Insights - Monthly evolution raw:', attributes['monthly_evolution']);
-    console.log('DEBUG Smart Insights - Yearly evolution raw:', attributes['yearly_evolution']);
-
-    const weekEvolution = parseFloat((attributes['current_week_evolution'] || '0').toString().replace(',', '.'));
-    const monthlyEvolution = parseFloat((attributes['monthly_evolution'] || '0').toString().replace(',', '.'));
-    const yearlyEvolution = parseFloat((attributes['yearly_evolution'] || '0').toString().replace(',', '.'));
-
-    console.log('DEBUG Smart Insights - Week parsed:', weekEvolution);
-    console.log('DEBUG Smart Insights - Month parsed:', monthlyEvolution);
-    console.log('DEBUG Smart Insights - Year parsed:', yearlyEvolution);
+    // Utiliser les évolutions directes de l'entité
+    const weekEvolution = parseFloat((attributes['current_week_evolution'] || 0).toString().replace(',', '.'));
+    const monthlyEvolution = parseFloat((attributes['monthly_evolution'] || 0).toString().replace(',', '.'));
+    const yearlyEvolution = parseFloat((attributes['yearly_evolution'] || 0).toString().replace(',', '.'));
 
     // Insights intelligents avec données réelles
     const isGoodWeekTrend = weekEvolution < 0;
@@ -1220,6 +1215,7 @@ class ContentCardLinky extends LitElement {
   } 
 
 
+  // Cache buster: v20250913-001
   static get styles() {
     return css`
       .card {
