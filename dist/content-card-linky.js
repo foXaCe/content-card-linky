@@ -382,7 +382,7 @@ class ContentCardLinky extends LitElement {
   }
 
   calculateWeekTotal(daily, dailyweek) {
-    if (!daily) return 0;
+    if (!dailyweek) return 0;
 
     // Samedi = on veut lundi(5 jours avant) à samedi(0 jours avant)
     const today = new Date();
@@ -395,10 +395,11 @@ class ContentCardLinky extends LitElement {
     console.log(`Aujourd'hui: ${today.toLocaleDateString('fr-FR', {weekday: 'long'})} (jour ${today.getDay()})`);
     console.log(`Jours depuis lundi: ${daysSinceMonday}, total à sommer: ${daysToSum}`);
 
-    // CORRECTION: daily[0] = jour le plus ancien, donc prendre les DERNIERS éléments
-    const startIndex = Math.max(0, daily.length - daysToSum);
-    for (let i = startIndex; i < daily.length; i++) {
-      const consumption = parseFloat(daily[i]);
+    // CORRECTION: utiliser dailyweek au lieu de daily pour avoir les mêmes données que l'affichage
+    const dailyweekArray = dailyweek.toString().split(",");
+    const startIndex = Math.max(0, dailyweekArray.length - daysToSum);
+    for (let i = startIndex; i < dailyweekArray.length; i++) {
+      const consumption = parseFloat(dailyweekArray[i]);
       const dayIndex = i - startIndex;
       const dayName = new Date(today.getTime() - ((daysToSum - 1 - dayIndex) * 24 * 60 * 60 * 1000)).toLocaleDateString('fr-FR', {weekday: 'short'});
 
