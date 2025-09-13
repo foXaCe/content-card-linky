@@ -519,33 +519,35 @@ class ContentCardLinky extends LitElement {
   }
 
   renderSmartInsights(daily, weekTotal, weekCost) {
+    // Utiliser les données réelles de l'entité si disponibles
+    const entity = this.hass.states[this.config.entity];
+    const attributes = entity ? entity.attributes : {};
+
     // Prédiction mensuelle basée sur la tendance actuelle
-    const monthlyPrediction = (weekTotal / 5) * 30; // Moyenne journalière * 30 jours
+    const currentMonth = attributes['Current month'] || 0;
+    const monthlyPrediction = attributes['Current month'] ?
+      (currentMonth / new Date().getDate()) * new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() :
+      (weekTotal / 5) * 30;
     const monthlyCostPrediction = (weekCost / 5) * 30;
 
-    // Comparaison avec semaine précédente (7 jours avant)
-    // Cette semaine: index 4,3,2,1,0 (lundi à vendredi)
-    // Semaine dernière: index 11,10,9,8,7 (lundi à vendredi d'avant)
-    let lastWeekTotal = 0;
-    if (daily.length >= 12) {
-      // Prendre les mêmes jours de la semaine d'avant (décalage de 7 jours)
-      for (let i = 11; i >= 7; i--) {
-        if (i < daily.length) {
-          const consumption = parseFloat(daily[i]);
-          if (!isNaN(consumption) && consumption !== -1) {
-            lastWeekTotal += consumption;
-          }
-        }
-      }
-    }
+    // Utiliser les évolutions directes de l'entité
+    const weekEvolution = attributes['Current week evolution'] || 0;
+    const monthlyEvolution = attributes['Monthly evolution'] || 0;
+    const yearlyEvolution = attributes['Yearly evolution'] || 0;
 
-    const weekComparison = weekTotal - lastWeekTotal;
-    const comparisonPercent = lastWeekTotal > 0 ? ((weekComparison / lastWeekTotal) * 100).toFixed(1) : 0;
+    // Insights intelligents avec données réelles
+    const isGoodWeekTrend = weekEvolution < 0;
+    const isGoodMonthTrend = monthlyEvolution < 0;
+    const isGoodYearTrend = yearlyEvolution < 0;
 
-    // Insights intelligents
-    const isGoodTrend = weekComparison < 0;
-    const trendIcon = isGoodTrend ? 'mdi:trending-down' : 'mdi:trending-up';
-    const trendColor = isGoodTrend ? '#4caf50' : '#f44336';
+    const weekTrendIcon = isGoodWeekTrend ? 'mdi:trending-down' : 'mdi:trending-up';
+    const weekTrendColor = isGoodWeekTrend ? '#4caf50' : '#f44336';
+
+    const monthTrendIcon = isGoodMonthTrend ? 'mdi:trending-down' : 'mdi:trending-up';
+    const monthTrendColor = isGoodMonthTrend ? '#4caf50' : '#f44336';
+
+    const yearTrendIcon = isGoodYearTrend ? 'mdi:trending-down' : 'mdi:trending-up';
+    const yearTrendColor = isGoodYearTrend ? '#4caf50' : '#f44336';
 
     return html`
       <div class="smart-insights">
@@ -559,11 +561,33 @@ class ContentCardLinky extends LitElement {
           </div>
 
           <div class="insight-item">
-            <ha-icon icon="${trendIcon}" class="insight-icon" style="color: ${trendColor}"></ha-icon>
+            <ha-icon icon="${weekTrendIcon}" class="insight-icon" style="color: ${weekTrendColor}"></ha-icon>
             <div class="insight-content">
               <div class="insight-label">vs semaine dernière</div>
-              <div class="insight-value" style="color: ${trendColor}">
-                ${comparisonPercent > 0 ? '+' : ''}${comparisonPercent}%
+              <div class="insight-value" style="color: ${weekTrendColor}">
+                ${weekEvolution > 0 ? '+' : ''}${weekEvolution}%
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="insight-row">
+          <div class="insight-item">
+            <ha-icon icon="${monthTrendIcon}" class="insight-icon" style="color: ${monthTrendColor}"></ha-icon>
+            <div class="insight-content">
+              <div class="insight-label">vs mois dernier</div>
+              <div class="insight-value" style="color: ${monthTrendColor}">
+                ${monthlyEvolution > 0 ? '+' : ''}${monthlyEvolution}%
+              </div>
+            </div>
+          </div>
+
+          <div class="insight-item">
+            <ha-icon icon="${yearTrendIcon}" class="insight-icon" style="color: ${yearTrendColor}"></ha-icon>
+            <div class="insight-content">
+              <div class="insight-label">vs année dernière</div>
+              <div class="insight-value" style="color: ${yearTrendColor}">
+                ${yearlyEvolution > 0 ? '+' : ''}${yearlyEvolution}%
               </div>
             </div>
           </div>
