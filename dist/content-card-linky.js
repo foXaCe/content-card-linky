@@ -405,7 +405,8 @@ class ContentCardLinky extends LitElement {
     };
 
     // Parcourir de lundi à hier (exclure aujourd'hui et dimanche)
-    for (let i = daysSinceMonday; i >= 1; i--) { // Commencer à partir de index 1 (hier)
+    // Si on est vendredi (daysSinceMonday=4), prendre index 4,3,2,1 (lundi à jeudi)
+    for (let i = Math.min(daysSinceMonday, daily.length-1); i >= 1; i--) { // Commencer à partir de lundi, pas dimanche
       if (i < daily.length) {
         // Calculer quel jour de la semaine correspond à cet index
         const dayDate = new Date();
