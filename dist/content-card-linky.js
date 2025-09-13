@@ -890,7 +890,7 @@ class ContentCardLinky extends LitElement {
       
       @media (max-width: 768px) {
         .card {
-          padding: 2.5em 1em 1em 1em;
+          padding: 2em 1em 1em 1em;
         }
         .main-title {
           font-size: 1.8em;
@@ -920,7 +920,7 @@ class ContentCardLinky extends LitElement {
       
       @media (max-width: 480px) {
         .card {
-          padding: 3em 0.8em 1em 0.8em;
+          padding: 2.2em 0.8em 1em 0.8em;
         }
         .main-title {
           font-size: 1.6em;
