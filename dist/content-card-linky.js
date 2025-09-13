@@ -395,12 +395,14 @@ class ContentCardLinky extends LitElement {
     console.log(`Aujourd'hui: ${today.toLocaleDateString('fr-FR', {weekday: 'long'})} (jour ${today.getDay()})`);
     console.log(`Jours depuis lundi: ${daysSinceMonday}, total à sommer: ${daysToSum}`);
 
-    // HYPOTHÈSE: daily[0] = aujourd'hui, daily[1] = hier, etc.
-    for (let i = 0; i < daysToSum && i < daily.length; i++) {
+    // CORRECTION: daily[0] = jour le plus ancien, donc prendre les DERNIERS éléments
+    const startIndex = Math.max(0, daily.length - daysToSum);
+    for (let i = startIndex; i < daily.length; i++) {
       const consumption = parseFloat(daily[i]);
-      const dayName = new Date(today.getTime() - (i * 24 * 60 * 60 * 1000)).toLocaleDateString('fr-FR', {weekday: 'short'});
+      const dayIndex = i - startIndex;
+      const dayName = new Date(today.getTime() - ((daysToSum - 1 - dayIndex) * 24 * 60 * 60 * 1000)).toLocaleDateString('fr-FR', {weekday: 'short'});
 
-      console.log(`Jour -${i} (${dayName}): ${consumption} kWh`);
+      console.log(`Jour ${i} (${dayName}): ${consumption} kWh`);
 
       if (!isNaN(consumption) && consumption !== -1) {
         weekTotal += consumption;
@@ -424,11 +426,14 @@ class ContentCardLinky extends LitElement {
     console.log(`=== DEBUG COÛT SEMAINE ===`);
     console.log(`Array coûts (${dailyCostArray.length} jours):`, dailyCostArray);
 
-    for (let i = 0; i < daysToSum && i < dailyCostArray.length; i++) {
+    // CORRECTION: dailyCostArray[0] = jour le plus ancien, donc prendre les DERNIERS éléments
+    const startIndex = Math.max(0, dailyCostArray.length - daysToSum);
+    for (let i = startIndex; i < dailyCostArray.length; i++) {
       const cost = parseFloat(dailyCostArray[i]);
-      const dayName = new Date(today.getTime() - (i * 24 * 60 * 60 * 1000)).toLocaleDateString('fr-FR', {weekday: 'short'});
+      const dayIndex = i - startIndex;
+      const dayName = new Date(today.getTime() - ((daysToSum - 1 - dayIndex) * 24 * 60 * 60 * 1000)).toLocaleDateString('fr-FR', {weekday: 'short'});
 
-      console.log(`Jour -${i} (${dayName}): ${cost} €`);
+      console.log(`Jour ${i} (${dayName}): ${cost} €`);
 
       if (!isNaN(cost) && cost !== -1) {
         weekCost += cost;
