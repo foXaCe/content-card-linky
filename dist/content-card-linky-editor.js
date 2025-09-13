@@ -39,23 +39,23 @@ export class contentCardLinkyEditor extends LitElement {
   }
 
   get _entity() {
-    return this._config.entity || "";
+    return (this._config && this._config.entity) || "";
   }
   
   get _ewEntity() {
-    return this._config.ewEntity || "";
+    return (this._config && this._config.ewEntity) || "";
   }
   
   get _ewEntityJ1() {
-    return this._config.ewEntityJ1 || "";
+    return (this._config && this._config.ewEntityJ1) || "";
   }
 
   get _ewEntityJ2() {
-    return this._config.ewEntityJ2 || "";
+    return (this._config && this._config.ewEntityJ2) || "";
   }  
   
   get _tempoEntity() {
-    return this._config.tempoEntityInfo || "";
+    return (this._config && this._config.tempoEntityInfo) || "";
   }
 
   get _tempoEntityInfo() {
@@ -63,113 +63,113 @@ export class contentCardLinkyEditor extends LitElement {
   }  
   
   get _tempoEntityJ0() {
-    return this._config.tempoEntityJ0 || "";
+    return (this._config && this._config.tempoEntityJ0) || "";
   }
 
   get _tempoEntityJ1() {
-    return this._config.tempoEntityJ1 || "";
+    return (this._config && this._config.tempoEntityJ1) || "";
   }    
 
   get _name() {
-    return this._config.name || "";
+    return (this._config && this._config.name) || "";
   }
 
   get _showIcon() {
-    return this._config.showIcon !== false;
+    return (this._config && this._config.showIcon) !== false;
   }
 
   get _showHeader() {
-    return this._config.showHeader !== false;
+    return (this._config && this._config.showHeader) !== false;
   }
 
   get _showHistory() {
-    return this._config.showHistory !== false;
+    return (this._config && this._config.showHistory) !== false;
   }
   
   get _showPeakOffPeak() {
-    return this._config.showPeakOffPeak !== false;
+    return (this._config && this._config.showPeakOffPeak) !== false;
   }
   
   get _showInTableUnit() {
-    return this._config.showInTableUnit !== false;
+    return (this._config && this._config.showInTableUnit) !== false;
   }
   
   get _showDayPrice() {
-    return this._config.showDayPrice !== false;
+    return (this._config && this._config.showDayPrice) !== false;
   }
   
   get _showDayPriceHCHP() {
-    return this._config.showDayPriceHCHP !== false;
+    return (this._config && this._config.showDayPriceHCHP) !== false;
   }
 
   get _showDayMaxPower() {
-    return this._config.showDayMaxPower !== false;
+    return (this._config && this._config.showDayMaxPower) !== false;
   }
   
   get _showPrice() {
-    return this._config.showPrice !== false;
+    return (this._config && this._config.showPrice) !== false;
   }
   
   get _showTitle() {
-    return this._config.showTitle !== false;
+    return (this._config && this._config.showTitle) !== false;
   }
   
   get _showDayHCHP() {
-    return this._config.showDayHCHP !== false;
+    return (this._config && this._config.showDayHCHP) !== false;
   }
   
   get _showCurrentMonthRatio() {
-    return this._config.showCurrentMonthRatio !== false;
+    return (this._config && this._config.showCurrentMonthRatio) !== false;
   }
   
   get _showMonthRatio() {
-    return this._config.showMonthRatio !== false;
+    return (this._config && this._config.showMonthRatio) !== false;
   }
   
   get _showYearRatio() {
-    return this._config.showYearRatio !== false;
+    return (this._config && this._config.showYearRatio) !== false;
   }
   
   get _showWeekRatio() {
-    return this._config.showWeekRatio !== false;
+    return (this._config && this._config.showWeekRatio) !== false;
   }
   
   get _showYesterdayRatio() {
-    return this._config.showYesterdayRatio !== false;
+    return (this._config && this._config.showYesterdayRatio) !== false;
   }
   get _showError() {
-    return this._config.showError !== false;
+    return (this._config && this._config.showError) !== false;
   }
   get _showTitleLign() {
-    return this._config.showTitleLign !== false;
+    return (this._config && this._config.showTitleLign) !== false;
   }
   get _showEcoWatt() {
-    return this._config.showEcoWatt !== false;
+    return (this._config && this._config.showEcoWatt) !== false;
   }
   get _showEcoWattJ12() {
-    return this._config.showEcoWattJ12 !== false;
+    return (this._config && this._config.showEcoWattJ12) !== false;
   }
   get _showTempo() {
-    return this._config.showTempo !== false;
+    return (this._config && this._config.showTempo) !== false;
   }
 get _showTempoColor() {
-    return this._config.showTempoColor !== false;
+    return (this._config && this._config.showTempoColor) !== false;
   }
 
   get _showSmartInsights() {
-    return this._config.showSmartInsights !== false;
+    return (this._config && this._config.showSmartInsights) !== false;
   }
 
   get _title() {
-    return this._config.showTitle !== false;
+    return (this._config && this._config.showTitle) !== false;
   }
   
   get _current() {
-    return this._config.current !== false;
+    return (this._config && this._config.current) !== false;
   }
 
   get _details() {
-    return this._config.details !== false;
+    return (this._config && this._config.details) !== false;
   }
 
   get _nbJoursAffichage() {
