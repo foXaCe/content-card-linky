@@ -382,51 +382,47 @@ class ContentCardLinky extends LitElement {
   }
 
   calculateWeekTotal(daily, dailyweek) {
-    if (!dailyweek || !daily) return 0;
+    if (!daily) return 0;
 
+    // Calculer le nombre de jours depuis lundi
     const today = new Date();
-    const mondayThisWeek = new Date(today);
-    mondayThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
-    mondayThisWeek.setHours(0, 0, 0, 0);
+    const daysSinceMonday = today.getDay() === 0 ? 6 : today.getDay() - 1; // 0 = dimanche
+    const daysToSum = daysSinceMonday + 1; // +1 pour inclure aujourd'hui
 
-    const dailyWeekArray = dailyweek.toString().split(",");
     let weekTotal = 0;
 
-    for (let i = 0; i < Math.min(daily.length, dailyWeekArray.length); i++) {
-      const dayDate = new Date(dailyWeekArray[daily.length - 1 - i]);
-      if (dayDate >= mondayThisWeek && dayDate <= today) {
-        const consumption = parseFloat(daily[daily.length - 1 - i]);
-        if (!isNaN(consumption) && consumption !== -1) {
-          weekTotal += consumption;
-        }
+    // Prendre les X derniers jours (depuis lundi jusqu'à aujourd'hui)
+    for (let i = 0; i < Math.min(daysToSum, daily.length); i++) {
+      const consumption = parseFloat(daily[i]);
+      if (!isNaN(consumption) && consumption !== -1) {
+        weekTotal += consumption;
       }
     }
 
+    console.log(`Jours depuis lundi: ${daysSinceMonday}, jours à sommer: ${daysToSum}, total: ${weekTotal}`);
     return weekTotal;
   }
 
   calculateWeekCost(dailyweek_cost, dailyweek) {
-    if (!dailyweek || !dailyweek_cost) return 0;
+    if (!dailyweek_cost) return 0;
 
+    // Calculer le nombre de jours depuis lundi
     const today = new Date();
-    const mondayThisWeek = new Date(today);
-    mondayThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
-    mondayThisWeek.setHours(0, 0, 0, 0);
+    const daysSinceMonday = today.getDay() === 0 ? 6 : today.getDay() - 1;
+    const daysToSum = daysSinceMonday + 1;
 
-    const dailyWeekArray = dailyweek.toString().split(",");
     const dailyCostArray = dailyweek_cost.toString().split(",");
     let weekCost = 0;
 
-    for (let i = 0; i < Math.min(dailyCostArray.length, dailyWeekArray.length); i++) {
-      const dayDate = new Date(dailyWeekArray[dailyCostArray.length - 1 - i]);
-      if (dayDate >= mondayThisWeek && dayDate <= today) {
-        const cost = parseFloat(dailyCostArray[dailyCostArray.length - 1 - i]);
-        if (!isNaN(cost) && cost !== -1) {
-          weekCost += cost;
-        }
+    // Prendre les X derniers jours
+    for (let i = 0; i < Math.min(daysToSum, dailyCostArray.length); i++) {
+      const cost = parseFloat(dailyCostArray[i]);
+      if (!isNaN(cost) && cost !== -1) {
+        weekCost += cost;
       }
     }
 
+    console.log(`Coûts depuis lundi: jours=${daysToSum}, total=${weekCost}, données=${dailyCostArray.slice(0, daysToSum)}`);
     return weekCost;
   }
 
