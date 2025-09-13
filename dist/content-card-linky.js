@@ -541,12 +541,12 @@ class ContentCardLinky extends LitElement {
 
     // Utiliser les évolutions directes de l'entité (parser les virgules françaises)
     console.log('DEBUG Smart Insights - Raw attributes:', {
-      'Current week evolution': attributes['Current week evolution'],
+      'Weekly evolution': attributes['Weekly evolution'],
       'Monthly evolution': attributes['Monthly evolution'],
       'Yearly evolution': attributes['Yearly evolution']
     });
 
-    const weekEvolution = parseFloat((attributes['Current week evolution'] || '0').toString().replace(',', '.'));
+    const weekEvolution = parseFloat((attributes['Weekly evolution'] || '0').toString().replace(',', '.'));
     const monthlyEvolution = parseFloat((attributes['Monthly evolution'] || '0').toString().replace(',', '.'));
     const yearlyEvolution = parseFloat((attributes['Yearly evolution'] || '0').toString().replace(',', '.'));
 
@@ -1769,8 +1769,6 @@ class ContentCardLinky extends LitElement {
       /* Smart Insights */
       .smart-insights {
         margin-top: 1em;
-        padding-top: 1em;
-        border-top: 1px solid rgba(255,255,255,0.2);
       }
 
       .insight-row {
