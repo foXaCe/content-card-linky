@@ -404,9 +404,9 @@ class ContentCardLinky extends LitElement {
       values: []
     };
 
-    // Parcourir de lundi à hier (exclure aujourd'hui et dimanche)
-    // Si on est vendredi (daysSinceMonday=4), prendre index 4,3,2,1 (lundi à jeudi)
-    for (let i = Math.min(daysSinceMonday, daily.length-1); i >= 1; i--) { // Commencer à partir de lundi, pas dimanche
+    // Parcourir de lundi à vendredi (exclure dimanche, aujourd'hui n'existe pas encore)
+    // Si on est samedi (daysSinceMonday=5), prendre index 4,3,2,1,0 (lundi à vendredi)
+    for (let i = Math.min(daysSinceMonday-1, daily.length-1); i >= 0; i--) { // De lundi (daysSinceMonday-1) à vendredi (0)
       if (i < daily.length) {
         // Calculer quel jour de la semaine correspond à cet index
         const dayDate = new Date();
@@ -485,7 +485,7 @@ class ContentCardLinky extends LitElement {
             <div class="week-debug-info" style="font-size: 0.7em; background: rgba(255,255,255,0.1); padding: 8px; margin-top: 8px; border-radius: 4px;">
               <div><strong>Debug Calcul:</strong></div>
               <div>${this._debugWeeklyDetails.today} - Jours depuis lundi: ${this._debugWeeklyDetails.daysSinceMonday}</div>
-              <div>Array length: ${this._debugWeeklyDetails.dailyLength}, prendre index ${this._debugWeeklyDetails.daysSinceMonday} à 1 (exclure aujourd'hui)</div>
+              <div>Array length: ${this._debugWeeklyDetails.dailyLength}, prendre index ${this._debugWeeklyDetails.daysSinceMonday-1} à 0 (lundi à vendredi)</div>
               <div style="margin-top: 4px;">
                 ${this._debugWeeklyDetails.values.map(v => html`<div>Index ${v.index} (${v.dayOfWeek === 0 ? 'dimanche' : v.dayOfWeek === 1 ? 'lundi' : v.dayOfWeek === 2 ? 'mardi' : v.dayOfWeek === 3 ? 'mercredi' : v.dayOfWeek === 4 ? 'jeudi' : v.dayOfWeek === 5 ? 'vendredi' : 'samedi'}): ${v.value} kWh ${v.dayOfWeek === 0 ? '(EXCLU)' : '(INCLUS)'}</div>`)}
               </div>
