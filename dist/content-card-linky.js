@@ -466,7 +466,7 @@ class ContentCardLinky extends LitElement {
           </div>
           ${weekCost > 0 ? html`
             <div class="week-summary-cost">
-              <span class="week-summary-cost-value">${this.toFloat(weekCost, 2)}</span>
+              <span class="week-summary-cost-value">${weekCost % 1 === 0 ? weekCost.toFixed(0) : this.toFloat(weekCost, 2)}</span>
               <span class="week-summary-cost-unit">€</span>
             </div>
           ` : html``}
