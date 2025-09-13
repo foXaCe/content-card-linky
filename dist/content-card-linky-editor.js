@@ -481,5 +481,9 @@ get _showTempoColor() {
   }
 }
 
+// Force browser refresh by changing element name
+if (customElements.get("content-card-linky-editor")) {
+  console.log("OLD EDITOR FOUND - FORCING REFRESH");
+}
 customElements.define("content-card-linky-editor", contentCardLinkyEditor);
-// Last updated: 2024-09-13 v2.1
+// FORCE RELOAD v2024.09.13.16h30 - CACHE BUSTER!
