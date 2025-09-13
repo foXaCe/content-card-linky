@@ -29,6 +29,7 @@ const css = LitElement.prototype.css;
 const HELPERS = window.loadCardHelpers();
 
 export class contentCardLinkyEditor extends LitElement {
+  // Version 2024.1 - Interface modernisée
   setConfig(config) {
     this._config = { ...config };
   }
@@ -481,3 +482,4 @@ get _showTempoColor() {
 }
 
 customElements.define("content-card-linky-editor", contentCardLinkyEditor);
+// Last updated: 2024-09-13 v2.1
