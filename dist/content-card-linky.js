@@ -486,11 +486,11 @@ class ContentCardLinky extends LitElement {
             ${this.renderWeekSummary(daily, unit_of_measurement, dailyweek, dailyweek_cost, config)}
             <div class="week-history">
             ${this.renderTitreLigne(config)}
-            ${daily.slice(-nbJours).reverse().map((day, index) => {
+            ${daily.slice(-nbJours).map((day, index) => {
               const dayIndex = daily.length - nbJours + index + 1;
               return this.renderDay(day, dayIndex, unit_of_measurement, dailyweek, dailyweek_cost, dailyweek_costHC, dailyweek_costHP,
                 dailyweek_HC, dailyweek_HP, dailyweek_MP, dailyweek_MP_over, dailyweek_MP_time, dailyweek_Tempo, config);
-            })}
+            }).reverse()}
             </div>
           `
         }
