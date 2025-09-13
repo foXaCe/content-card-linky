@@ -585,11 +585,13 @@ class ContentCardLinky extends LitElement {
 
     if (config.showTempoColor) {
       finalColor = this.getTempoColorForDay(valueC, dayNumber, dayDate);
+      // Debug log
+      console.log(`Jour ${dayNumber}, date: ${dayDate}, couleur tempo: ${finalColor}`);
     }
 
     return html
     `
-    <span class="tempoday-${finalColor}">${new Date(dayDate).toLocaleDateString('fr-FR', {weekday: config.showDayName})}</span>
+    <span class="tempoday-${finalColor}" title="Tempo: ${finalColor}">${new Date(dayDate).toLocaleDateString('fr-FR', {weekday: config.showDayName})}</span>
     `;
   }
   renderNoData(){
@@ -1375,12 +1377,15 @@ class ContentCardLinky extends LitElement {
 	text-transform: capitalize;
       }
 	  .tempoday-blue {
-        color: var(--accent-color, var(--primary-color, #009dfa));
+        color: white !important;
+        background: var(--accent-color, var(--primary-color, #009dfa)) !important;
 		font-weight: bold;
 	text-align: center;
-        background: var(--ha-card-background, var(--card-background-color, var(--primary-background-color)));
     	box-shadow: var(--ha-card-box-shadow,none);
 	text-transform: capitalize;
+        border-radius: 4px;
+        padding: 2px 4px;
+        margin: 1px;
       }
       .tempo-white {
         color: var(--text-primary-color, var(--primary-text-color, #002654));
@@ -1391,15 +1396,25 @@ class ContentCardLinky extends LitElement {
 	text-transform: capitalize;
       }
 	  .tempoday-white {
+        color: #002654 !important;
+        background: white !important;
+        border: 1px solid #ccc !important;
 		font-weight: bold;
 	text-align: center;
 	text-transform: capitalize;
+        border-radius: 4px;
+        padding: 2px 4px;
+        margin: 1px;
       }
 	  .tempoday-grey {
+        color: white !important;
+        background: grey !important;
 		font-weight: bold;
-		background: grey;
 	text-align: center;
 	text-transform: capitalize;
+        border-radius: 4px;
+        padding: 2px 4px;
+        margin: 1px;
       }	  
       .tempo-red {
         color: white;
@@ -1410,12 +1425,15 @@ class ContentCardLinky extends LitElement {
      	text-transform: capitalize;
       }
 	  .tempoday-red {
-        color: var(--error-color, var(--red-color, #ff2700));
+        color: white !important;
+        background: var(--error-color, var(--red-color, #ff2700)) !important;
 		font-weight: bold;
 	text-align: center;
-        background: var(--ha-card-background, var(--card-background-color, var(--primary-background-color)));
     	box-shadow: var(--ha-card-box-shadow,none);
 	text-transform: capitalize;
+        border-radius: 4px;
+        padding: 2px 4px;
+        margin: 1px;
       }
       .tempo-grey {
         color: var(--text-primary-color, var(--primary-text-color, #002654));
