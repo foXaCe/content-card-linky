@@ -786,7 +786,6 @@ class ContentCardLinky extends LitElement {
       if (targetDate.toDateString() === today.toDateString() && tempoEntities.today) {
         const tempoEntity = this.hass.states[tempoEntities.today];
         if (tempoEntity && tempoEntity.state && tempoValues.has(tempoEntity.state)) {
-          console.log(`Tempo détecté pour aujourd'hui: ${tempoEntity.state} depuis ${tempoEntities.today}`);
           return tempoValues.get(tempoEntity.state);
         }
       }
@@ -795,7 +794,6 @@ class ContentCardLinky extends LitElement {
       if (targetDate.toDateString() === tomorrow.toDateString() && tempoEntities.tomorrow) {
         const tempoEntity = this.hass.states[tempoEntities.tomorrow];
         if (tempoEntity && tempoEntity.state && tempoValues.has(tempoEntity.state)) {
-          console.log(`Tempo détecté pour demain: ${tempoEntity.state} depuis ${tempoEntities.tomorrow}`);
           return tempoValues.get(tempoEntity.state);
         }
       }
