@@ -412,12 +412,12 @@ class ContentCardLinky extends LitElement {
             // Données réelles disponibles
             weekTotal += consumption;
           } else if (dailyweek_cost) {
-            // Données manquantes mais prix disponible - utiliser l'estimation
+            // Données manquantes mais vérifier si prix disponible
             const dailyCostArray = dailyweek_cost.toString().split(",");
             const dayPrice = parseFloat(dailyCostArray[i]?.replace(',', '.'));
 
             if (!isNaN(dayPrice) && dayPrice > 0) {
-              // Calculer estimation pour ce jour spécifique
+              // Prix disponible mais pas kWh - utiliser l'estimation
               let validRatios = [];
 
               // Utiliser les autres jours disponibles pour calculer le ratio moyen
@@ -440,6 +440,7 @@ class ContentCardLinky extends LitElement {
                 }
               }
             }
+            // Si ni prix ni kWh : on ne fait rien (données en attente, pas incluses dans le total)
           }
         }
       }
@@ -853,6 +854,13 @@ class ContentCardLinky extends LitElement {
              <br><span class="cons-val" title="Donnée indisponible"><ha-icon id="icon" icon="mdi:alert-outline"></ha-icon></span>
            ` ;
   }
+
+  renderPendingData(){
+     return html
+          `
+             <br><span class="cons-val pending" title="Données en attente de remontée"><ha-icon id="icon" icon="mdi:clock-outline" style="color: #ff9800;"></ha-icon></span>
+           ` ;
+  }
   estimateMissingKwh(daily, dayNumber, dailyweek_cost) {
     if (!daily || !dailyweek_cost) return 0;
 
@@ -942,7 +950,13 @@ class ContentCardLinky extends LitElement {
                          }</span>
              `;
             }
+          } else if (!dayPrice || dayPrice === "-1") {
+            // Ni prix ni kWh disponibles - données en attente
+            return this.renderPendingData();
           }
+        } else {
+          // Pas de données de prix du tout - données en attente
+          return this.renderPendingData();
         }
         return this.renderNoData();
     }
@@ -1631,6 +1645,16 @@ class ContentCardLinky extends LitElement {
         opacity: 0.8;
         margin-left: 2px;
         font-weight: normal;
+      }
+
+      .cons-val.pending {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.6; }
+        100% { opacity: 1; }
       }
       
       .year {
