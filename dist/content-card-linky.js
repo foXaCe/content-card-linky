@@ -257,11 +257,10 @@ class ContentCardLinky extends LitElement {
                       <div class="icon-block">
                       <span class="linky-icon bigger" style="background: none, url('/local/community/content-card-linky/icons/linky.svg') no-repeat; background-size: contain;"></span>
                       </div>`
-                    : html `` 
+                    : html ``
                   }
                   <div class="cout-block">
-                    <span class="cout">${this.toFloat(stateObj.state)}</span>
-                    <span class="cout-unit">${attributes.unit_of_measurement}</span>
+                    ${this.renderProductionValue(stateObj.state, attributes)}
                   </div>
                 </div>
                 ${this.renderError(attributes.errorLastCall, this.config)}
@@ -385,7 +384,7 @@ class ContentCardLinky extends LitElement {
     }
   }
 
-  calculateWeekTotal(daily, dailyweek) {
+  calculateWeekTotal(daily, dailyweek, dailyweek_cost) {
     if (!daily) return 0;
 
     const today = new Date();
@@ -395,7 +394,6 @@ class ContentCardLinky extends LitElement {
 
     // Dans daily[], index 0 = aujourd'hui, index 1 = hier, etc.
     // Pour calculer lundi à aujourd'hui, on va de l'index daysSinceMonday à l'index 0
-
 
     // Parcourir de lundi à vendredi (exclure dimanche, aujourd'hui n'existe pas encore)
     // Si on est samedi (daysSinceMonday=5), prendre index 4,3,2,1,0 (lundi à vendredi)
@@ -409,8 +407,18 @@ class ContentCardLinky extends LitElement {
         const consumption = parseFloat(daily[i]);
 
         // Ne prendre que lundi à vendredi (pas dimanche)
-        if (dayOfWeek !== 0 && !isNaN(consumption) && consumption !== -1) {
-          weekTotal += consumption;
+        if (dayOfWeek !== 0) {
+          if (!isNaN(consumption) && consumption !== -1 && consumption !== 0) {
+            // Données réelles disponibles
+            weekTotal += consumption;
+          } else if (dailyweek_cost) {
+            // Données manquantes mais prix disponible - utiliser l'estimation
+            const dayNumber = i + 1; // Ajuster l'index pour la fonction d'estimation
+            const estimatedKwh = this.estimateMissingKwh(daily, dayNumber, dailyweek_cost);
+            if (estimatedKwh > 0) {
+              weekTotal += estimatedKwh;
+            }
+          }
         }
       }
     }
@@ -487,7 +495,7 @@ class ContentCardLinky extends LitElement {
       return html``;
     }
 
-    const weekTotal = this.calculateWeekTotal(daily, dailyweek);
+    const weekTotal = this.calculateWeekTotal(daily, dailyweek, dailyweek_cost);
     const weekCost = this.calculateWeekCost(dailyweek_cost, dailyweek);
     const today = new Date();
     const mondayThisWeek = new Date(today);
@@ -847,6 +855,46 @@ class ContentCardLinky extends LitElement {
 
     const avgRatio = validRatios.reduce((sum, ratio) => sum + ratio, 0) / validRatios.length;
     return currentDayPrice * avgRatio;
+  }
+
+  renderProductionValue(state, attributes) {
+    const value = parseFloat(state);
+
+    // Traiter les cas de données manquantes ou invalides pour la production
+    if (isNaN(value) || value === -1 || value === 0 || state === "0" || state === null || state === undefined) {
+        // Pour la production, essayer d'estimer basé sur les prix si disponibles
+        if (attributes.dailyweek_cost && attributes.daily) {
+          const dailyArray = attributes.daily;
+          const costArray = attributes.dailyweek_cost.toString().split(",");
+
+          // Prendre le prix du jour le plus récent (index 0)
+          const recentPrice = parseFloat(costArray[0]?.replace(',', '.'));
+
+          if (!isNaN(recentPrice) && recentPrice > 0) {
+            // Calculer une estimation basée sur la moyenne des derniers ratios production/prix
+            const estimatedProduction = this.estimateMissingKwh(dailyArray, 1, attributes.dailyweek_cost);
+
+            if (estimatedProduction > 0) {
+              return html`
+                <span class="cout estimated" title="Estimation production basée sur les données précédentes">${this.toFloat(estimatedProduction)}</span>
+                <span class="cout-unit">${attributes.unit_of_measurement}</span>
+              `;
+            }
+          }
+        }
+
+        // Afficher un indicateur de données non disponibles
+        return html`
+          <span class="cout" title="Données de production non disponibles" style="color: #888; font-style: italic;">--</span>
+          <span class="cout-unit">${attributes.unit_of_measurement}</span>
+        `;
+    }
+    else {
+        return html`
+          <span class="cout">${this.toFloat(state)}</span>
+          <span class="cout-unit">${attributes.unit_of_measurement}</span>
+        `;
+    }
   }
 
   renderDailyValue(day, dayNumber, unit_of_measurement, config, dailyweek_cost) {
@@ -1391,6 +1439,28 @@ class ContentCardLinky extends LitElement {
         font-weight: 300;
         font-size: clamp(2.5em, 5vw, 3.5em);
         text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+
+      .cout.estimated {
+        color: #ff6b6b !important;
+        font-style: italic !important;
+        position: relative;
+      }
+
+      .cout.estimated::before {
+        content: "~";
+        font-weight: bold;
+        margin-right: 2px;
+      }
+
+      .cout.estimated::after {
+        content: "est.";
+        font-size: 0.3em;
+        opacity: 0.8;
+        margin-left: 4px;
+        font-weight: normal;
+        position: absolute;
+        top: 0.2em;
       }
     
       .cout-unit {
