@@ -413,10 +413,32 @@ class ContentCardLinky extends LitElement {
             weekTotal += consumption;
           } else if (dailyweek_cost) {
             // Données manquantes mais prix disponible - utiliser l'estimation
-            const dayNumber = i + 1; // Ajuster l'index pour la fonction d'estimation
-            const estimatedKwh = this.estimateMissingKwh(daily, dayNumber, dailyweek_cost);
-            if (estimatedKwh > 0) {
-              weekTotal += estimatedKwh;
+            const dailyCostArray = dailyweek_cost.toString().split(",");
+            const dayPrice = parseFloat(dailyCostArray[i]?.replace(',', '.'));
+
+            if (!isNaN(dayPrice) && dayPrice > 0) {
+              // Calculer estimation pour ce jour spécifique
+              let validRatios = [];
+
+              // Utiliser les autres jours disponibles pour calculer le ratio moyen
+              for (let j = 0; j < Math.min(daily.length, dailyCostArray.length, 7); j++) {
+                if (j !== i) { // Exclure le jour manquant
+                  const kwh = parseFloat(daily[j]);
+                  const cost = parseFloat(dailyCostArray[j]?.replace(',', '.'));
+
+                  if (!isNaN(kwh) && !isNaN(cost) && kwh > 0 && cost > 0 && kwh !== -1 && cost !== -1) {
+                    validRatios.push(kwh / cost);
+                  }
+                }
+              }
+
+              if (validRatios.length > 0) {
+                const avgRatio = validRatios.reduce((sum, ratio) => sum + ratio, 0) / validRatios.length;
+                const estimatedKwh = dayPrice * avgRatio;
+                if (estimatedKwh > 0) {
+                  weekTotal += estimatedKwh;
+                }
+              }
             }
           }
         }
