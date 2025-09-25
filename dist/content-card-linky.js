@@ -892,17 +892,14 @@ class ContentCardLinky extends LitElement {
 
     // Traiter les cas de données manquantes ou invalides pour la production
     if (isNaN(value) || value === -1 || value === 0 || state === "0" || state === null || state === undefined) {
-        // Pour la production, essayer d'estimer basé sur les prix si disponibles
+        // Vérifier si on a des prix pour faire une estimation
         if (attributes.dailyweek_cost && attributes.daily) {
-          const dailyArray = attributes.daily;
           const costArray = attributes.dailyweek_cost.toString().split(",");
-
-          // Prendre le prix du jour le plus récent (index 0)
           const recentPrice = parseFloat(costArray[0]?.replace(',', '.'));
 
           if (!isNaN(recentPrice) && recentPrice > 0) {
-            // Calculer une estimation basée sur la moyenne des derniers ratios production/prix
-            const estimatedProduction = this.estimateMissingKwh(dailyArray, 1, attributes.dailyweek_cost);
+            // On a un prix, faire une estimation
+            const estimatedProduction = this.estimateMissingKwh(attributes.daily, 1, attributes.dailyweek_cost);
 
             if (estimatedProduction > 0) {
               return html`
@@ -910,12 +907,30 @@ class ContentCardLinky extends LitElement {
                 <span class="cout-unit">${attributes.unit_of_measurement}</span>
               `;
             }
+          } else if (recentPrice === 0 || isNaN(recentPrice) || !costArray[0] || costArray[0] === "-1") {
+            // Ni prix ni production - données en attente
+            return html`
+              <span class="cout pending" title="Données de production en attente" style="color: #ff9800; font-style: italic;">
+                <ha-icon icon="mdi:clock-outline"></ha-icon>
+              </span>
+              <span class="cout-unit">${attributes.unit_of_measurement}</span>
+            `;
           }
+        } else {
+          // Pas de données de prix - en attente
+          return html`
+            <span class="cout pending" title="Données de production en attente" style="color: #ff9800; font-style: italic;">
+              <ha-icon icon="mdi:clock-outline"></ha-icon>
+            </span>
+            <span class="cout-unit">${attributes.unit_of_measurement}</span>
+          `;
         }
 
-        // Afficher un indicateur de données non disponibles
+        // Cas d'erreur réelle
         return html`
-          <span class="cout" title="Données de production non disponibles" style="color: #888; font-style: italic;">--</span>
+          <span class="cout" title="Erreur données de production" style="color: #f44336; font-style: italic;">
+            <ha-icon icon="mdi:alert-outline"></ha-icon>
+          </span>
           <span class="cout-unit">${attributes.unit_of_measurement}</span>
         `;
     }
