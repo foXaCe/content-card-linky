@@ -850,7 +850,8 @@ class ContentCardLinky extends LitElement {
   }
 
   renderDailyValue(day, dayNumber, unit_of_measurement, config, dailyweek_cost) {
-    if ( day === -1 ){
+    // Traiter les cas de données manquantes ou invalides
+    if ( day === -1 || day === 0 || day === "0" || day === null || day === undefined ){
         // Vérifier si on a un prix mais pas de kWh pour faire une estimation
         if (dailyweek_cost) {
           const dailyCostArray = dailyweek_cost.toString().split(",");
