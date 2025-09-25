@@ -635,7 +635,7 @@ class ContentCardLinky extends LitElement {
       `
         <div class="day">
           ${this.renderDailyWeek(dailyweek, dailyweek_Tempo, dayNumber, config)}
-          ${this.renderDailyValue(day, dayNumber, unit_of_measurement, config)}
+          ${this.renderDailyValue(day, dayNumber, unit_of_measurement, config, dailyweek_cost)}
           ${this.renderDayPrice(dailyweek_cost, dayNumber, config)}
           ${this.renderDayPriceHCHP(dailyweek_costHC, dayNumber, config)}
           ${this.renderDayPriceHCHP(dailyweek_costHP, dayNumber, config)}
@@ -823,15 +823,63 @@ class ContentCardLinky extends LitElement {
              <br><span class="cons-val" title="Donnée indisponible"><ha-icon id="icon" icon="mdi:alert-outline"></ha-icon></span>
            ` ;
   }
-  renderDailyValue(day, dayNumber, unit_of_measurement, config) {
+  estimateMissingKwh(daily, dayNumber, dailyweek_cost) {
+    if (!daily || !dailyweek_cost) return 0;
+
+    const dailyCostArray = dailyweek_cost.toString().split(",");
+    const currentDayPrice = parseFloat(dailyCostArray[dayNumber-1]?.replace(',', '.'));
+
+    if (isNaN(currentDayPrice) || currentDayPrice <= 0) return 0;
+
+    // Calculer la moyenne des ratios kWh/€ des 7 derniers jours disponibles
+    let validRatios = [];
+
+    for (let i = 0; i < Math.min(daily.length, dailyCostArray.length, 7); i++) {
+      const kwh = parseFloat(daily[i]);
+      const cost = parseFloat(dailyCostArray[i]?.replace(',', '.'));
+
+      if (!isNaN(kwh) && !isNaN(cost) && kwh > 0 && cost > 0 && kwh !== -1 && cost !== -1) {
+        validRatios.push(kwh / cost);
+      }
+    }
+
+    if (validRatios.length === 0) return 0;
+
+    const avgRatio = validRatios.reduce((sum, ratio) => sum + ratio, 0) / validRatios.length;
+    return currentDayPrice * avgRatio;
+  }
+
+  renderDailyValue(day, dayNumber, unit_of_measurement, config, dailyweek_cost) {
     if ( day === -1 ){
+        // Vérifier si on a un prix mais pas de kWh pour faire une estimation
+        if (dailyweek_cost) {
+          const dailyCostArray = dailyweek_cost.toString().split(",");
+          const dayPrice = dailyCostArray[dayNumber-1];
+
+          if (dayPrice && dayPrice !== "-1" && parseFloat(dayPrice.replace(',', '.')) > 0) {
+            // On a un prix mais pas de kWh, faire une estimation
+            const estimatedKwh = this.estimateMissingKwh(this.hass.states[this.config.entity].attributes.daily, dayNumber, dailyweek_cost);
+
+            if (estimatedKwh > 0) {
+              return html
+              `
+              <br><span class="cons-val estimated" title="Estimation basée sur les jours précédents - Données kWh non disponibles">${this.toFloat(estimatedKwh)}
+                        ${this.config.showInTableUnit
+                          ? html `
+                            ${unit_of_measurement}`
+                          : html ``
+                         }</span>
+             `;
+            }
+          }
+        }
         return this.renderNoData();
     }
     else{
         return html
         `
-        <br><span class="cons-val">${this.toFloat(day)} 
-                  ${this.config.showInTableUnit 
+        <br><span class="cons-val">${this.toFloat(day)}
+                  ${this.config.showInTableUnit
                     ? html `
                       ${unit_of_measurement}`
                     : html ``
@@ -1470,6 +1518,26 @@ class ContentCardLinky extends LitElement {
         font-weight: 500;
         white-space: nowrap;
         transition: all 0.2s ease;
+      }
+
+      .cons-val.estimated {
+        color: #ff6b6b !important;
+        font-style: italic !important;
+        position: relative;
+      }
+
+      .cons-val.estimated::before {
+        content: "~";
+        font-weight: bold;
+        margin-right: 2px;
+      }
+
+      .cons-val.estimated::after {
+        content: "est.";
+        font-size: 0.7em;
+        opacity: 0.8;
+        margin-left: 2px;
+        font-weight: normal;
       }
       
       .year {
