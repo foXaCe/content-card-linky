@@ -670,10 +670,8 @@ class ContentCardLinky extends LitElement {
                 dailyweek_HC, dailyweek_HP, dailyweek_MP, dailyweek_MP_over, dailyweek_MP_time, dailyweek_Tempo, config);
             }).reverse()}
             </div>
-            <div class="temporal-views-container">
-              ${this.renderMonthlyView(attributes, config)}
-              ${this.renderYearlyView(attributes, config)}
-            </div>
+            ${this.renderMonthlyView(attributes, config)}
+            ${this.renderYearlyView(attributes, config)}
             ${this.renderDetailedComparison(attributes, config)}
           `
         }
@@ -2479,8 +2477,7 @@ class ContentCardLinky extends LitElement {
 
       /* Collapsible sections styles */
       .collapsible-section {
-        flex: 1;
-        min-width: 0;
+        margin-top: 1em;
         border-radius: 12px;
         background: var(--ha-card-background, var(--card-background-color, white));
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -2542,30 +2539,22 @@ class ContentCardLinky extends LitElement {
       .month-item, .year-item {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
-        gap: 0.5em;
+        gap: 1em;
         padding: 0.5em;
         background: var(--secondary-background-color, #f5f5f5);
         border-radius: 8px;
         align-items: center;
-        min-width: 0;
       }
 
       .month-name, .year-name {
         font-weight: bold;
         color: var(--primary-text-color, #333);
-        font-size: 0.85em;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
       }
 
       .month-value, .year-value {
         text-align: center;
-        font-size: 0.95em;
+        font-size: 1.1em;
         color: var(--accent-color, #03dac6);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
       }
 
       .month-cost, .year-cost {
@@ -2576,21 +2565,14 @@ class ContentCardLinky extends LitElement {
 
       .month-evolution, .year-evolution {
         text-align: right;
-        font-size: 0.8em;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        font-size: 0.9em;
       }
 
       .evolution-percent {
         font-weight: bold;
-        padding: 0.1em 0.3em;
-        border-radius: 3px;
-        font-size: 0.75em;
-        display: inline-block;
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        padding: 0.2em 0.4em;
+        border-radius: 4px;
+        font-size: 0.85em;
       }
 
       .evolution-percent.positive {
