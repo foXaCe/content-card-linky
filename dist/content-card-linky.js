@@ -1492,27 +1492,12 @@ class ContentCardLinky extends LitElement {
   }
 
   renderDetailedComparison(attributes, config) {
-    // Debug: toujours afficher quelque chose pour tester
     if (!config.showDetailedComparison) {
-      return html`
-        <div class="collapsible-section">
-          <div class="collapsible-header">
-            <span class="section-title">Debug: Comparaison désactivée</span>
-            <span class="section-summary">showDetailedComparison = ${config.showDetailedComparison}</span>
-          </div>
-        </div>
-      `;
+      return html``;
     }
 
     if (!config.detailedComparisonEntity) {
-      return html`
-        <div class="collapsible-section">
-          <div class="collapsible-header">
-            <span class="section-title">Debug: Entité manquante</span>
-            <span class="section-summary">detailedComparisonEntity = ${config.detailedComparisonEntity}</span>
-          </div>
-        </div>
-      `;
+      return html``;
     }
 
     const detailedEntity = this.hass.states[config.detailedComparisonEntity];
@@ -1527,23 +1512,22 @@ class ContentCardLinky extends LitElement {
       `;
     }
 
-    // Chercher les attributs avec différents noms possibles
-    const timeAttr = detailedEntity.attributes.Time || detailedEntity.attributes.time || detailedEntity.attributes.times || detailedEntity.attributes.timestamp;
-    const consumptionAttr = detailedEntity.attributes.Consumption || detailedEntity.attributes.consumption || detailedEntity.attributes.values || detailedEntity.attributes.data;
+    // Utiliser les attributs réels du capteur
+    const dailyData = detailedEntity.attributes.Daily;
+    const dailyWeekData = detailedEntity.attributes.Dailyweek;
 
-    if (!timeAttr || !consumptionAttr) {
-      const availableAttrs = Object.keys(detailedEntity.attributes).join(', ');
+    if (!dailyData || !dailyWeekData) {
       return html`
         <div class="collapsible-section">
           <div class="collapsible-header">
             <span class="section-title">Aujourd'hui vs Hier</span>
-            <span class="section-summary">Attributs disponibles: ${availableAttrs}</span>
+            <span class="section-summary">Données Daily/Dailyweek manquantes</span>
           </div>
         </div>
       `;
     }
 
-    const comparisonData = this.parseDetailedData({Time: timeAttr, Consumption: consumptionAttr});
+    const comparisonData = this.parseDetailedData({Daily: dailyData, Dailyweek: dailyWeekData});
     if (!comparisonData.today || !comparisonData.yesterday) {
       return html`
         <div class="collapsible-section">
@@ -1575,8 +1559,15 @@ class ContentCardLinky extends LitElement {
   }
 
   parseDetailedData(attributes) {
-    const times = attributes.Time.split(', ');
-    const consumptions = attributes.Consumption.split(', ').map(val => parseInt(val.replace(/\s/g, '')));
+    // Parsing des données Daily: "0, 12, 11,7, 9,02, 9,23, 10,14, 19,67"
+    const dailyConsumptions = attributes.Daily.split(',').map(val => parseFloat(val.trim().replace(',', '.')));
+
+    // Parsing des données Dailyweek: "15/1, 14/1, 13/1, 12/1, 11/1, 10/1, 9/1"
+    const dailyWeekDates = attributes.Dailyweek.split(',').map(dateStr => {
+      const [day, month] = dateStr.trim().split('/');
+      const year = new Date().getFullYear();
+      return new Date(year, parseInt(month) - 1, parseInt(day));
+    });
 
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -1585,13 +1576,13 @@ class ContentCardLinky extends LitElement {
     const todayData = [];
     const yesterdayData = [];
 
-    times.forEach((timeStr, index) => {
-      const date = new Date(timeStr);
-      const consumption = consumptions[index] || 0;
+    dailyWeekDates.forEach((date, index) => {
+      const consumption = dailyConsumptions[index] || 0;
+      const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-      if (date >= today) {
+      if (dateOnly.getTime() === today.getTime()) {
         todayData.push({ time: date, consumption });
-      } else if (date >= yesterday && date < today) {
+      } else if (dateOnly.getTime() === yesterday.getTime()) {
         yesterdayData.push({ time: date, consumption });
       }
     });
