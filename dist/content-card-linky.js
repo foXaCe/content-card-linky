@@ -1492,7 +1492,28 @@ class ContentCardLinky extends LitElement {
   }
 
   renderDetailedComparison(attributes, config) {
-    if (!config.showDetailedComparison || !config.detailedComparisonEntity) return html``;
+    // Debug: toujours afficher quelque chose pour tester
+    if (!config.showDetailedComparison) {
+      return html`
+        <div class="collapsible-section">
+          <div class="collapsible-header">
+            <span class="section-title">Debug: Comparaison désactivée</span>
+            <span class="section-summary">showDetailedComparison = ${config.showDetailedComparison}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    if (!config.detailedComparisonEntity) {
+      return html`
+        <div class="collapsible-section">
+          <div class="collapsible-header">
+            <span class="section-title">Debug: Entité manquante</span>
+            <span class="section-summary">detailedComparisonEntity = ${config.detailedComparisonEntity}</span>
+          </div>
+        </div>
+      `;
+    }
 
     const detailedEntity = this.hass.states[config.detailedComparisonEntity];
     if (!detailedEntity) {
