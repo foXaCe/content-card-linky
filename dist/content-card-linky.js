@@ -1495,13 +1495,38 @@ class ContentCardLinky extends LitElement {
     if (!config.showDetailedComparison || !config.detailedComparisonEntity) return html``;
 
     const detailedEntity = this.hass.states[config.detailedComparisonEntity];
-    if (!detailedEntity || !detailedEntity.attributes.Time || !detailedEntity.attributes.Consumption) {
-      return html``;
+    if (!detailedEntity) {
+      return html`
+        <div class="collapsible-section">
+          <div class="collapsible-header">
+            <span class="section-title">Aujourd'hui vs Hier</span>
+            <span class="section-summary">Entité ${config.detailedComparisonEntity} introuvable</span>
+          </div>
+        </div>
+      `;
+    }
+
+    if (!detailedEntity.attributes.Time || !detailedEntity.attributes.Consumption) {
+      return html`
+        <div class="collapsible-section">
+          <div class="collapsible-header">
+            <span class="section-title">Aujourd'hui vs Hier</span>
+            <span class="section-summary">Données Time/Consumption manquantes</span>
+          </div>
+        </div>
+      `;
     }
 
     const comparisonData = this.parseDetailedData(detailedEntity.attributes);
     if (!comparisonData.today || !comparisonData.yesterday) {
-      return html``;
+      return html`
+        <div class="collapsible-section">
+          <div class="collapsible-header">
+            <span class="section-title">Aujourd'hui vs Hier</span>
+            <span class="section-summary">Données aujourd'hui/hier manquantes (${comparisonData.today?.length || 0} / ${comparisonData.yesterday?.length || 0})</span>
+          </div>
+        </div>
+      `;
     }
 
     return html`
