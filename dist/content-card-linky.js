@@ -2288,7 +2288,7 @@ class ContentCardLinky extends LitElement {
       }
 
       .collapsible-header {
-        padding: 1em;
+        padding: 0.6em 1em;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -2297,6 +2297,7 @@ class ContentCardLinky extends LitElement {
         color: white;
         transition: background-color 0.2s ease;
         user-select: none;
+        min-height: auto;
       }
 
       .collapsible-header:hover {
@@ -2309,12 +2310,12 @@ class ContentCardLinky extends LitElement {
 
       .section-title {
         font-weight: bold;
-        font-size: 1.1em;
+        font-size: 1em;
         flex-grow: 1;
       }
 
       .section-summary {
-        font-size: 0.9em;
+        font-size: 0.8em;
         opacity: 0.9;
       }
 
@@ -2378,16 +2379,16 @@ class ContentCardLinky extends LitElement {
         }
 
         .collapsible-header {
-          padding: 0.8em;
+          padding: 0.5em 0.8em;
           font-size: 0.9em;
         }
 
         .section-title {
-          font-size: 1em;
+          font-size: 0.9em;
         }
 
         .section-summary {
-          font-size: 0.8em;
+          font-size: 0.75em;
         }
       }
 
