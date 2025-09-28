@@ -666,8 +666,10 @@ class ContentCardLinky extends LitElement {
                 dailyweek_HC, dailyweek_HP, dailyweek_MP, dailyweek_MP_over, dailyweek_MP_time, dailyweek_Tempo, config);
             }).reverse()}
             </div>
-            ${this.renderMonthlyView(attributes, config)}
-            ${this.renderYearlyView(attributes, config)}
+            <div class="temporal-views-container">
+              ${this.renderMonthlyView(attributes, config)}
+              ${this.renderYearlyView(attributes, config)}
+            </div>
           `
         }
     }
@@ -1379,9 +1381,9 @@ class ContentCardLinky extends LitElement {
       <div class="collapsible-section">
         <div class="collapsible-header" @click="${this.toggleMonthlyView}">
           <ha-icon icon="${this._monthlyExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down'}"></ha-icon>
-          <span class="section-title">Vue Mensuelle</span>
+          <span class="section-title">Mensuel</span>
           <span class="section-summary">
-            ${monthData.length > 0 ? `${monthData.length} périodes disponibles` : 'Aucune donnée'}
+            ${monthData.length > 0 ? `${monthData.length} mois` : 'Aucune donnée'}
           </span>
         </div>
         <div class="collapsible-content ${this._monthlyExpanded ? 'expanded' : 'collapsed'}">
@@ -1415,9 +1417,9 @@ class ContentCardLinky extends LitElement {
       <div class="collapsible-section">
         <div class="collapsible-header" @click="${this.toggleYearlyView}">
           <ha-icon icon="${this._yearlyExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down'}"></ha-icon>
-          <span class="section-title">Vue Annuelle</span>
+          <span class="section-title">Annuel</span>
           <span class="section-summary">
-            ${yearData.length > 0 ? `${yearData.length} années disponibles` : 'Aucune donnée'}
+            ${yearData.length > 0 ? `${yearData.length} ans` : 'Aucune donnée'}
           </span>
         </div>
         <div class="collapsible-content ${this._yearlyExpanded ? 'expanded' : 'collapsed'}">
@@ -2278,9 +2280,16 @@ class ContentCardLinky extends LitElement {
         background: #666 !important;
       }
 
+      /* Temporal views container */
+      .temporal-views-container {
+        display: flex;
+        gap: 0.5em;
+        margin-top: 1em;
+      }
+
       /* Collapsible sections styles */
       .collapsible-section {
-        margin-top: 1em;
+        flex: 1;
         border-radius: 12px;
         background: var(--ha-card-background, var(--card-background-color, white));
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -2367,6 +2376,11 @@ class ContentCardLinky extends LitElement {
       }
 
       @media (max-width: 768px) {
+        .temporal-views-container {
+          flex-direction: column;
+          gap: 0.5em;
+        }
+
         .month-item, .year-item {
           grid-template-columns: 1fr;
           text-align: center;
