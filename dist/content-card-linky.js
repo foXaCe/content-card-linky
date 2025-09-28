@@ -64,8 +64,16 @@ class ContentCardLinky extends LitElement {
     return {
       config: { attribute: false },
       hass: { attribute: false },
-      _config: { state: true }
+      _config: { state: true },
+      _monthlyExpanded: { state: true },
+      _yearlyExpanded: { state: true }
     };
+  }
+
+  constructor() {
+    super();
+    this._monthlyExpanded = false;
+    this._yearlyExpanded = false;
   }
 
   static async getConfigElement() {
@@ -89,7 +97,9 @@ class ContentCardLinky extends LitElement {
       showDayMaxPower: true,
       showTitleLine: true,
       showEcoWatt: true,
-      showTempo: false
+      showTempo: false,
+      showMonthlyView: true,
+      showYearlyView: true
     };
   }
 
@@ -656,6 +666,8 @@ class ContentCardLinky extends LitElement {
                 dailyweek_HC, dailyweek_HP, dailyweek_MP, dailyweek_MP_over, dailyweek_MP_time, dailyweek_Tempo, config);
             }).reverse()}
             </div>
+            ${this.renderMonthlyView(attributes, config)}
+            ${this.renderYearlyView(attributes, config)}
           `
         }
     }
@@ -1299,6 +1311,8 @@ class ContentCardLinky extends LitElement {
 	  showTempo: false,
 	  showTempoColor: true,
       showWeekSummary: true,
+      showMonthlyView: true,
+      showYearlyView: true,
       tempoEntity: "sensor.rte_tempo_today",
       titleName: "LINKY",
       nbJoursAffichage: "7",
@@ -1332,7 +1346,87 @@ class ContentCardLinky extends LitElement {
   toFloat(value, decimals = 1) {
     return Number.parseFloat(value).toFixed(decimals);
   }
-  
+
+  toggleMonthlyView() {
+    this._monthlyExpanded = !this._monthlyExpanded;
+  }
+
+  toggleYearlyView() {
+    this._yearlyExpanded = !this._yearlyExpanded;
+  }
+
+  renderMonthlyView(attributes, config) {
+    if (!config.showMonthlyView) return html``;
+
+    const monthly = attributes.monthly || [];
+    const monthlyCost = attributes.monthly_cost || [];
+
+    return html`
+      <div class="collapsible-section">
+        <div class="collapsible-header" @click="${this.toggleMonthlyView}">
+          <ha-icon icon="${this._monthlyExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down'}"></ha-icon>
+          <span class="section-title">Vue Mensuelle</span>
+          <span class="section-summary">
+            ${monthly.length > 0 ? `${monthly.length} mois disponibles` : 'Aucune donnée'}
+          </span>
+        </div>
+        <div class="collapsible-content ${this._monthlyExpanded ? 'expanded' : 'collapsed'}">
+          <div class="month-history">
+            ${monthly.slice(-12).map((monthValue, index) => {
+              const monthCost = monthlyCost[monthlyCost.length - 12 + index] || '0';
+              const monthDate = new Date();
+              monthDate.setMonth(monthDate.getMonth() - (11 - index));
+
+              return html`
+                <div class="month-item">
+                  <div class="month-name">${monthDate.toLocaleDateString('fr-FR', {month: 'short', year: 'numeric'})}</div>
+                  <div class="month-value">${this.toFloat(monthValue)} ${attributes.unit_of_measurement}</div>
+                  <div class="month-cost">${this.toFloat(monthCost, 2)} €</div>
+                </div>
+              `;
+            })}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderYearlyView(attributes, config) {
+    if (!config.showYearlyView) return html``;
+
+    const yearly = attributes.yearly || [];
+    const yearlyCost = attributes.yearly_cost || [];
+
+    return html`
+      <div class="collapsible-section">
+        <div class="collapsible-header" @click="${this.toggleYearlyView}">
+          <ha-icon icon="${this._yearlyExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down'}"></ha-icon>
+          <span class="section-title">Vue Annuelle</span>
+          <span class="section-summary">
+            ${yearly.length > 0 ? `${yearly.length} années disponibles` : 'Aucune donnée'}
+          </span>
+        </div>
+        <div class="collapsible-content ${this._yearlyExpanded ? 'expanded' : 'collapsed'}">
+          <div class="year-history">
+            ${yearly.slice(-5).map((yearValue, index) => {
+              const yearCost = yearlyCost[yearlyCost.length - 5 + index] || '0';
+              const yearDate = new Date();
+              yearDate.setFullYear(yearDate.getFullYear() - (4 - index));
+
+              return html`
+                <div class="year-item">
+                  <div class="year-name">${yearDate.getFullYear()}</div>
+                  <div class="year-value">${this.toFloat(yearValue)} ${attributes.unit_of_measurement}</div>
+                  <div class="year-cost">${this.toFloat(yearCost, 2)} €</div>
+                </div>
+              `;
+            })}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   previousYear() {
     var d = new Date();
     d.setFullYear(d.getFullYear()-1 );
@@ -2174,6 +2268,130 @@ class ContentCardLinky extends LitElement {
       .tempo-day-wrapper .tempoday-grey {
         color: white !important;
         background: #666 !important;
+      }
+
+      /* Collapsible sections styles */
+      .collapsible-section {
+        margin-top: 1em;
+        border-radius: 12px;
+        background: var(--ha-card-background, var(--card-background-color, white));
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+      }
+
+      .collapsible-header {
+        padding: 1em;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        background: var(--primary-color, #1976d2);
+        color: white;
+        transition: background-color 0.2s ease;
+        user-select: none;
+      }
+
+      .collapsible-header:hover {
+        background: var(--primary-color-light, #2196f3);
+      }
+
+      .collapsible-header ha-icon {
+        transition: transform 0.3s ease;
+      }
+
+      .section-title {
+        font-weight: bold;
+        font-size: 1.1em;
+        flex-grow: 1;
+      }
+
+      .section-summary {
+        font-size: 0.9em;
+        opacity: 0.9;
+      }
+
+      .collapsible-content {
+        overflow: hidden;
+        transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+      }
+
+      .collapsible-content.collapsed {
+        max-height: 0;
+        padding: 0 1em;
+      }
+
+      .collapsible-content.expanded {
+        max-height: 1000px;
+        padding: 1em;
+      }
+
+      .month-history, .year-history {
+        display: grid;
+        gap: 0.5em;
+      }
+
+      .month-item, .year-item {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1em;
+        padding: 0.5em;
+        background: var(--secondary-background-color, #f5f5f5);
+        border-radius: 8px;
+        align-items: center;
+      }
+
+      .month-name, .year-name {
+        font-weight: bold;
+        color: var(--primary-text-color, #333);
+      }
+
+      .month-value, .year-value {
+        text-align: center;
+        font-size: 1.1em;
+        color: var(--accent-color, #03dac6);
+      }
+
+      .month-cost, .year-cost {
+        text-align: right;
+        font-weight: bold;
+        color: var(--primary-color, #1976d2);
+      }
+
+      @media (max-width: 768px) {
+        .month-item, .year-item {
+          grid-template-columns: 1fr;
+          text-align: center;
+          gap: 0.3em;
+        }
+
+        .month-value, .year-value,
+        .month-cost, .year-cost {
+          text-align: center;
+        }
+
+        .collapsible-header {
+          padding: 0.8em;
+          font-size: 0.9em;
+        }
+
+        .section-title {
+          font-size: 1em;
+        }
+
+        .section-summary {
+          font-size: 0.8em;
+        }
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .collapsible-section {
+          background: var(--ha-card-background, var(--card-background-color, #1e1e1e));
+          border: 1px solid var(--divider-color, #333);
+        }
+
+        .month-item, .year-item {
+          background: var(--secondary-background-color, #2e2e2e);
+        }
       }
       `;
   }

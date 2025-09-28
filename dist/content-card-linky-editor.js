@@ -160,6 +160,14 @@ get _showTempoColor() {
     return (this._config && this._config.showSmartInsights) !== false;
   }
 
+  get _showMonthlyView() {
+    return (this._config && this._config.showMonthlyView) !== false;
+  }
+
+  get _showYearlyView() {
+    return (this._config && this._config.showYearlyView) !== false;
+  }
+
   get _title() {
     return (this._config && this._config.showTitle) !== false;
   }
@@ -298,6 +306,14 @@ get _showTempoColor() {
             ${this.renderSwitchOption("Afficher EcoWatt J+1/J+2", this._showEcoWattJ12, "showEcoWattJ12")}
             ${this.renderSwitchOption("Afficher Tempo", this._showTempo, "showTempo")}
             ${this.renderSwitchOption("Couleurs Tempo du jour", this._showTempoColor, "showTempoColor")}
+          </ul>
+        </div>
+
+        <div class="config-section">
+          <h3 class="section-title">Vues temporelles</h3>
+          <ul class="switches">
+            ${this.renderSwitchOption("Vue mensuelle (repliable)", this._showMonthlyView, "showMonthlyView")}
+            ${this.renderSwitchOption("Vue annuelle (repliable)", this._showYearlyView, "showYearlyView")}
           </ul>
         </div>
       </div>
