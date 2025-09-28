@@ -2467,14 +2467,6 @@ class ContentCardLinky extends LitElement {
         background: #666 !important;
       }
 
-      /* Temporal views container */
-      .temporal-views-container {
-        display: flex;
-        gap: 0.5em;
-        margin-top: 1em;
-        overflow: hidden;
-      }
-
       /* Collapsible sections styles */
       .collapsible-section {
         margin-top: 1em;
@@ -2586,11 +2578,6 @@ class ContentCardLinky extends LitElement {
       }
 
       @media (max-width: 768px) {
-        .temporal-views-container {
-          flex-direction: column;
-          gap: 0.5em;
-        }
-
         .month-item, .year-item {
           grid-template-columns: 1fr;
           text-align: center;
