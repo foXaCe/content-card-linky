@@ -1517,11 +1517,12 @@ class ContentCardLinky extends LitElement {
     const dailyWeekData = detailedEntity.attributes.Dailyweek;
 
     if (!dailyData || !dailyWeekData) {
+      const availableAttrs = Object.keys(detailedEntity.attributes).join(', ');
       return html`
         <div class="collapsible-section">
           <div class="collapsible-header">
             <span class="section-title">Aujourd'hui vs Hier</span>
-            <span class="section-summary">Données Daily/Dailyweek manquantes</span>
+            <span class="section-summary">Attributs disponibles: ${availableAttrs}</span>
           </div>
         </div>
       `;
