@@ -1315,6 +1315,15 @@ class ContentCardLinky extends LitElement {
     return hasConfigOrEntityChanged(this, changedProps);
   }
 
+  updated(changedProps) {
+    super.updated(changedProps);
+    // Scroll to rightmost position after rendering
+    const weekHistory = this.shadowRoot.querySelector('.week-history');
+    if (weekHistory) {
+      weekHistory.scrollLeft = weekHistory.scrollWidth - weekHistory.clientWidth;
+    }
+  }
+
   // @TODO: This requires more intelligent logic
   getCardSize() {
     return 3;
@@ -1604,11 +1613,13 @@ class ContentCardLinky extends LitElement {
     
       .week-history {
         display: flex;
-        overflow: hidden;
+        overflow-x: auto;
+        overflow-y: hidden;
         background: var(--ha-card-background, var(--card-background-color, white));
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         margin-top: 0.5em;
+        scroll-behavior: smooth;
       }
     
       .day {
