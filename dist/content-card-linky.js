@@ -253,6 +253,9 @@ class ContentCardLinky extends LitElement {
                   : html``
                 }
                 ${this.renderHistory(attributes.daily, attributes.unit_of_measurement, attributes.dailyweek, attributes.dailyweek_cost, attributes.dailyweek_costHC, attributes.dailyweek_costHP, attributes.dailyweek_HC, attributes.dailyweek_HP, attributes.dailyweek_MP, attributes.dailyweek_MP_over, attributes.dailyweek_MP_time, attributes.dailyweek_Tempo, this.config, attributes)}
+                ${this.renderMonthlyView(attributes, this.config)}
+                ${this.renderYearlyView(attributes, this.config)}
+                ${this.renderDetailedComparison(attributes, this.config)}
                 ${this.renderEcoWatt(attributes, this.config)}
 				${this.renderTempo(attributes, this.config)}
                 ${this.renderError(attributes.errorLastCall, this.config)}
@@ -670,9 +673,6 @@ class ContentCardLinky extends LitElement {
                 dailyweek_HC, dailyweek_HP, dailyweek_MP, dailyweek_MP_over, dailyweek_MP_time, dailyweek_Tempo, config);
             }).reverse()}
             </div>
-            ${this.renderMonthlyView(attributes, config)}
-            ${this.renderYearlyView(attributes, config)}
-            ${this.renderDetailedComparison(attributes, config)}
           `
         }
     }
