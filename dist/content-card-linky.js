@@ -66,7 +66,8 @@ class ContentCardLinky extends LitElement {
       hass: { attribute: false },
       _config: { state: true },
       _monthlyExpanded: { state: true },
-      _yearlyExpanded: { state: true }
+      _yearlyExpanded: { state: true },
+      _detailedExpanded: { state: true }
     };
   }
 
@@ -74,6 +75,7 @@ class ContentCardLinky extends LitElement {
     super();
     this._monthlyExpanded = false;
     this._yearlyExpanded = false;
+    this._detailedExpanded = false;
   }
 
   static async getConfigElement() {
@@ -99,7 +101,9 @@ class ContentCardLinky extends LitElement {
       showEcoWatt: true,
       showTempo: false,
       showMonthlyView: true,
-      showYearlyView: true
+      showYearlyView: true,
+      showDetailedComparison: true,
+      detailedComparisonEntity: "sensor.linky_consumption_last5day"
     };
   }
 
@@ -670,6 +674,7 @@ class ContentCardLinky extends LitElement {
               ${this.renderMonthlyView(attributes, config)}
               ${this.renderYearlyView(attributes, config)}
             </div>
+            ${this.renderDetailedComparison(attributes, config)}
           `
         }
     }
@@ -1315,6 +1320,8 @@ class ContentCardLinky extends LitElement {
       showWeekSummary: true,
       showMonthlyView: true,
       showYearlyView: true,
+      showDetailedComparison: true,
+      detailedComparisonEntity: "sensor.linky_consumption_last5day",
       tempoEntity: "sensor.rte_tempo_today",
       titleName: "LINKY",
       nbJoursAffichage: "7",
@@ -1361,6 +1368,12 @@ class ContentCardLinky extends LitElement {
     this._yearlyExpanded = !this._yearlyExpanded;
   }
 
+  toggleDetailedComparison(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    this._detailedExpanded = !this._detailedExpanded;
+  }
+
   renderMonthlyView(attributes, config) {
     if (!config.showMonthlyView) return html``;
 
@@ -1371,10 +1384,32 @@ class ContentCardLinky extends LitElement {
     const lastMonthLastYear = attributes.last_month_last_year || 'N/A';
 
     const monthData = [
-      { name: 'Mois actuel', value: currentMonth, year: new Date().getFullYear() },
-      { name: 'Mois précédent', value: lastMonth, year: new Date().getFullYear() },
-      { name: 'Mois actuel A-1', value: currentMonthLastYear, year: new Date().getFullYear() - 1 },
-      { name: 'Mois préc. A-1', value: lastMonthLastYear, year: new Date().getFullYear() - 1 }
+      {
+        name: 'Mois actuel',
+        value: currentMonth,
+        year: new Date().getFullYear(),
+        evolution: currentMonthLastYear !== 'N/A' && currentMonth !== 'N/A' ?
+          ((parseFloat(currentMonth) - parseFloat(currentMonthLastYear)) / parseFloat(currentMonthLastYear) * 100).toFixed(1) : null
+      },
+      {
+        name: 'Mois précédent',
+        value: lastMonth,
+        year: new Date().getFullYear(),
+        evolution: lastMonthLastYear !== 'N/A' && lastMonth !== 'N/A' ?
+          ((parseFloat(lastMonth) - parseFloat(lastMonthLastYear)) / parseFloat(lastMonthLastYear) * 100).toFixed(1) : null
+      },
+      {
+        name: 'Mois actuel A-1',
+        value: currentMonthLastYear,
+        year: new Date().getFullYear() - 1,
+        evolution: null
+      },
+      {
+        name: 'Mois préc. A-1',
+        value: lastMonthLastYear,
+        year: new Date().getFullYear() - 1,
+        evolution: null
+      }
     ].filter(item => item.value !== 'N/A');
 
     return html`
@@ -1392,7 +1427,13 @@ class ContentCardLinky extends LitElement {
               <div class="month-item">
                 <div class="month-name">${item.name} (${item.year})</div>
                 <div class="month-value">${this.toFloat(item.value)} ${attributes.unit_of_measurement}</div>
-                <div class="month-cost">-</div>
+                <div class="month-evolution">
+                  ${item.evolution !== null ? html`
+                    <span class="evolution-percent ${parseFloat(item.evolution) >= 0 ? 'positive' : 'negative'}">
+                      ${parseFloat(item.evolution) >= 0 ? '+' : ''}${item.evolution}%
+                    </span>
+                  ` : '-'}
+                </div>
               </div>
             `)}
           </div>
@@ -1409,8 +1450,17 @@ class ContentCardLinky extends LitElement {
     const currentYearLastYear = attributes.current_year_last_year || 'N/A';
 
     const yearData = [
-      { name: new Date().getFullYear(), value: currentYear },
-      { name: new Date().getFullYear() - 1, value: currentYearLastYear }
+      {
+        name: new Date().getFullYear(),
+        value: currentYear,
+        evolution: currentYearLastYear !== 'N/A' && currentYear !== 'N/A' ?
+          ((parseFloat(currentYear) - parseFloat(currentYearLastYear)) / parseFloat(currentYearLastYear) * 100).toFixed(1) : null
+      },
+      {
+        name: new Date().getFullYear() - 1,
+        value: currentYearLastYear,
+        evolution: null
+      }
     ].filter(item => item.value !== 'N/A');
 
     return html`
@@ -1428,10 +1478,149 @@ class ContentCardLinky extends LitElement {
               <div class="year-item">
                 <div class="year-name">${item.name}</div>
                 <div class="year-value">${this.toFloat(item.value)} ${attributes.unit_of_measurement}</div>
-                <div class="year-cost">-</div>
+                <div class="year-evolution">
+                  ${item.evolution !== null ? html`
+                    <span class="evolution-percent ${parseFloat(item.evolution) >= 0 ? 'positive' : 'negative'}">
+                      ${parseFloat(item.evolution) >= 0 ? '+' : ''}${item.evolution}%
+                    </span>
+                  ` : '-'}
+                </div>
               </div>
             `)}
           </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderDetailedComparison(attributes, config) {
+    if (!config.showDetailedComparison || !config.detailedComparisonEntity) return html``;
+
+    const detailedEntity = this.hass.states[config.detailedComparisonEntity];
+    if (!detailedEntity || !detailedEntity.attributes.Time || !detailedEntity.attributes.Consumption) {
+      return html``;
+    }
+
+    const comparisonData = this.parseDetailedData(detailedEntity.attributes);
+    if (!comparisonData.today || !comparisonData.yesterday) {
+      return html``;
+    }
+
+    return html`
+      <div class="collapsible-section">
+        <div class="collapsible-header" @click="${this.toggleDetailedComparison}">
+          <ha-icon icon="${this._detailedExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down'}"></ha-icon>
+          <span class="section-title">Aujourd'hui vs Hier</span>
+          <span class="section-summary">
+            ${comparisonData.todayTotal.toFixed(1)} vs ${comparisonData.yesterdayTotal.toFixed(1)} kWh
+          </span>
+        </div>
+        <div class="collapsible-content ${this._detailedExpanded ? 'expanded' : 'collapsed'}">
+          <div class="detailed-comparison">
+            ${this.renderComparisonCharts(comparisonData, attributes.unit_of_measurement)}
+            ${this.renderComparisonStats(comparisonData)}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  parseDetailedData(attributes) {
+    const times = attributes.Time.split(', ');
+    const consumptions = attributes.Consumption.split(', ').map(val => parseInt(val.replace(/\s/g, '')));
+
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+
+    const todayData = [];
+    const yesterdayData = [];
+
+    times.forEach((timeStr, index) => {
+      const date = new Date(timeStr);
+      const consumption = consumptions[index] || 0;
+
+      if (date >= today) {
+        todayData.push({ time: date, consumption });
+      } else if (date >= yesterday && date < today) {
+        yesterdayData.push({ time: date, consumption });
+      }
+    });
+
+    const todayTotal = todayData.reduce((sum, item) => sum + item.consumption, 0) / 1000; // Convert W to kW
+    const yesterdayTotal = yesterdayData.reduce((sum, item) => sum + item.consumption, 0) / 1000;
+
+    return {
+      today: todayData,
+      yesterday: yesterdayData,
+      todayTotal,
+      yesterdayTotal,
+      evolution: todayTotal > 0 ? ((todayTotal - yesterdayTotal) / yesterdayTotal * 100) : 0
+    };
+  }
+
+  renderComparisonCharts(data, unit) {
+    const maxConsumption = Math.max(
+      ...data.today.map(d => d.consumption),
+      ...data.yesterday.map(d => d.consumption)
+    );
+
+    return html`
+      <div class="comparison-charts">
+        <div class="chart-day">
+          <h4>Aujourd'hui</h4>
+          <div class="mini-chart">
+            ${this.renderMiniChart(data.today, maxConsumption, '#2196f3')}
+          </div>
+          <div class="day-stats">
+            <span class="total">${data.todayTotal.toFixed(1)} ${unit}</span>
+            <span class="peak">Pic: ${Math.max(...data.today.map(d => d.consumption))}W</span>
+          </div>
+        </div>
+        <div class="chart-day">
+          <h4>Hier</h4>
+          <div class="mini-chart">
+            ${this.renderMiniChart(data.yesterday, maxConsumption, '#666')}
+          </div>
+          <div class="day-stats">
+            <span class="total">${data.yesterdayTotal.toFixed(1)} ${unit}</span>
+            <span class="peak">Pic: ${Math.max(...data.yesterday.map(d => d.consumption))}W</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderMiniChart(data, maxValue, color) {
+    const points = data.map((item, index) => {
+      const x = (index / (data.length - 1)) * 100;
+      const y = 100 - (item.consumption / maxValue) * 100;
+      return `${x},${y}`;
+    }).join(' ');
+
+    return html`
+      <svg viewBox="0 0 100 50" class="consumption-chart">
+        <polyline points="${points}" fill="none" stroke="${color}" stroke-width="2"/>
+      </svg>
+    `;
+  }
+
+  renderComparisonStats(data) {
+    const evolution = data.evolution;
+    const evolutionClass = evolution > 0 ? 'increase' : evolution < 0 ? 'decrease' : 'stable';
+    const evolutionIcon = evolution > 0 ? 'mdi:trending-up' : evolution < 0 ? 'mdi:trending-down' : 'mdi:trending-neutral';
+
+    return html`
+      <div class="comparison-stats">
+        <div class="stat-item evolution ${evolutionClass}">
+          <ha-icon icon="${evolutionIcon}"></ha-icon>
+          <span class="label">Évolution</span>
+          <span class="value">${Math.abs(evolution).toFixed(1)}%</span>
+        </div>
+        <div class="stat-item difference">
+          <ha-icon icon="mdi:calculator"></ha-icon>
+          <span class="label">Différence</span>
+          <span class="value">${Math.abs(data.todayTotal - data.yesterdayTotal).toFixed(2)} kWh</span>
         </div>
       </div>
     `;
@@ -2375,6 +2564,28 @@ class ContentCardLinky extends LitElement {
         color: var(--primary-color, #1976d2);
       }
 
+      .month-evolution, .year-evolution {
+        text-align: right;
+        font-size: 0.9em;
+      }
+
+      .evolution-percent {
+        font-weight: bold;
+        padding: 0.2em 0.4em;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+
+      .evolution-percent.positive {
+        color: #d32f2f;
+        background-color: rgba(211, 47, 47, 0.1);
+      }
+
+      .evolution-percent.negative {
+        color: #388e3c;
+        background-color: rgba(56, 142, 60, 0.1);
+      }
+
       @media (max-width: 768px) {
         .temporal-views-container {
           flex-direction: column;
@@ -2413,6 +2624,136 @@ class ContentCardLinky extends LitElement {
         }
 
         .month-item, .year-item {
+          background: var(--secondary-background-color, #2e2e2e);
+        }
+      }
+
+      /* Detailed comparison styles */
+      .detailed-comparison {
+        padding: 1em 0;
+      }
+
+      .comparison-charts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1em;
+        margin-bottom: 1em;
+      }
+
+      .chart-day {
+        text-align: center;
+      }
+
+      .chart-day h4 {
+        margin: 0 0 0.5em 0;
+        font-size: 0.9em;
+        color: var(--primary-text-color, #333);
+      }
+
+      .mini-chart {
+        height: 60px;
+        margin-bottom: 0.5em;
+        background: var(--secondary-background-color, #f5f5f5);
+        border-radius: 8px;
+        padding: 0.5em;
+      }
+
+      .consumption-chart {
+        width: 100%;
+        height: 100%;
+      }
+
+      .day-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2em;
+        font-size: 0.8em;
+      }
+
+      .day-stats .total {
+        font-weight: bold;
+        color: var(--primary-color, #1976d2);
+      }
+
+      .day-stats .peak {
+        color: var(--accent-color, #03dac6);
+      }
+
+      .comparison-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1em;
+        padding-top: 1em;
+        border-top: 1px solid var(--divider-color, #ddd);
+      }
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        padding: 0.5em;
+        background: var(--secondary-background-color, #f5f5f5);
+        border-radius: 8px;
+      }
+
+      .stat-item ha-icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      .stat-item .label {
+        flex-grow: 1;
+        font-size: 0.9em;
+        color: var(--secondary-text-color, #666);
+      }
+
+      .stat-item .value {
+        font-weight: bold;
+        font-size: 1em;
+      }
+
+      .stat-item.evolution.increase {
+        border-left: 4px solid #f44336;
+      }
+
+      .stat-item.evolution.increase .value {
+        color: #f44336;
+      }
+
+      .stat-item.evolution.decrease {
+        border-left: 4px solid #4caf50;
+      }
+
+      .stat-item.evolution.decrease .value {
+        color: #4caf50;
+      }
+
+      .stat-item.evolution.stable {
+        border-left: 4px solid #9e9e9e;
+      }
+
+      .stat-item.evolution.stable .value {
+        color: #9e9e9e;
+      }
+
+      @media (max-width: 768px) {
+        .comparison-charts {
+          grid-template-columns: 1fr;
+          gap: 0.5em;
+        }
+
+        .comparison-stats {
+          grid-template-columns: 1fr;
+          gap: 0.5em;
+        }
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .mini-chart {
+          background: var(--secondary-background-color, #2e2e2e);
+        }
+
+        .stat-item {
           background: var(--secondary-background-color, #2e2e2e);
         }
       }
