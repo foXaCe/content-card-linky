@@ -168,6 +168,14 @@ get _showTempoColor() {
     return (this._config && this._config.showYearlyView) !== false;
   }
 
+  get _showDetailedComparison() {
+    return (this._config && this._config.showDetailedComparison) !== false;
+  }
+
+  get _detailedComparisonEntity() {
+    return (this._config && this._config.detailedComparisonEntity) || "sensor.linky_consumption_last5day";
+  }
+
   get _title() {
     return (this._config && this._config.showTitle) !== false;
   }
@@ -314,7 +322,9 @@ get _showTempoColor() {
           <ul class="switches">
             ${this.renderSwitchOption("Vue mensuelle (repliable)", this._showMonthlyView, "showMonthlyView")}
             ${this.renderSwitchOption("Vue annuelle (repliable)", this._showYearlyView, "showYearlyView")}
+            ${this.renderSwitchOption("Comparaison Aujourd'hui vs Hier", this._showDetailedComparison, "showDetailedComparison")}
           </ul>
+          ${this.renderSensorPicker("Entité données détaillées", this._detailedComparisonEntity, "detailedComparisonEntity")}
         </div>
       </div>
     `;
