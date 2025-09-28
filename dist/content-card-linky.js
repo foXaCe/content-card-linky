@@ -1347,19 +1347,33 @@ class ContentCardLinky extends LitElement {
     return Number.parseFloat(value).toFixed(decimals);
   }
 
-  toggleMonthlyView() {
+  toggleMonthlyView(e) {
+    e.stopPropagation();
+    e.preventDefault();
     this._monthlyExpanded = !this._monthlyExpanded;
   }
 
-  toggleYearlyView() {
+  toggleYearlyView(e) {
+    e.stopPropagation();
+    e.preventDefault();
     this._yearlyExpanded = !this._yearlyExpanded;
   }
 
   renderMonthlyView(attributes, config) {
     if (!config.showMonthlyView) return html``;
 
-    const monthly = attributes.monthly || [];
-    const monthlyCost = attributes.monthly_cost || [];
+    // Pour l'instant, on affiche les données de base disponibles
+    const currentMonth = attributes.current_month || 'N/A';
+    const lastMonth = attributes.last_month || 'N/A';
+    const currentMonthLastYear = attributes.current_month_last_year || 'N/A';
+    const lastMonthLastYear = attributes.last_month_last_year || 'N/A';
+
+    const monthData = [
+      { name: 'Mois actuel', value: currentMonth, year: new Date().getFullYear() },
+      { name: 'Mois précédent', value: lastMonth, year: new Date().getFullYear() },
+      { name: 'Mois actuel A-1', value: currentMonthLastYear, year: new Date().getFullYear() - 1 },
+      { name: 'Mois préc. A-1', value: lastMonthLastYear, year: new Date().getFullYear() - 1 }
+    ].filter(item => item.value !== 'N/A');
 
     return html`
       <div class="collapsible-section">
@@ -1367,24 +1381,18 @@ class ContentCardLinky extends LitElement {
           <ha-icon icon="${this._monthlyExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down'}"></ha-icon>
           <span class="section-title">Vue Mensuelle</span>
           <span class="section-summary">
-            ${monthly.length > 0 ? `${monthly.length} mois disponibles` : 'Aucune donnée'}
+            ${monthData.length > 0 ? `${monthData.length} périodes disponibles` : 'Aucune donnée'}
           </span>
         </div>
         <div class="collapsible-content ${this._monthlyExpanded ? 'expanded' : 'collapsed'}">
           <div class="month-history">
-            ${monthly.slice(-12).map((monthValue, index) => {
-              const monthCost = monthlyCost[monthlyCost.length - 12 + index] || '0';
-              const monthDate = new Date();
-              monthDate.setMonth(monthDate.getMonth() - (11 - index));
-
-              return html`
-                <div class="month-item">
-                  <div class="month-name">${monthDate.toLocaleDateString('fr-FR', {month: 'short', year: 'numeric'})}</div>
-                  <div class="month-value">${this.toFloat(monthValue)} ${attributes.unit_of_measurement}</div>
-                  <div class="month-cost">${this.toFloat(monthCost, 2)} €</div>
-                </div>
-              `;
-            })}
+            ${monthData.map(item => html`
+              <div class="month-item">
+                <div class="month-name">${item.name} (${item.year})</div>
+                <div class="month-value">${this.toFloat(item.value)} ${attributes.unit_of_measurement}</div>
+                <div class="month-cost">-</div>
+              </div>
+            `)}
           </div>
         </div>
       </div>
@@ -1394,8 +1402,14 @@ class ContentCardLinky extends LitElement {
   renderYearlyView(attributes, config) {
     if (!config.showYearlyView) return html``;
 
-    const yearly = attributes.yearly || [];
-    const yearlyCost = attributes.yearly_cost || [];
+    // Utilise les données annuelles disponibles
+    const currentYear = attributes.current_year || 'N/A';
+    const currentYearLastYear = attributes.current_year_last_year || 'N/A';
+
+    const yearData = [
+      { name: new Date().getFullYear(), value: currentYear },
+      { name: new Date().getFullYear() - 1, value: currentYearLastYear }
+    ].filter(item => item.value !== 'N/A');
 
     return html`
       <div class="collapsible-section">
@@ -1403,24 +1417,18 @@ class ContentCardLinky extends LitElement {
           <ha-icon icon="${this._yearlyExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down'}"></ha-icon>
           <span class="section-title">Vue Annuelle</span>
           <span class="section-summary">
-            ${yearly.length > 0 ? `${yearly.length} années disponibles` : 'Aucune donnée'}
+            ${yearData.length > 0 ? `${yearData.length} années disponibles` : 'Aucune donnée'}
           </span>
         </div>
         <div class="collapsible-content ${this._yearlyExpanded ? 'expanded' : 'collapsed'}">
           <div class="year-history">
-            ${yearly.slice(-5).map((yearValue, index) => {
-              const yearCost = yearlyCost[yearlyCost.length - 5 + index] || '0';
-              const yearDate = new Date();
-              yearDate.setFullYear(yearDate.getFullYear() - (4 - index));
-
-              return html`
-                <div class="year-item">
-                  <div class="year-name">${yearDate.getFullYear()}</div>
-                  <div class="year-value">${this.toFloat(yearValue)} ${attributes.unit_of_measurement}</div>
-                  <div class="year-cost">${this.toFloat(yearCost, 2)} €</div>
-                </div>
-              `;
-            })}
+            ${yearData.map(item => html`
+              <div class="year-item">
+                <div class="year-name">${item.name}</div>
+                <div class="year-value">${this.toFloat(item.value)} ${attributes.unit_of_measurement}</div>
+                <div class="year-cost">-</div>
+              </div>
+            `)}
           </div>
         </div>
       </div>
