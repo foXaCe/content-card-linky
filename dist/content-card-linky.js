@@ -1527,18 +1527,23 @@ class ContentCardLinky extends LitElement {
       `;
     }
 
-    if (!detailedEntity.attributes.Time || !detailedEntity.attributes.Consumption) {
+    // Chercher les attributs avec différents noms possibles
+    const timeAttr = detailedEntity.attributes.Time || detailedEntity.attributes.time || detailedEntity.attributes.times || detailedEntity.attributes.timestamp;
+    const consumptionAttr = detailedEntity.attributes.Consumption || detailedEntity.attributes.consumption || detailedEntity.attributes.values || detailedEntity.attributes.data;
+
+    if (!timeAttr || !consumptionAttr) {
+      const availableAttrs = Object.keys(detailedEntity.attributes).join(', ');
       return html`
         <div class="collapsible-section">
           <div class="collapsible-header">
             <span class="section-title">Aujourd'hui vs Hier</span>
-            <span class="section-summary">Données Time/Consumption manquantes</span>
+            <span class="section-summary">Attributs disponibles: ${availableAttrs}</span>
           </div>
         </div>
       `;
     }
 
-    const comparisonData = this.parseDetailedData(detailedEntity.attributes);
+    const comparisonData = this.parseDetailedData({Time: timeAttr, Consumption: consumptionAttr});
     if (!comparisonData.today || !comparisonData.yesterday) {
       return html`
         <div class="collapsible-section">
