@@ -140,6 +140,9 @@ export class contentCardLinkyEditor extends LitElement {
   get _showError() {
     return (this._config && this._config.showError) !== false;
   }
+  get _showInformation() {
+    return (this._config && this._config.showInformation) !== false;
+  }
   get _showTitleLign() {
     return (this._config && this._config.showTitleLign) !== false;
   }
@@ -259,6 +262,7 @@ get _showTempoColor() {
             ${this.renderSwitchOption("Afficher le titre", this._showTitle, "showTitle")}
             ${this.renderSwitchOption("Afficher l'en-tête", this._showHeader, "showHeader")}
             ${this.renderSwitchOption("Afficher les erreurs", this._showError, "showError")}
+            ${this.renderSwitchOption("Afficher les informations", this._showInformation, "showInformation")}
           </ul>
         </div>
 
@@ -371,13 +375,13 @@ get _showTempoColor() {
   renderSwitchOption(label, state, configAttr) {
     return html`
       <li class="switch">
-              <ha-switch
-                .checked=${state}
-                .configValue="${configAttr}"
-                @change="${this._valueChanged}">
-                </ha-switch><span>${label}</span>
-            </div>
-          </li>
+        <ha-switch
+          .checked=${state}
+          .configValue="${configAttr}"
+          @change="${this._valueChanged}">
+        </ha-switch>
+        <span>${label}</span>
+      </li>
     `
   }
   
@@ -507,8 +511,6 @@ get _showTempoColor() {
   }
 }
 
-// Force browser refresh by changing element name
-if (customElements.get("content-card-linky-editor")) {
+if (!customElements.get("content-card-linky-editor")) {
+  customElements.define("content-card-linky-editor", contentCardLinkyEditor);
 }
-customElements.define("content-card-linky-editor", contentCardLinkyEditor);
-// FORCE RELOAD v2024.09.13.16h30 - CACHE BUSTER!

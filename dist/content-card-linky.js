@@ -371,6 +371,9 @@ class ContentCardLinky extends LitElement {
     }
   }
   renderInformation(attributes, config) {
+    if (config.showInformation === false) {
+		return html ``
+	}
     if (attributes.serviceEnedis === undefined ) {
 		return html ``
 	}
@@ -380,7 +383,7 @@ class ContentCardLinky extends LitElement {
               <div class="information-msg" style="color: red">
               <ha-icon id="icon" icon="mdi:alert-outline"></ha-icon>
 			  Merci de migrer sur myElectricalData.<br>
-			  EnedisGateway sera desactivé courant 2023.
+			  EnedisGateway n'est plus supporté.
 			  </div>
 			  `
 		}
@@ -730,51 +733,6 @@ class ContentCardLinky extends LitElement {
         `
     }
   }
-  r_enderTitreLigne(config) {
-    if (this.config.showTitleLign === true) {
-        return html
-        `
-            <div class="day">
-        <br><span class="cons-val">Conso.</span>
-        ${this.config.showDayPrice 
-        ? html `
-        <br><span class="cons-val">Prix</span>`
-        : html ``
-        }
-        ${this.config.showDayPriceHCHP
-        ? html `
-        <br><span class="cons-val">Prix HC</span>`
-        : html ``
-        }
-        ${this.config.showDayPriceHCHP 
-        ? html `
-        <br><span class="cons-val">Prix HP</span>`
-        : html ``
-        }
-        ${this.config.showDayHCHP 
-        ? html `
-        <br><span class="cons-val">HC</span>`
-        : html ``
-        }
-        ${this.config.showDayHCHP 
-        ? html `
-        <br><span class="cons-val">HP</span>`
-        : html ``
-        }
-	${this.config.showDayMaxPower 
-        ? html `
-	<br><span class="cons-val">MP</span>`
-        : html ``
-        }
-	${this.config.showDayMaxPower 
-        ? html `
-	<br><span class="cons-val">MPtime</span>`
-        : html ``
-        }
-            </div>
-        `;
-      }
-  }
   findTempoEntities() {
     // Recherche intelligente des entités tempo disponibles
     const tempoPatterns = [
@@ -1085,7 +1043,7 @@ class ContentCardLinky extends LitElement {
   
     renderDayMaxPowerTime(value, dayNumber, overMP, config) {
     if (config.showDayMaxPower) {
-       const valeur = value.toString.split(",")[dayNumber-1] ;
+       const valeur = value.toString().split(",")[dayNumber-1] ;
        const over = overMP.toString().split(",")[dayNumber-1];
        if ( valeur === "-1" ){
           return this.renderNoData();
@@ -1303,7 +1261,7 @@ class ContentCardLinky extends LitElement {
       showDayHCHP: false,
       showDayName: "long",
       showError: true,
-	  shoInformation: true,
+	  showInformation: true,
       showPrice: true,
       showTitle: false,
       showCurrentMonthRatio: true,
@@ -1692,10 +1650,8 @@ class ContentCardLinky extends LitElement {
   } 
   dayBeforeYesterday() {
     return "avant-hier";
-  } 
+  }
 
-
-  // Cache buster: v20250913-final
   static get styles() {
     return css`
       .card {
