@@ -10,7 +10,7 @@ window.customCards.push({
     "Carte pour l'intégration MyElectricalData - Affichage moderne des données Linky avec évolutions colorées",
   preview: true,
   documentationURL: "https://github.com/MyElectricalData/content-card-linky",
-  version: "1.6.0",
+  version: "1.6.1",
 });
 const fireEvent = (node, type, detail, options) => {
   options = options || {};
