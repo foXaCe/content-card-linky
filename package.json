@@ -11,8 +11,7 @@
   },
   "devDependencies": {
     "eslint": "^9.18.0",
-    "prettier": "^3.4.0",
-    "globals": "^15.14.0"
+    "prettier": "^3.4.0"
   },
   "license": "MIT"
 }

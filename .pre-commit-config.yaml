@@ -12,14 +12,18 @@ repos:
     hooks:
       - id: eslint
         name: eslint
-        entry: npx eslint
-        language: system
+        entry: eslint
+        language: node
         files: ^dist/.*\.js$
         types: [javascript]
+        additional_dependencies:
+          - eslint@9.18.0
 
       - id: prettier
         name: prettier
-        entry: npx prettier --check
-        language: system
+        entry: prettier --check
+        language: node
         files: ^dist/.*\.js$
         types: [javascript]
+        additional_dependencies:
+          - prettier@3.4.0
