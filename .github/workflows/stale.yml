@@ -1,0 +1,36 @@
+name: Stale
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    name: Close stale issues and PRs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 60
+          days-before-close: 14
+          stale-issue-label: stale
+          stale-pr-label: stale
+          stale-issue-message: >
+            Cette issue est inactive depuis 60 jours.
+            Elle sera automatiquement fermee dans 14 jours sans activite.
+            Ajoutez un commentaire pour la garder ouverte.
+          stale-pr-message: >
+            Cette PR est inactive depuis 60 jours.
+            Elle sera automatiquement fermee dans 14 jours sans activite.
+            Ajoutez un commentaire pour la garder ouverte.
+          close-issue-message: >
+            Cette issue a ete fermee automatiquement par manque d'activite.
+            N'hesitez pas a en ouvrir une nouvelle si le probleme persiste.
+          close-pr-message: >
+            Cette PR a ete fermee automatiquement par manque d'activite.
+          exempt-issue-labels: bug,enhancement,pinned
+          exempt-pr-labels: pinned

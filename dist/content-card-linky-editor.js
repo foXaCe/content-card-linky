@@ -11,18 +11,17 @@ const fireEvent = (node, type, detail, options) => {
   return event;
 };
 
-if (
-  !customElements.get("ha-switch") &&
-  customElements.get("paper-toggle-button")
-) {
+if (!customElements.get("ha-switch") && customElements.get("paper-toggle-button")) {
   customElements.define("ha-switch", customElements.get("paper-toggle-button"));
 }
 
 if (!customElements.get("ha-entity-picker")) {
-  (customElements.get("hui-entities-card")).getConfigElement();
+  customElements.get("hui-entities-card").getConfigElement();
 }
 
-const LitElement = customElements.get("hui-masonry-view") ? Object.getPrototypeOf(customElements.get("hui-masonry-view")) : Object.getPrototypeOf(customElements.get("hui-view"));
+const LitElement = customElements.get("hui-masonry-view")
+  ? Object.getPrototypeOf(customElements.get("hui-masonry-view"))
+  : Object.getPrototypeOf(customElements.get("hui-view"));
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
@@ -41,34 +40,34 @@ export class contentCardLinkyEditor extends LitElement {
   get _entity() {
     return (this._config && this._config.entity) || "";
   }
-  
+
   get _ewEntity() {
     return (this._config && this._config.ewEntity) || "";
   }
-  
+
   get _ewEntityJ1() {
     return (this._config && this._config.ewEntityJ1) || "";
   }
 
   get _ewEntityJ2() {
     return (this._config && this._config.ewEntityJ2) || "";
-  }  
-  
+  }
+
   get _tempoEntity() {
     return (this._config && this._config.tempoEntityInfo) || "";
   }
 
   get _tempoEntityInfo() {
     return this._config.tempoEntityInfo || "";
-  }  
-  
+  }
+
   get _tempoEntityJ0() {
     return (this._config && this._config.tempoEntityJ0) || "";
   }
 
   get _tempoEntityJ1() {
     return (this._config && this._config.tempoEntityJ1) || "";
-  }    
+  }
 
   get _name() {
     return (this._config && this._config.name) || "";
@@ -85,19 +84,19 @@ export class contentCardLinkyEditor extends LitElement {
   get _showHistory() {
     return (this._config && this._config.showHistory) !== false;
   }
-  
+
   get _showPeakOffPeak() {
     return (this._config && this._config.showPeakOffPeak) !== false;
   }
-  
+
   get _showInTableUnit() {
     return (this._config && this._config.showInTableUnit) !== false;
   }
-  
+
   get _showDayPrice() {
     return (this._config && this._config.showDayPrice) !== false;
   }
-  
+
   get _showDayPriceHCHP() {
     return (this._config && this._config.showDayPriceHCHP) !== false;
   }
@@ -105,35 +104,35 @@ export class contentCardLinkyEditor extends LitElement {
   get _showDayMaxPower() {
     return (this._config && this._config.showDayMaxPower) !== false;
   }
-  
+
   get _showPrice() {
     return (this._config && this._config.showPrice) !== false;
   }
-  
+
   get _showTitle() {
     return (this._config && this._config.showTitle) !== false;
   }
-  
+
   get _showDayHCHP() {
     return (this._config && this._config.showDayHCHP) !== false;
   }
-  
+
   get _showCurrentMonthRatio() {
     return (this._config && this._config.showCurrentMonthRatio) !== false;
   }
-  
+
   get _showMonthRatio() {
     return (this._config && this._config.showMonthRatio) !== false;
   }
-  
+
   get _showYearRatio() {
     return (this._config && this._config.showYearRatio) !== false;
   }
-  
+
   get _showWeekRatio() {
     return (this._config && this._config.showWeekRatio) !== false;
   }
-  
+
   get _showYesterdayRatio() {
     return (this._config && this._config.showYesterdayRatio) !== false;
   }
@@ -155,7 +154,7 @@ export class contentCardLinkyEditor extends LitElement {
   get _showTempo() {
     return (this._config && this._config.showTempo) !== false;
   }
-get _showTempoColor() {
+  get _showTempoColor() {
     return (this._config && this._config.showTempoColor) !== false;
   }
 
@@ -182,7 +181,7 @@ get _showTempoColor() {
   get _title() {
     return (this._config && this._config.showTitle) !== false;
   }
-  
+
   get _current() {
     return (this._config && this._config.current) !== false;
   }
@@ -198,7 +197,7 @@ get _showTempoColor() {
   get _showDayName() {
     return (this._config && this._config.showDayName) || "long";
   }
-  
+
   get _titleName() {
     return (this._config && this._config.titleName) || "LINKY";
   }
@@ -208,11 +207,11 @@ get _showTempoColor() {
   }
 
   firstUpdated() {
-    HELPERS.then(help => {
+    HELPERS.then((help) => {
       if (help.importMoreInfoControl) {
         help.importMoreInfoControl("fan");
       }
-    })
+    });
   }
 
   render() {
@@ -226,14 +225,30 @@ get _showTempoColor() {
           <h3 class="section-title">Configuration générale</h3>
           ${this.renderTextField("Titre de la carte", this._titleName, "titleName")}
           ${this.renderNumberField("Prix du kWh (€)", this._kWhPrice, "kWhPrice")}
-          ${this.renderSelectField("Nombre de jours à afficher", "nbJoursAffichage", [
-            {value: "1", label: "1 jour"}, {value: "2", label: "2 jours"}, {value: "3", label: "3 jours"},
-            {value: "4", label: "4 jours"}, {value: "5", label: "5 jours"}, {value: "6", label: "6 jours"},
-            {value: "7", label: "7 jours"}
-          ], this._nbJoursAffichage)}
-          ${this.renderSelectField("Format des jours", "showDayName", [
-            {value: "long", label: "Complet (Lundi)"}, {value: "short", label: "Abrégé (Lun)"}, {value: "narrow", label: "Minimal (L)"}
-          ], this._showDayName)}
+          ${this.renderSelectField(
+            "Nombre de jours à afficher",
+            "nbJoursAffichage",
+            [
+              { value: "1", label: "1 jour" },
+              { value: "2", label: "2 jours" },
+              { value: "3", label: "3 jours" },
+              { value: "4", label: "4 jours" },
+              { value: "5", label: "5 jours" },
+              { value: "6", label: "6 jours" },
+              { value: "7", label: "7 jours" },
+            ],
+            this._nbJoursAffichage,
+          )}
+          ${this.renderSelectField(
+            "Format des jours",
+            "showDayName",
+            [
+              { value: "long", label: "Complet (Lundi)" },
+              { value: "short", label: "Abrégé (Lun)" },
+              { value: "narrow", label: "Minimal (L)" },
+            ],
+            this._showDayName,
+          )}
         </div>
 
         <div class="config-section">
@@ -295,14 +310,22 @@ get _showTempoColor() {
         <div class="config-section">
           <h3 class="section-title">Puissance maximale</h3>
           <ul class="switches">
-            ${this.renderSwitchOption("Afficher la puissance max quotidienne", this._showDayMaxPower, "showDayMaxPower")}
+            ${this.renderSwitchOption(
+              "Afficher la puissance max quotidienne",
+              this._showDayMaxPower,
+              "showDayMaxPower",
+            )}
           </ul>
         </div>
 
         <div class="config-section">
           <h3 class="section-title">📊 Smart Insights & Évolutions</h3>
           <ul class="switches">
-            ${this.renderSwitchOption("Afficher les insights intelligents", this._showSmartInsights, "showSmartInsights")}
+            ${this.renderSwitchOption(
+              "Afficher les insights intelligents",
+              this._showSmartInsights,
+              "showSmartInsights",
+            )}
             ${this.renderSwitchOption("Évolution annuelle", this._showYearRatio, "showYearRatio")}
             ${this.renderSwitchOption("Évolution mois courant", this._showCurrentMonthRatio, "showCurrentMonthRatio")}
             ${this.renderSwitchOption("Évolution mois précédent", this._showMonthRatio, "showMonthRatio")}
@@ -326,32 +349,40 @@ get _showTempoColor() {
           <ul class="switches">
             ${this.renderSwitchOption("Vue mensuelle (repliable)", this._showMonthlyView, "showMonthlyView")}
             ${this.renderSwitchOption("Vue annuelle (repliable)", this._showYearlyView, "showYearlyView")}
-            ${this.renderSwitchOption("Comparaison Aujourd'hui vs Hier", this._showDetailedComparison, "showDetailedComparison")}
+            ${this.renderSwitchOption(
+              "Comparaison Aujourd'hui vs Hier",
+              this._showDetailedComparison,
+              "showDetailedComparison",
+            )}
           </ul>
-          ${this.renderSensorPicker("Entité données détaillées", this._detailedComparisonEntity, "detailedComparisonEntity")}
+          ${this.renderSensorPicker(
+            "Entité données détaillées",
+            this._detailedComparisonEntity,
+            "detailedComparisonEntity",
+          )}
         </div>
       </div>
     `;
   }
-   
+
   renderSensorPicker(label, entity, configAttr) {
     return this.renderPicker(label, entity, configAttr, "sensor");
   }
 
   renderPicker(label, entity, configAttr, domain) {
     return html`
-              <ha-entity-picker
-                label="${label}"
-                .hass="${this.hass}"
-                .value="${entity}"
-                .configValue="${configAttr}"
-                .includeDomains="${domain}"
-                @change="${this._valueChanged}"
-                allow-custom-entity
-              ></ha-entity-picker>
-            `
+      <ha-entity-picker
+        label="${label}"
+        .hass="${this.hass}"
+        .value="${entity}"
+        .configValue="${configAttr}"
+        .includeDomains="${domain}"
+        @change="${this._valueChanged}"
+        allow-custom-entity
+      ></ha-entity-picker>
+    `;
   }
-  
+
   renderTextField(label, state, configAttr) {
     return this.renderField(label, state, configAttr, "text");
   }
@@ -370,41 +401,37 @@ get _showTempoColor() {
         @input=${this._valueChanged}
       ></ha-textfield>
     `;
-  }  
-  
+  }
+
   renderSwitchOption(label, state, configAttr) {
     return html`
       <li class="switch">
-        <ha-switch
-          .checked=${state}
-          .configValue="${configAttr}"
-          @change="${this._valueChanged}">
-        </ha-switch>
+        <ha-switch .checked=${state} .configValue="${configAttr}" @change="${this._valueChanged}"> </ha-switch>
         <span>${label}</span>
       </li>
-    `
+    `;
   }
-  
-  renderSelectField(label, config_key, options, value, default_value) {
-	let selectOptions = [];
-	for (let i = 0; i < options.length; i++) {
-		let currentOption = options[i];
-		selectOptions.push(html`<ha-list-item .value="${currentOption.value}">${currentOption.label}</ha-list-item>`);
-	}
 
-	return html`
-		<ha-select
-			label="${label}"
-			.value=${value || default_value}
-			.configValue=${config_key}                
-			@change=${this._valueChanged}
-			@closed=${(ev) => ev.stopPropagation()}
-		>
-			${selectOptions}
-		</ha-select>
-	`
-	}  
-  
+  renderSelectField(label, config_key, options, value, default_value) {
+    const selectOptions = [];
+    for (let i = 0; i < options.length; i++) {
+      const currentOption = options[i];
+      selectOptions.push(html`<ha-list-item .value="${currentOption.value}">${currentOption.label}</ha-list-item>`);
+    }
+
+    return html`
+      <ha-select
+        label="${label}"
+        .value=${value || default_value}
+        .configValue=${config_key}
+        @change=${this._valueChanged}
+        @closed=${(ev) => ev.stopPropagation()}
+      >
+        ${selectOptions}
+      </ha-select>
+    `;
+  }
+
   _valueChanged(ev) {
     if (!this._config || !this.hass) {
       return;
@@ -419,8 +446,7 @@ get _showTempoColor() {
       } else {
         this._config = {
           ...this._config,
-          [target.configValue]:
-            target.checked !== undefined ? target.checked : target.value,
+          [target.configValue]: target.checked !== undefined ? target.checked : target.value,
         };
       }
     }

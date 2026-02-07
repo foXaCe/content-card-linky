@@ -1,0 +1,18 @@
+{
+  "name": "content-card-linky",
+  "version": "1.6.0",
+  "description": "Carte Lovelace pour afficher les donnees Linky dans Home Assistant",
+  "private": true,
+  "scripts": {
+    "lint": "eslint dist/",
+    "lint:fix": "eslint dist/ --fix",
+    "format": "prettier --write dist/",
+    "format:check": "prettier --check dist/"
+  },
+  "devDependencies": {
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.0",
+    "globals": "^15.14.0"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,89 @@
+name: Bug Report
+description: Signaler un bug avec la carte Linky
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de prendre le temps de signaler ce bug.
+        Remplissez le formulaire ci-dessous pour nous aider a le reproduire.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description du bug
+      description: Decrivez clairement le probleme rencontre.
+      placeholder: Quand j'ouvre la carte, ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportement attendu
+      description: Que devrait-il se passer normalement ?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Etapes pour reproduire
+      description: Comment reproduire le bug ?
+      placeholder: |
+        1. Aller sur ...
+        2. Cliquer sur ...
+        3. Observer ...
+    validations:
+      required: true
+
+  - type: input
+    id: card-version
+    attributes:
+      label: Version de la carte
+      description: Visible dans HACS ou dans les logs.
+      placeholder: "v1.6.0"
+    validations:
+      required: true
+
+  - type: input
+    id: ha-version
+    attributes:
+      label: Version de Home Assistant
+      description: "Parametres > A propos"
+      placeholder: "2025.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Navigateur
+      placeholder: "Chrome 131, Firefox 133, Safari 18, HA Companion App"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: integration
+    attributes:
+      label: Integration utilisee
+      options:
+        - MyElectricalData
+        - Autre
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Captures d'ecran
+      description: Collez les logs de la console navigateur ou des captures d'ecran.
+      render: text
+
+  - type: textarea
+    id: card-config
+    attributes:
+      label: Configuration de la carte
+      description: Collez votre configuration YAML (masquez les donnees sensibles).
+      render: yaml

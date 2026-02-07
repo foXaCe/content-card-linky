@@ -1,0 +1,38 @@
+name: Feature Request
+description: Proposer une amelioration ou une nouvelle fonctionnalite
+title: "[Feature] "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de proposer une amelioration pour la carte Linky !
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Probleme ou besoin
+      description: Decrivez le probleme que cette fonctionnalite resoudrait.
+      placeholder: Je suis frustre quand ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solution proposee
+      description: Decrivez la solution que vous aimeriez voir.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives envisagees
+      description: Avez-vous considere d'autres solutions ?
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexte supplementaire
+      description: Captures d'ecran, liens, ou tout contexte utile.
