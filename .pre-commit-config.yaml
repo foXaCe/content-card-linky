@@ -8,17 +8,18 @@ repos:
       - id: check-json
       - id: check-merge-conflict
 
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.18.0
+  - repo: local
     hooks:
       - id: eslint
+        name: eslint
+        entry: npx eslint
+        language: system
         files: ^dist/.*\.js$
-        additional_dependencies:
-          - eslint@9.18.0
-          - globals@15.14.0
+        types: [javascript]
 
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
-    hooks:
       - id: prettier
+        name: prettier
+        entry: npx prettier --check
+        language: system
         files: ^dist/.*\.js$
+        types: [javascript]
