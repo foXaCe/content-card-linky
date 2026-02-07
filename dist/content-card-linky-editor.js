@@ -15,8 +15,12 @@ if (!customElements.get("ha-switch") && customElements.get("paper-toggle-button"
   customElements.define("ha-switch", customElements.get("paper-toggle-button"));
 }
 
-if (!customElements.get("ha-entity-picker")) {
-  customElements.get("hui-entities-card").getConfigElement();
+try {
+  if (!customElements.get("ha-entity-picker")) {
+    customElements.get("hui-entities-card")?.getConfigElement();
+  }
+} catch (_e) {
+  // hui-entities-card may not be available
 }
 
 const LitElement = customElements.get("hui-masonry-view")
@@ -54,11 +58,11 @@ export class contentCardLinkyEditor extends LitElement {
   }
 
   get _tempoEntity() {
-    return (this._config && this._config.tempoEntityInfo) || "";
+    return (this._config && this._config.tempoEntity) || "";
   }
 
   get _tempoEntityInfo() {
-    return this._config.tempoEntityInfo || "";
+    return (this._config && this._config.tempoEntityInfo) || "";
   }
 
   get _tempoEntityJ0() {

@@ -10,7 +10,7 @@ window.customCards.push({
     "Carte pour l'intégration MyElectricalData - Affichage moderne des données Linky avec évolutions colorées",
   preview: true,
   documentationURL: "https://github.com/MyElectricalData/content-card-linky",
-  version: "2.0.0",
+  version: "1.6.0",
 });
 const fireEvent = (node, type, detail, options) => {
   options = options || {};
@@ -53,12 +53,16 @@ function hasConfigOrEntityChanged(element, changedProps) {
   return true;
 }
 
+function safeRound(val) {
+  const n = Number(val);
+  return isNaN(n) ? 0 : Math.round(n);
+}
+
 class ContentCardLinky extends LitElement {
   static get properties() {
     return {
       config: { attribute: false },
       hass: { attribute: false },
-      _config: { state: true },
       _monthlyExpanded: { state: true },
       _yearlyExpanded: { state: true },
       _detailedExpanded: { state: true },
@@ -132,237 +136,232 @@ class ContentCardLinky extends LitElement {
     const attributes = stateObj.attributes;
     const modeCompteur = attributes["typeCompteur"];
 
-    if (stateObj) {
-      if (modeCompteur === "consommation" || !modeCompteur) {
-        return html` <ha-card id="card">
-          ${this.addEventListener("click", (event) => {
-            this._showDetails(this.config.entity);
-          })}
-          ${this.renderTitle(this.config)}
-          <div class="card">
-            ${this.renderHeader(attributes, this.config, stateObj)}
-            <div class="variations">
-              ${this.config.showYearRatio
-                ? html` <span class="variations-linky">
-                    <div class="percentage-line">
-                      <span class="ha-icon">
-                        <ha-icon
-                          icon="mdi:arrow-right"
-                          style="display: inline-block; transform: rotate(${attributes.yearly_evolution < 0
-                            ? "45"
-                            : attributes.yearly_evolution == 0
-                              ? "0"
-                              : "-45"}deg)"
-                        >
-                        </ha-icon>
-                      </span>
-                      <span
-                        class="percentage-value ${attributes.yearly_evolution > 0
-                          ? "percentage-positive"
-                          : attributes.yearly_evolution < 0
-                            ? "percentage-negative"
-                            : "percentage-neutral"}"
-                        aria-label="Évolution annuelle: ${Math.round(attributes.yearly_evolution)}%"
-                        role="text"
-                        >${Math.round(attributes.yearly_evolution)}<span class="unit"> %</span></span
-                      >
-                    </div>
-                    <div class="tooltip">
-                      <span class="year">vs ${this.previousYear()}</span>
-                      <span class="tooltiptext"
-                        >A-1 : ${attributes.current_year_last_year}<br />A : ${attributes.current_year}</span
-                      >
-                    </div>
-                  </span>`
-                : html``}
-              ${this.config.showMonthRatio
-                ? html` <span class="variations-linky">
-                    <div class="percentage-line">
-                      <span class="ha-icon">
-                        <ha-icon
-                          icon="mdi:arrow-right"
-                          style="display: inline-block; transform: rotate(${attributes.monthly_evolution < 0
-                            ? "45"
-                            : attributes.monthly_evolution == 0
-                              ? "0"
-                              : "-45"}deg)"
-                        >
-                        </ha-icon>
-                      </span>
-                      <span
-                        class="percentage-value ${attributes.monthly_evolution > 0
-                          ? "percentage-positive"
-                          : attributes.monthly_evolution < 0
-                            ? "percentage-negative"
-                            : "percentage-neutral"}"
-                        aria-label="Évolution mensuelle: ${Math.round(attributes.monthly_evolution)}%"
-                        role="text"
-                        >${Math.round(attributes.monthly_evolution)}<span class="unit"> %</span></span
-                      >
-                    </div>
-                    <div class="tooltip">
-                      <span class="previous-month">vs ${this.previousMonth()}</span>
-                      <span class="tooltiptext"
-                        >Mois Precedent A-1 : ${attributes.last_month_last_year}<br />Mois Precedent :
-                        ${attributes.last_month}</span
-                      >
-                    </div>
-                  </span>`
-                : html``}
-              ${this.config.showCurrentMonthRatio
-                ? html` <span class="variations-linky">
-                    <div class="percentage-line">
-                      <span class="ha-icon">
-                        <ha-icon
-                          icon="mdi:arrow-right"
-                          style="display: inline-block; transform: rotate(${attributes.current_month_evolution < 0
-                            ? "45"
-                            : attributes.current_month_evolution == 0
-                              ? "0"
-                              : "-45"}deg)"
-                        >
-                        </ha-icon>
-                      </span>
-                      <span
-                        class="percentage-value ${attributes.current_month_evolution > 0
-                          ? "percentage-positive"
-                          : attributes.current_month_evolution < 0
-                            ? "percentage-negative"
-                            : "percentage-neutral"}"
-                        aria-label="Évolution du mois courant: ${Math.round(attributes.current_month_evolution)}%"
-                        role="text"
-                        >${Math.round(attributes.current_month_evolution)}<span class="unit"> %</span></span
-                      >
-                    </div>
-                    <div class="tooltip">
-                      <span class="current-month">vs ${this.currentMonth()}</span>
-                      <span class="tooltiptext"
-                        >Mois A-1 : ${attributes.current_month_last_year}<br />Mois : ${attributes.current_month}</span
-                      >
-                    </div>
-                  </span>`
-                : html``}
-              ${this.config.showWeekRatio
-                ? html` <span class="variations-linky">
-                    <div class="percentage-line">
-                      <span class="ha-icon">
-                        <ha-icon
-                          icon="mdi:arrow-right"
-                          style="display: inline-block; transform: rotate(${attributes.current_week_evolution < 0
-                            ? "45"
-                            : attributes.current_week_evolution == 0
-                              ? "0"
-                              : "-45"}deg)"
-                        >
-                        </ha-icon>
-                      </span>
-                      <span
-                        class="percentage-value ${attributes.current_week_evolution > 0
-                          ? "percentage-positive"
-                          : attributes.current_week_evolution < 0
-                            ? "percentage-negative"
-                            : "percentage-neutral"}"
-                        aria-label="Évolution hebdomadaire: ${Math.round(attributes.current_week_evolution)}%"
-                        role="text"
-                        >${Math.round(attributes.current_week_evolution)}<span class="unit"> %</span></span
-                      >
-                    </div>
-                    <div class="tooltip">
-                      <span class="previous-month">vs ${this.weekBefore()}</span>
-                      <span class="tooltiptext"
-                        >Semaine dernière : ${attributes.last_week}<br />Semaine courante :
-                        ${attributes.current_week}</span
-                      >
-                    </div>
-                  </span>`
-                : html``}
-              ${this.config.showYesterdayRatio
-                ? html` <span class="variations-linky">
-                    <div class="percentage-line">
-                      <span class="ha-icon">
-                        <ha-icon
-                          icon="mdi:arrow-right"
-                          style="display: inline-block; transform: rotate(${attributes.yesterday_evolution < 0
-                            ? "45"
-                            : attributes.yesterday_evolution == 0
-                              ? "0"
-                              : "-45"}deg)"
-                        >
-                        </ha-icon>
-                      </span>
-                      <span
-                        class="percentage-value ${attributes.yesterday_evolution > 0
-                          ? "percentage-positive"
-                          : attributes.yesterday_evolution < 0
-                            ? "percentage-negative"
-                            : "percentage-neutral"}"
-                        aria-label="Évolution quotidienne: ${Math.round(attributes.yesterday_evolution)}%"
-                        role="text"
-                        >${Math.round(attributes.yesterday_evolution)}<span class="unit"> %</span></span
-                      >
-                    </div>
-                    <div class="tooltip">
-                      <span class="previous-month">vs ${this.dayBeforeYesterday()}</span>
-                      <span class="tooltiptext"
-                        >Avant-hier : ${attributes.day_2}<br />Hier : ${attributes.yesterday}</span
-                      >
-                    </div>
-                  </span>`
-                : html``}
-              ${this.config.showPeakOffPeak
-                ? html` <span class="variations-linky">
+    if (modeCompteur === "consommation" || !modeCompteur) {
+      return html` <ha-card id="card" @click="${() => this._showDetails(this.config.entity)}">
+        ${this.renderTitle()}
+        <div class="card">
+          ${this.renderHeader(attributes, this.config, stateObj)}
+          <div class="variations">
+            ${this.config.showYearRatio
+              ? html` <span class="variations-linky">
+                  <div class="percentage-line">
                     <span class="ha-icon">
-                      <ha-icon icon="mdi:flash"></ha-icon>
+                      <ha-icon
+                        icon="mdi:arrow-right"
+                        style="display: inline-block; transform: rotate(${attributes.yearly_evolution < 0
+                          ? "45"
+                          : attributes.yearly_evolution === 0
+                            ? "0"
+                            : "-45"}deg)"
+                      >
+                      </ha-icon>
                     </span>
-                    ${Math.round(attributes.peak_offpeak_percent)}<span class="unit"> % HP</span>
-                  </span>`
-                : html``}
-            </div>
-            ${this.config.showSmartInsights !== false
-              ? this.renderSmartInsights(attributes.daily, attributes.dailyweek, attributes.dailyweek_cost)
-              : html``}
-            ${this.renderHistory(
-              attributes.daily,
-              attributes.unit_of_measurement,
-              attributes.dailyweek,
-              attributes.dailyweek_cost,
-              attributes.dailyweek_costHC,
-              attributes.dailyweek_costHP,
-              attributes.dailyweek_HC,
-              attributes.dailyweek_HP,
-              attributes.dailyweek_MP,
-              attributes.dailyweek_MP_over,
-              attributes.dailyweek_MP_time,
-              attributes.dailyweek_Tempo,
-              this.config,
-              attributes,
-            )}
-            ${this.renderMonthlyView(attributes, this.config)} ${this.renderYearlyView(attributes, this.config)}
-            ${this.renderDetailedComparison(attributes, this.config)} ${this.renderEcoWatt(attributes, this.config)}
-            ${this.renderTempo(attributes, this.config)} ${this.renderError(attributes.errorLastCall, this.config)}
-            ${this.renderVersion(attributes.versionUpdateAvailable, attributes.versionGit)}
-            ${this.renderInformation(attributes, this.config)}
-          </div>
-        </ha-card>`;
-      }
-      if (modeCompteur === "production") {
-        return html` <ha-card>
-          <div class="card">
-            <div class="main-info">
-              ${this.config.showIcon
-                ? html` <div class="icon-block">
                     <span
-                      class="linky-icon bigger"
-                      style="background: none, url('/local/community/content-card-linky/icons/linky.svg') no-repeat; background-size: contain;"
-                    ></span>
-                  </div>`
-                : html``}
-              <div class="cout-block">${this.renderProductionValue(stateObj.state, attributes)}</div>
-            </div>
-            ${this.renderError(attributes.errorLastCall, this.config)}
+                      class="percentage-value ${attributes.yearly_evolution > 0
+                        ? "percentage-positive"
+                        : attributes.yearly_evolution < 0
+                          ? "percentage-negative"
+                          : "percentage-neutral"}"
+                      aria-label="Évolution annuelle: ${safeRound(attributes.yearly_evolution)}%"
+                      role="text"
+                      >${safeRound(attributes.yearly_evolution)}<span class="unit"> %</span></span
+                    >
+                  </div>
+                  <div class="tooltip">
+                    <span class="year">vs ${this.previousYear()}</span>
+                    <span class="tooltiptext"
+                      >A-1 : ${attributes.current_year_last_year}<br />A : ${attributes.current_year}</span
+                    >
+                  </div>
+                </span>`
+              : html``}
+            ${this.config.showMonthRatio
+              ? html` <span class="variations-linky">
+                  <div class="percentage-line">
+                    <span class="ha-icon">
+                      <ha-icon
+                        icon="mdi:arrow-right"
+                        style="display: inline-block; transform: rotate(${attributes.monthly_evolution < 0
+                          ? "45"
+                          : attributes.monthly_evolution === 0
+                            ? "0"
+                            : "-45"}deg)"
+                      >
+                      </ha-icon>
+                    </span>
+                    <span
+                      class="percentage-value ${attributes.monthly_evolution > 0
+                        ? "percentage-positive"
+                        : attributes.monthly_evolution < 0
+                          ? "percentage-negative"
+                          : "percentage-neutral"}"
+                      aria-label="Évolution mensuelle: ${safeRound(attributes.monthly_evolution)}%"
+                      role="text"
+                      >${safeRound(attributes.monthly_evolution)}<span class="unit"> %</span></span
+                    >
+                  </div>
+                  <div class="tooltip">
+                    <span class="previous-month">vs ${this.previousMonth()}</span>
+                    <span class="tooltiptext"
+                      >Mois Precedent A-1 : ${attributes.last_month_last_year}<br />Mois Precedent :
+                      ${attributes.last_month}</span
+                    >
+                  </div>
+                </span>`
+              : html``}
+            ${this.config.showCurrentMonthRatio
+              ? html` <span class="variations-linky">
+                  <div class="percentage-line">
+                    <span class="ha-icon">
+                      <ha-icon
+                        icon="mdi:arrow-right"
+                        style="display: inline-block; transform: rotate(${attributes.current_month_evolution < 0
+                          ? "45"
+                          : attributes.current_month_evolution === 0
+                            ? "0"
+                            : "-45"}deg)"
+                      >
+                      </ha-icon>
+                    </span>
+                    <span
+                      class="percentage-value ${attributes.current_month_evolution > 0
+                        ? "percentage-positive"
+                        : attributes.current_month_evolution < 0
+                          ? "percentage-negative"
+                          : "percentage-neutral"}"
+                      aria-label="Évolution du mois courant: ${safeRound(attributes.current_month_evolution)}%"
+                      role="text"
+                      >${safeRound(attributes.current_month_evolution)}<span class="unit"> %</span></span
+                    >
+                  </div>
+                  <div class="tooltip">
+                    <span class="current-month">vs ${this.currentMonth()}</span>
+                    <span class="tooltiptext"
+                      >Mois A-1 : ${attributes.current_month_last_year}<br />Mois : ${attributes.current_month}</span
+                    >
+                  </div>
+                </span>`
+              : html``}
+            ${this.config.showWeekRatio
+              ? html` <span class="variations-linky">
+                  <div class="percentage-line">
+                    <span class="ha-icon">
+                      <ha-icon
+                        icon="mdi:arrow-right"
+                        style="display: inline-block; transform: rotate(${attributes.current_week_evolution < 0
+                          ? "45"
+                          : attributes.current_week_evolution === 0
+                            ? "0"
+                            : "-45"}deg)"
+                      >
+                      </ha-icon>
+                    </span>
+                    <span
+                      class="percentage-value ${attributes.current_week_evolution > 0
+                        ? "percentage-positive"
+                        : attributes.current_week_evolution < 0
+                          ? "percentage-negative"
+                          : "percentage-neutral"}"
+                      aria-label="Évolution hebdomadaire: ${safeRound(attributes.current_week_evolution)}%"
+                      role="text"
+                      >${safeRound(attributes.current_week_evolution)}<span class="unit"> %</span></span
+                    >
+                  </div>
+                  <div class="tooltip">
+                    <span class="previous-month">vs ${this.weekBefore()}</span>
+                    <span class="tooltiptext"
+                      >Semaine dernière : ${attributes.last_week}<br />Semaine courante :
+                      ${attributes.current_week}</span
+                    >
+                  </div>
+                </span>`
+              : html``}
+            ${this.config.showYesterdayRatio
+              ? html` <span class="variations-linky">
+                  <div class="percentage-line">
+                    <span class="ha-icon">
+                      <ha-icon
+                        icon="mdi:arrow-right"
+                        style="display: inline-block; transform: rotate(${attributes.yesterday_evolution < 0
+                          ? "45"
+                          : attributes.yesterday_evolution === 0
+                            ? "0"
+                            : "-45"}deg)"
+                      >
+                      </ha-icon>
+                    </span>
+                    <span
+                      class="percentage-value ${attributes.yesterday_evolution > 0
+                        ? "percentage-positive"
+                        : attributes.yesterday_evolution < 0
+                          ? "percentage-negative"
+                          : "percentage-neutral"}"
+                      aria-label="Évolution quotidienne: ${safeRound(attributes.yesterday_evolution)}%"
+                      role="text"
+                      >${safeRound(attributes.yesterday_evolution)}<span class="unit"> %</span></span
+                    >
+                  </div>
+                  <div class="tooltip">
+                    <span class="previous-month">vs ${this.dayBeforeYesterday()}</span>
+                    <span class="tooltiptext"
+                      >Avant-hier : ${attributes.day_2}<br />Hier : ${attributes.yesterday}</span
+                    >
+                  </div>
+                </span>`
+              : html``}
+            ${this.config.showPeakOffPeak
+              ? html` <span class="variations-linky">
+                  <span class="ha-icon">
+                    <ha-icon icon="mdi:flash"></ha-icon>
+                  </span>
+                  ${safeRound(attributes.peak_offpeak_percent)}<span class="unit"> % HP</span>
+                </span>`
+              : html``}
           </div>
-        </ha-card>`;
-      }
+          ${this.config.showSmartInsights !== false
+            ? this.renderSmartInsights(attributes.daily, attributes.dailyweek, attributes.dailyweek_cost)
+            : html``}
+          ${this.renderHistory(
+            attributes.daily,
+            attributes.unit_of_measurement,
+            attributes.dailyweek,
+            attributes.dailyweek_cost,
+            attributes.dailyweek_costHC,
+            attributes.dailyweek_costHP,
+            attributes.dailyweek_HC,
+            attributes.dailyweek_HP,
+            attributes.dailyweek_MP,
+            attributes.dailyweek_MP_over,
+            attributes.dailyweek_MP_time,
+            attributes.dailyweek_Tempo,
+            this.config,
+            attributes,
+          )}
+          ${this.renderMonthlyView(attributes, this.config)} ${this.renderYearlyView(attributes, this.config)}
+          ${this.renderDetailedComparison(attributes, this.config)} ${this.renderEcoWatt(attributes)}
+          ${this.renderTempo(attributes)} ${this.renderError(attributes.errorLastCall)}
+          ${this.renderVersion(attributes.versionUpdateAvailable, attributes.versionGit)}
+          ${this.renderInformation(attributes, this.config)}
+        </div>
+      </ha-card>`;
+    }
+    if (modeCompteur === "production") {
+      return html` <ha-card>
+        <div class="card">
+          <div class="main-info">
+            ${this.config.showIcon
+              ? html` <div class="icon-block">
+                  <span
+                    class="linky-icon bigger"
+                    style="background: none, url('/local/community/content-card-linky/icons/linky.svg') no-repeat; background-size: contain;"
+                  ></span>
+                </div>`
+              : html``}
+            <div class="cout-block">${this.renderProductionValue(stateObj.state, attributes)}</div>
+          </div>
+          ${this.renderError(attributes.errorLastCall)}
+        </div>
+      </ha-card>`;
     }
   }
   _showDetails(myEntity) {
@@ -377,7 +376,7 @@ class ContentCardLinky extends LitElement {
     this.dispatchEvent(event);
     return event;
   }
-  renderTitle(config) {
+  renderTitle() {
     if (this.config.showTitle === true) {
       return html` <div class="card">
         <div class="main-title">
@@ -390,7 +389,7 @@ class ContentCardLinky extends LitElement {
     if (this.config.showHeader === true) {
       if (config.showPeakOffPeak) {
         return html` <div class="main-info">
-          ${this.renderIcon(attributes, config)}
+          ${this.renderIcon()}
           <div class="hp-hc-block">
             <span class="conso-hc">${this.toFloat(attributes.yesterday_HC)}</span
             ><span class="conso-unit-hc"> ${attributes.unit_of_measurement} <span class="more-unit">(en HC)</span></span
@@ -400,21 +399,21 @@ class ContentCardLinky extends LitElement {
               ${attributes.unit_of_measurement} <span class="more-unit">(en HP)</span></span
             >
           </div>
-          ${this.renderPrice(attributes, config)}
+          ${this.renderPrice(attributes)}
         </div>`;
       } else {
         return html` <div class="main-info">
-          ${this.renderIcon(attributes, config)}
+          ${this.renderIcon()}
           <div class="cout-block">
             <span class="cout">${this.toFloat(stateObj.state)}</span>
             <span class="cout-unit">${attributes.unit_of_measurement}</span>
           </div>
-          ${this.renderPrice(attributes, config)}
+          ${this.renderPrice(attributes)}
         </div>`;
       }
     }
   }
-  renderIcon(attributes, config) {
+  renderIcon() {
     if (this.config.showIcon) {
       return html` <div class="icon-block">
         <span
@@ -426,7 +425,7 @@ class ContentCardLinky extends LitElement {
       return html``;
     }
   }
-  renderPrice(attributes, config) {
+  renderPrice(attributes) {
     if (this.config.showPrice) {
       return html` <div class="cout-block">
         <span class="cout" title="Coût journalier">${this.toFloat(attributes.daily_cost, 2)}</span
@@ -436,9 +435,9 @@ class ContentCardLinky extends LitElement {
       return html``;
     }
   }
-  renderError(errorMsg, config) {
+  renderError(errorMsg) {
     if (this.config.showError === true) {
-      if (errorMsg != "") {
+      if (errorMsg !== "") {
         return html`
           <div class="error-msg" style="color: red">
             <ha-icon id="icon" icon="mdi:alert-outline"></ha-icon>
@@ -479,7 +478,7 @@ class ContentCardLinky extends LitElement {
     }
   }
 
-  calculateWeekTotal(daily, dailyweek, dailyweek_cost) {
+  calculateWeekTotal(daily, _dailyweek, dailyweek_cost) {
     if (!daily) return 0;
 
     const today = new Date();
@@ -546,7 +545,7 @@ class ContentCardLinky extends LitElement {
     return weekTotal;
   }
 
-  calculateWeekCost(dailyweek_cost, dailyweek) {
+  calculateWeekCost(dailyweek_cost, _dailyweek) {
     if (!dailyweek_cost) return 0;
 
     const today = new Date();
@@ -610,7 +609,7 @@ class ContentCardLinky extends LitElement {
     }
   }
 
-  renderWeekSummary(daily, unit_of_measurement, dailyweek, dailyweek_cost, config) {
+  renderWeekSummary(daily, unit_of_measurement, dailyweek, dailyweek_cost) {
     if (!this.config.showWeekSummary && this.config.showWeekSummary !== undefined) {
       return html``;
     }
@@ -758,18 +757,18 @@ class ContentCardLinky extends LitElement {
     dailyweek_MP_time,
     dailyweek_Tempo,
     config,
-    attributes,
+    _attributes,
   ) {
     if (this.config.showHistory === true) {
-      if (dailyweek != undefined) {
-        var nbJours = dailyweek.toString().split(",").length;
+      if (dailyweek !== undefined) {
+        let nbJours = dailyweek.toString().split(",").length;
         if (config.nbJoursAffichage <= nbJours) {
           nbJours = config.nbJoursAffichage;
         }
         return html`
-          ${this.renderWeekSummary(daily, unit_of_measurement, dailyweek, dailyweek_cost, config)}
+          ${this.renderWeekSummary(daily, unit_of_measurement, dailyweek, dailyweek_cost)}
           <div class="week-history">
-            ${this.renderTitreLigne(config)}
+            ${this.renderTitreLigne()}
             ${daily
               .slice(-nbJours)
               .map((day, index) => {
@@ -842,7 +841,7 @@ class ContentCardLinky extends LitElement {
       return html``;
     }
   }
-  renderTitreLigne(config) {
+  renderTitreLigne() {
     if (this.config.showTitleLign === true) {
       return html`
         <div class="day">
@@ -1041,23 +1040,15 @@ class ContentCardLinky extends LitElement {
           <span class="cout-unit">${attributes.unit_of_measurement}</span>
         `;
       }
-
-      // Cas d'erreur réelle
-      return html`
-        <span class="cout" title="Erreur données de production" style="color: #f44336; font-style: italic;">
-          <ha-icon icon="mdi:alert-outline"></ha-icon>
-        </span>
-        <span class="cout-unit">${attributes.unit_of_measurement}</span>
-      `;
-    } else {
-      return html`
-        <span class="cout">${this.toFloat(state)}</span>
-        <span class="cout-unit">${attributes.unit_of_measurement}</span>
-      `;
     }
+
+    return html`
+      <span class="cout">${this.toFloat(state)}</span>
+      <span class="cout-unit">${attributes.unit_of_measurement}</span>
+    `;
   }
 
-  renderDailyValue(day, dayNumber, unit_of_measurement, config, dailyweek_cost) {
+  renderDailyValue(day, dayNumber, unit_of_measurement, _config, dailyweek_cost) {
     // Traiter les cas de données manquantes ou invalides
     if (day === -1 || day === 0 || day === "0" || day === null || day === undefined) {
       // Vérifier si on a un prix mais pas de kWh pour faire une estimation
@@ -1169,44 +1160,20 @@ class ContentCardLinky extends LitElement {
     }
   }
 
-  renderDayMaxPowerTime(value, dayNumber, overMP, config) {
-    if (config.showDayMaxPower) {
-      const valeur = value.toString().split(",")[dayNumber - 1];
-      const over = overMP.toString().split(",")[dayNumber - 1];
-      if (valeur === "-1") {
-        return this.renderNoData();
-      } else {
-        if (over === "true") {
-          return html` <br /><span class="cons-val" style="color:red">${this.toFloat(valeur, 2)}</span> `;
-        } else {
-          return html` <br /><span class="cons-val">${this.toFloat(valeur, 2)}</span> `;
-        }
-      }
-    }
-  }
-
-  getOneDayForecastTime(ecoWattForecast) {
-    const ecoWattForecastDate = new Date(ecoWattForecast.attributes["date"]);
-    return [ecoWattForecastDate];
-  }
-
   getOneDayNextEcoWattText(ecoWattForecastEntity) {
     const forecastDate = new Date(ecoWattForecastEntity.attributes["date"]);
     for (const [time, value] of Object.entries(ecoWattForecastEntity.attributes["forecast"])) {
-      if (time != undefined && ecoWattForecastValues.get(value) !== "green") {
-        const timeStr = time.replace(/([345])5/g, "$10");
+      if (time !== undefined && ecoWattForecastValues.get(value) !== "green") {
         return html`Actuellement: ${ecoWattForecastValues.get(value)}`;
-      } else {
-        return html`Ecowatt ${forecastDate.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric" })}`;
       }
     }
-    return "";
+    return html`Ecowatt ${forecastDate.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric" })}`;
   }
 
   getOneDayNextEcoWatt(ecoWattForecastEntity) {
     const ecoWattForecastList = [];
     for (let [time, value] of Object.entries(ecoWattForecastEntity.attributes["forecast"])) {
-      if (time != undefined) {
+      if (time !== undefined) {
         time = time.replace("h", "").trim();
         time = time.replace("min", "").trim();
         ecoWattForecastList.push([time, ecoWattForecastValues.get(value), value]);
@@ -1216,7 +1183,7 @@ class ContentCardLinky extends LitElement {
     return ecoWattForecastList;
   }
 
-  renderEcoWatt(attributes, config) {
+  renderEcoWatt(attributes) {
     if (attributes.serviceEnedis === undefined) {
       return html``;
     }
@@ -1225,11 +1192,18 @@ class ContentCardLinky extends LitElement {
     }
 
     const sensorName = this.config.ewEntity;
-    const ecoWattForecast = this.hass.states[sensorName];
+    const ecoWattForecast = sensorName ? this.hass.states[sensorName] : undefined;
     const sensorNameJ1 = this.config.ewEntityJ1;
-    const ecoWattForecastJ1 = this.hass.states[sensorNameJ1];
+    const ecoWattForecastJ1 = sensorNameJ1 ? this.hass.states[sensorNameJ1] : undefined;
     const sensorNameJ2 = this.config.ewEntityJ2;
-    const ecoWattForecastJ2 = this.hass.states[sensorNameJ2];
+    const ecoWattForecastJ2 = sensorNameJ2 ? this.hass.states[sensorNameJ2] : undefined;
+
+    if (this.config.showEcoWatt && !ecoWattForecast) {
+      return html`<div class="error-msg">EcoWatt : entité J+0 non configurée ou introuvable</div>`;
+    }
+    if (this.config.showEcoWattJ12 && (!ecoWattForecastJ1 || !ecoWattForecastJ2)) {
+      return html`<div class="error-msg">EcoWatt : entité(s) J+1/J+2 non configurée(s) ou introuvable(s)</div>`;
+    }
 
     return html`
       <table style="width:100%">
@@ -1294,7 +1268,8 @@ class ContentCardLinky extends LitElement {
                   <ul class="flow-row oneHourLabel">
                     ${html`
                       ${this.getOneDayNextEcoWatt(ecoWattForecastJ2).map(
-                        (forecast) => html` <li title="${forecast[0]}">${forecast[0] % 2 == 1 ? forecast[0] : ""}</li>`,
+                        (forecast) =>
+                          html` <li title="${forecast[0]}">${forecast[0] % 2 === 1 ? forecast[0] : ""}</li>`,
                       )}
                     `}
                   </ul>
@@ -1319,7 +1294,7 @@ class ContentCardLinky extends LitElement {
     return [tempoRemainingRed, tempoRemainingWhite, tempoRemainingBlue];
   }
 
-  renderTempo(attributes, config) {
+  renderTempo(attributes) {
     if (attributes.serviceEnedis === undefined) {
       return html``;
     }
@@ -1336,15 +1311,15 @@ class ContentCardLinky extends LitElement {
     const sensorNameJ1 = this.config.tempoEntityJ1;
     const tempoJ1 = this.hass.states[sensorNameJ1];
 
-    if (!tempoJ0 || tempoJ0.length === 0 || !tempoJ1 || tempoJ1.length === 0) {
+    if (!tempoJ0 || !tempoJ0.state || !tempoJ1 || !tempoJ1.state) {
       return html`Tempo: sensor(s) J0 et/ou J1 indisponible ou incorrecte`;
     }
-    if (!tempoInfo || tempoInfo.length === 0) {
+    if (!tempoInfo || !tempoInfo.state) {
       return html`Tempo: sensor 'info' indisponible ou incorrecte`;
     }
 
-    const [dateJ0, valueJ0, stateJ0] = this.getTempoDateValue(tempoJ0);
-    const [dateJ1, valueJ1, stateJ1] = this.getTempoDateValue(tempoJ1);
+    const [dateJ0, valueJ0] = this.getTempoDateValue(tempoJ0);
+    const [dateJ1, valueJ1] = this.getTempoDateValue(tempoJ1);
     const [remainingRed, remainingWhite, remainingBlue] = this.getTempoRemainingDays(tempoInfo);
 
     return html`
@@ -1437,7 +1412,8 @@ class ContentCardLinky extends LitElement {
   }
 
   toFloat(value, decimals = 1) {
-    return Number.parseFloat(value).toFixed(decimals);
+    const n = Number.parseFloat(value);
+    return isNaN(n) ? "–" : n.toFixed(decimals);
   }
 
   toggleMonthlyView(e) {
@@ -1703,7 +1679,7 @@ class ContentCardLinky extends LitElement {
       yesterday: yesterdayData,
       todayTotal,
       yesterdayTotal,
-      evolution: todayTotal > 0 ? ((todayTotal - yesterdayTotal) / yesterdayTotal) * 100 : 0,
+      evolution: todayTotal > 0 && yesterdayTotal !== 0 ? ((todayTotal - yesterdayTotal) / yesterdayTotal) * 100 : 0,
     };
   }
 
@@ -1736,6 +1712,9 @@ class ContentCardLinky extends LitElement {
   }
 
   renderMiniChart(data, maxValue, color) {
+    if (!data || data.length <= 1 || maxValue === 0) {
+      return html`<svg viewBox="0 0 100 50" class="consumption-chart"></svg>`;
+    }
     const points = data
       .map((item, index) => {
         const x = (index / (data.length - 1)) * 100;
@@ -1774,21 +1753,21 @@ class ContentCardLinky extends LitElement {
   }
 
   previousYear() {
-    var d = new Date();
+    const d = new Date();
     d.setFullYear(d.getFullYear() - 1);
 
     return d.toLocaleDateString("fr-FR", { year: "numeric" });
   }
 
   previousMonth() {
-    var d = new Date();
+    const d = new Date();
     d.setMonth(d.getMonth() - 1);
     d.setFullYear(d.getFullYear() - 1);
 
     return d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
   }
   currentMonth() {
-    var d = new Date();
+    const d = new Date();
     d.setFullYear(d.getFullYear() - 1);
 
     return d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
@@ -1934,9 +1913,6 @@ class ContentCardLinky extends LitElement {
       .ha-icon {
         margin-right: 5px;
         color: var(--state-icon-color);
-      }
-
-      .cout-block {
       }
 
       .cout {
@@ -2150,8 +2126,6 @@ class ContentCardLinky extends LitElement {
         font-style: italic;
         margin-left: 5px;
       }
-      .icon-block {
-      }
       .linky-icon.bigger {
         width: 6em;
         height: 5em;
@@ -2159,7 +2133,7 @@ class ContentCardLinky extends LitElement {
       }
       .error {
         font-size: 0.8em;
-        font-style: bold;
+        font-weight: bold;
         margin-left: 5px;
       }
       .tooltip .tooltiptext {

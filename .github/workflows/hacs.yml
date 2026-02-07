@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: HACS Action
-        uses: hacs/action@main
+        uses: hacs/action@v2
         with:
           category: plugin
           ignore: brands
