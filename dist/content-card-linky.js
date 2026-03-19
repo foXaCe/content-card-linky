@@ -1092,16 +1092,16 @@ class ContentCardLinky extends LitElement {
     }
   }
   renderDayPrice(value, dayNumber, config) {
-    if (config.kWhPrice) {
-      return html` <br /><span class="cons-val">${this.toFloat(value * config.kWhPrice, 2)} €</span> `;
-    }
     if (config.showDayPrice) {
       const valeur = value.toString().split(",")[dayNumber - 1];
       if (valeur === "-1") {
         return this.renderNoData();
       } else {
-        return html` <br /><span class="cons-val">${this.toFloat(valeur)} €</span> `;
+        return html` <br /><span class="cons-val">${this.toFloat(valeur, 2)} €</span> `;
       }
+    }
+    if (config.kWhPrice) {
+      return html` <br /><span class="cons-val">${this.toFloat(value * config.kWhPrice, 2)} €</span> `;
     }
   }
   renderDayPriceHCHP(value, dayNumber, config) {
