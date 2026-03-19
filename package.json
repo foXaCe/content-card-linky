@@ -1,6 +1,6 @@
 {
   "name": "content-card-linky",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "Carte Lovelace pour afficher les donnees Linky dans Home Assistant",
   "private": true,
   "scripts": {
