@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  lint:
-    name: Lint & Format
+  build:
+    name: Lint, Format & Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -25,3 +25,14 @@ jobs:
 
       - name: Prettier
         run: npm run format:check
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify dist/ is up to date
+        run: |
+          if [ -n "$(git status --porcelain dist/)" ]; then
+            echo "::error::dist/ is out of sync with src/. Run 'npm run build' and commit."
+            git --no-pager diff dist/
+            exit 1
+          fi
