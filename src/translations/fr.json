@@ -1,0 +1,37 @@
+{
+  "card": {
+    "name": "Carte Enedis",
+    "description": "Carte pour l'intégration MyElectricalData — affichage moderne des données Linky avec évolutions colorées",
+    "data_unavailable": "Linky : données inaccessibles pour {entity}",
+    "current_week": "Semaine en cours",
+    "since": "depuis",
+    "previous_year": "vs {year}",
+    "previous_month": "vs {month}",
+    "current_month": "vs {month}",
+    "previous_week": "vs {week}",
+    "before_yesterday": "vs {date}",
+    "in_off_peak": "(en HC)",
+    "in_peak": "(en HP)",
+    "daily_cost": "Coût journalier",
+    "version_available": "Nouvelle version disponible {version}",
+    "migrate_med": "Merci de migrer sur MyElectricalData. EnedisGateway n'est plus supporté.",
+    "monthly_view": "Vue mensuelle",
+    "yearly_view": "Vue annuelle",
+    "detailed_comparison": "Comparaison détaillée",
+    "ecowatt": "EcoWatt",
+    "tempo": "Tempo",
+    "remaining_blue_days": "Jours bleus restants",
+    "remaining_white_days": "Jours blancs restants",
+    "remaining_red_days": "Jours rouges restants"
+  },
+  "editor": {
+    "entity": "Entité (requis)",
+    "title_name": "Titre de la carte",
+    "show_icon": "Afficher l'icône Linky",
+    "show_history": "Afficher l'historique",
+    "show_price": "Afficher le prix",
+    "show_day_price": "Afficher le prix journalier",
+    "show_week_ratio": "Afficher l'évolution hebdo",
+    "show_current_month_ratio": "Afficher l'évolution du mois en cours"
+  }
+}

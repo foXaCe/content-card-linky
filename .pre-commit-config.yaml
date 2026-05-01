@@ -14,7 +14,7 @@ repos:
         name: eslint
         entry: eslint
         language: node
-        files: ^dist/.*\.js$
+        files: ^src/.*\.js$
         types: [javascript]
         additional_dependencies:
           - eslint@9.18.0
@@ -23,7 +23,6 @@ repos:
         name: prettier
         entry: prettier --check
         language: node
-        files: ^dist/.*\.js$
-        types: [javascript]
+        files: ^src/.*\.(js|json)$
         additional_dependencies:
           - prettier@3.4.0

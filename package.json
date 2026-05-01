@@ -1,17 +1,28 @@
 {
   "name": "content-card-linky",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "description": "Carte Lovelace pour afficher les donnees Linky dans Home Assistant",
   "private": true,
+  "type": "module",
   "scripts": {
-    "lint": "eslint dist/",
-    "lint:fix": "eslint dist/ --fix",
-    "format": "prettier --write dist/",
-    "format:check": "prettier --check dist/"
+    "build": "rollup -c",
+    "build:watch": "rollup -c -w",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/"
   },
   "devDependencies": {
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-replace": "^6.0.2",
+    "@rollup/plugin-terser": "^0.4.4",
     "eslint": "^9.18.0",
-    "prettier": "^3.4.0"
+    "prettier": "^3.4.0",
+    "rollup": "^4.30.0"
+  },
+  "dependencies": {
+    "lit": "^3.2.1"
   },
   "license": "MIT"
 }

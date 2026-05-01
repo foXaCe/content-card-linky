@@ -1,0 +1,37 @@
+{
+  "card": {
+    "name": "Linky Card",
+    "description": "Card for the MyElectricalData integration — modern Linky data display with coloured trends",
+    "data_unavailable": "Linky: data unavailable for {entity}",
+    "current_week": "Current week",
+    "since": "since",
+    "previous_year": "vs {year}",
+    "previous_month": "vs {month}",
+    "current_month": "vs {month}",
+    "previous_week": "vs {week}",
+    "before_yesterday": "vs {date}",
+    "in_off_peak": "(off-peak)",
+    "in_peak": "(peak)",
+    "daily_cost": "Daily cost",
+    "version_available": "New version available {version}",
+    "migrate_med": "Please migrate to MyElectricalData. EnedisGateway is no longer supported.",
+    "monthly_view": "Monthly view",
+    "yearly_view": "Yearly view",
+    "detailed_comparison": "Detailed comparison",
+    "ecowatt": "EcoWatt",
+    "tempo": "Tempo",
+    "remaining_blue_days": "Remaining blue days",
+    "remaining_white_days": "Remaining white days",
+    "remaining_red_days": "Remaining red days"
+  },
+  "editor": {
+    "entity": "Entity (required)",
+    "title_name": "Card title",
+    "show_icon": "Show Linky icon",
+    "show_history": "Show history",
+    "show_price": "Show price",
+    "show_day_price": "Show daily price",
+    "show_week_ratio": "Show week trend",
+    "show_current_month_ratio": "Show current month trend"
+  }
+}

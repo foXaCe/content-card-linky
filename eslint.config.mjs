@@ -1,6 +1,6 @@
 export default [
   {
-    files: ["dist/**/*.js"],
+    files: ["src/**/*.js"],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
@@ -38,6 +38,7 @@ export default [
         getComputedStyle: "readonly",
         atob: "readonly",
         btoa: "readonly",
+        __CARD_VERSION__: "readonly",
       },
     },
     rules: {
