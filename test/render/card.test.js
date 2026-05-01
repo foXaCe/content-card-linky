@@ -1,0 +1,171 @@
+// @vitest-environment happy-dom
+import { describe, it, expect, beforeEach } from "vitest";
+import { makeHass, makeLinkyEntity, mountCard } from "./setup.js";
+
+beforeEach(() => {
+  document.body.innerHTML = "";
+});
+
+const baseConfig = {
+  type: "custom:content-card-linky",
+  entity: "sensor.linky_consumption",
+  titleName: "LINKY",
+};
+
+describe("content-card-linky render", () => {
+  it("registers as a custom element", async () => {
+    await import("../../src/content-card-linky.js");
+    expect(customElements.get("content-card-linky")).toBeDefined();
+  });
+
+  it("getCardSize is dynamic and grows with enabled sections", async () => {
+    const hass = makeHass({ states: { [baseConfig.entity]: makeLinkyEntity() } });
+    const minimal = await mountCard(
+      {
+        ...baseConfig,
+        showHistory: false,
+        showSmartInsights: false,
+        showMonthlyView: false,
+        showYearlyView: false,
+        showDetailedComparison: false,
+        showEcoWatt: false,
+        showEcoWattJ12: false,
+        showTempo: false,
+      },
+      hass,
+    );
+    const full = await mountCard(
+      {
+        ...baseConfig,
+        showHistory: true,
+        showSmartInsights: true,
+        showMonthlyView: true,
+        showYearlyView: true,
+        showDetailedComparison: true,
+      },
+      hass,
+    );
+    expect(minimal.getCardSize()).toBeGreaterThanOrEqual(2);
+    expect(full.getCardSize()).toBeGreaterThan(minimal.getCardSize());
+  });
+
+  it("getGridOptions and getLayoutOptions return sensible bounds", async () => {
+    const hass = makeHass({ states: { [baseConfig.entity]: makeLinkyEntity() } });
+    const card = await mountCard(baseConfig, hass);
+    const grid = card.getGridOptions();
+    expect(grid.columns).toBe(12);
+    expect(grid.min_columns).toBeLessThanOrEqual(grid.columns);
+    expect(grid.rows).toBeGreaterThanOrEqual(grid.min_rows);
+
+    const layout = card.getLayoutOptions();
+    expect(layout.grid_columns).toBeGreaterThanOrEqual(layout.grid_min_columns);
+    expect(layout.grid_rows).toBeGreaterThanOrEqual(layout.grid_min_rows);
+  });
+
+  it("renders the localized 'data unavailable' message when entity is missing", async () => {
+    const hass = makeHass({ states: {} }); // no states → entity introuvable
+    const card = await mountCard(baseConfig, hass);
+    const text = card.shadowRoot.textContent;
+    expect(text).toMatch(/Linky\s*:\s*données inaccessibles/);
+    expect(text).toContain("sensor.linky_consumption");
+  });
+
+  it("renders the consumption header for a normal entity", async () => {
+    const hass = makeHass({ states: { [baseConfig.entity]: makeLinkyEntity() } });
+    const card = await mountCard(baseConfig, hass);
+    const text = card.shadowRoot.textContent;
+    // Default config: showPeakOffPeak=true, showHeader=true
+    // → header shows yesterday HC/HP values
+    expect(text).toContain("5"); // yesterday_HC
+    expect(text).toContain("6"); // yesterday_HP
+    expect(text).toMatch(/en HC/);
+    expect(text).toMatch(/en HP/);
+  });
+
+  it("respects locale fallback (English)", async () => {
+    const hass = makeHass({
+      locale: { language: "en" },
+      states: {},
+    });
+    const card = await mountCard(baseConfig, hass);
+    const text = card.shadowRoot.textContent;
+    expect(text).toMatch(/Linky:\s*data unavailable/);
+  });
+
+  it("getStubConfig auto-detects a Linky-like sensor", async () => {
+    await import("../../src/content-card-linky.js");
+    const Card = customElements.get("content-card-linky");
+    const hass = makeHass({
+      states: {
+        "sensor.weather": { attributes: {} },
+        "sensor.linky_42_consumption": { attributes: { typeCompteur: "consommation" } },
+      },
+    });
+    const stub = await Card.getStubConfig(hass);
+    expect(stub.entity).toBe("sensor.linky_42_consumption");
+  });
+
+  it("getStubConfig falls back when no candidate exists", async () => {
+    await import("../../src/content-card-linky.js");
+    const Card = customElements.get("content-card-linky");
+    const stub = await Card.getStubConfig(makeHass({ states: {} }));
+    expect(stub.entity).toBe("sensor.linky_consumption");
+  });
+
+  it("setConfig throws without an entity", async () => {
+    await import("../../src/content-card-linky.js");
+    const Card = customElements.get("content-card-linky");
+    const card = new Card();
+    expect(() => card.setConfig({})).toThrow(/entity/i);
+  });
+
+  it("renders the legacy detailed-comparison fallback when both formats are missing", async () => {
+    const hass = makeHass({
+      states: {
+        [baseConfig.entity]: makeLinkyEntity(),
+        "sensor.linky_consumption_last5day": {
+          state: "ok",
+          attributes: { unit_of_measurement: "kWh", friendly_name: "last5day" },
+        },
+      },
+    });
+    const card = await mountCard(
+      { ...baseConfig, showDetailedComparison: true, detailedComparisonEntity: "sensor.linky_consumption_last5day" },
+      hass,
+    );
+    const text = card.shadowRoot.textContent;
+    expect(text).toMatch(/Attributs disponibles/);
+  });
+
+  it("renders the time-series detailed comparison when last5day exposes time/consumption", async () => {
+    // Build samples for "today" and "yesterday" relative to the test runtime.
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 0, 0);
+    const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+    const fmt = (d) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")} ${String(
+        d.getHours(),
+      ).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:00`;
+
+    const hass = makeHass({
+      states: {
+        [baseConfig.entity]: makeLinkyEntity(),
+        "sensor.linky_consumption_last5day": {
+          state: "ok",
+          attributes: {
+            unit_of_measurement: "kWh",
+            time: [fmt(yesterday), fmt(today)],
+            consumption: [200, 300],
+          },
+        },
+      },
+    });
+    const card = await mountCard(
+      { ...baseConfig, showDetailedComparison: true, detailedComparisonEntity: "sensor.linky_consumption_last5day" },
+      hass,
+    );
+    const text = card.shadowRoot.textContent;
+    expect(text).toMatch(/Aujourd'hui vs Hier/);
+    expect(text).not.toMatch(/Attributs disponibles/);
+  });
+});
