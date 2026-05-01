@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.1] - 2026-05-01
+
+### Fixed
+- **Detailed comparison ("Aujourd'hui vs Hier")** now supports the modern
+  MyElectricalData `last5day` time-series format (`time[]` + `consumption[]`).
+  Previously the section displayed a `Attributs disponibles: time, consumption, ...`
+  debug fallback when the entity used the new attribute shape. Closes #6.
+- **"Semaine en cours" totals**: corrected an off-by-one in
+  `calculateWeekTotal` / `calculateWeekCost`. The loop now sums Monday
+  through yesterday (the original intent) instead of Tuesday through today.
+  Visible effect: the weekly total will match what users expect — biggest
+  shift on Saturdays, no shift on Mondays.
+
+### Changed
+- **Editor**: rewritten on top of `ha-form` schema (-45% code, ~530 → 292 lines).
+  All 36 options preserved, with native HA selectors, dark-mode styling and
+  fully localized labels (EN/FR).
+- **Renderers extracted**: `renderEcoWatt`, `renderTempo` and
+  `renderDetailedComparison` moved out of the 2900-line monolith into
+  dedicated modules under `src/renderers/`. `content-card-linky.js` is now
+  ~2500 lines (-15%). Behaviour preserved.
+- **Pure calculation helpers** moved to `src/lib/calculations.js` so they
+  can be tested without DOM (`safeRound`, week totals, gradient/season
+  themes, EcoWatt parser, last5day time-series parser).
+
+### Tests
+- Added a Vitest harness with 54 tests:
+  - 43 unit tests on the pure helpers in `src/lib/`.
+  - 11 happy-dom render tests on the LitElement (custom element registration,
+    `getCardSize` / `getGridOptions`, locale fallback, "data unavailable"
+    state, async `getStubConfig`, detailed-comparison legacy and modern
+    formats).
+- CI now runs `npm test` before `npm run build`.
+
+### Security
+- Bumped `@rollup/plugin-terser` to `^1.0.0` (fixes the
+  `serialize-javascript` advisory carried by 0.x).
+- Bumped `vitest` to `^4.1.5` to pull `vite ^6.4.2` (fixes path-traversal
+  and `esbuild` dev-server advisories — dev-only impact).
+- Bumped `softprops/action-gh-release` to `v3` in the release workflow.
+
 ## [1.7.0] - 2026-05-01
 
 ### Added
