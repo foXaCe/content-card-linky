@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-05-01
+
+### Added
+- EN/FR translations via `hass.locale` (new `src/translations/{en,fr}.json` and `src/lib/localize.js`)
+- Home Assistant 2024.7+ *section view* support: `getGridOptions()` and `getLayoutOptions()`
+- `getStubConfig(hass)` is now async and auto-detects an available Linky sensor
+- Console banner with the card version on load
+- Card version is injected at build time from `package.json` (single source of truth)
+- Modern build pipeline with Rollup (Lit 3 bundled, terser minification, version injection)
+- Source layout reorganized: editable code now lives in `src/`, `dist/` is generated
+- CI now builds and verifies `dist/` is in sync with `src/`
+- Release workflow now builds before attaching artifacts
+
+### Changed
+- Replaced the brittle `Object.getPrototypeOf(customElements.get("ha-panel-lovelace"))` hack with a direct Lit import
+- `shouldUpdate` now observes every configured entity (`ewEntity*`, `tempo*`, `detailedComparisonEntity`), not only the main one
+- `getCardSize()` is now dynamic, based on enabled sections
+- `fireEvent` factored into a shared helper (`src/lib/fire-event.js`)
+- Hardcoded `color: red` replaced with `var(--error-color, red)` for theme compatibility
+- Visible strings (HC/HP labels, "Semaine en cours", error/version banners) are now localized
+- Locale-aware date formatting in the weekly summary (uses `hass.locale.language`)
+
+### Fixed
+- Card no longer fails to refresh when EcoWatt, Tempo or detailed-comparison entities change
+- Version mismatch between `package.json` (1.6.2) and `customCards.push({ version: "1.6.1" })`
+
+### Security
+- Bumped `@rollup/plugin-terser` to `^1.0.0` (fixes `serialize-javascript` advisory carried by 0.x)
+
 ## [1.6.2] - 2026-03-19
 
 ### Fixed
