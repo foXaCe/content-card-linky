@@ -7,19 +7,23 @@
   "scripts": {
     "build": "rollup -c",
     "build:watch": "rollup -c -w",
-    "lint": "eslint src/",
-    "lint:fix": "eslint src/ --fix",
-    "format": "prettier --write src/",
-    "format:check": "prettier --check src/"
+    "lint": "eslint src/ test/",
+    "lint:fix": "eslint src/ test/ --fix",
+    "format": "prettier --write src/ test/",
+    "format:check": "prettier --check src/ test/",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^1.0.0",
+    "@vitest/coverage-v8": "^2.1.8",
     "eslint": "^9.18.0",
     "prettier": "^3.4.0",
-    "rollup": "^4.30.0"
+    "rollup": "^4.30.0",
+    "vitest": "^2.1.8"
   },
   "dependencies": {
     "lit": "^3.2.1"

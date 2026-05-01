@@ -1,6 +1,14 @@
 import { LitElement, html, css } from "lit";
 import { fireEvent } from "./lib/fire-event.js";
 import { localize } from "./lib/localize.js";
+import {
+  calculateWeekTotal,
+  calculateWeekCost,
+  getDynamicGradient,
+  getOneDayNextEcoWatt,
+  getSeasonalTheme,
+  safeRound,
+} from "./lib/calculations.js";
 
 const CARD_VERSION = __CARD_VERSION__;
 
@@ -69,11 +77,6 @@ function hasConfigOrEntityChanged(element, changedProps) {
     }
   }
   return false;
-}
-
-function safeRound(val) {
-  const n = Number(val);
-  return isNaN(n) ? 0 : Math.round(n);
 }
 
 class ContentCardLinky extends LitElement {
@@ -505,152 +508,21 @@ class ContentCardLinky extends LitElement {
     }
   }
 
-  calculateWeekTotal(daily, _dailyweek, dailyweek_cost) {
-    if (!daily) return 0;
-
-    const today = new Date();
-    const daysSinceMonday = today.getDay() === 0 ? 6 : today.getDay() - 1;
-
-    let weekTotal = 0;
-
-    // Dans daily[], index 0 = aujourd'hui, index 1 = hier, etc.
-    // Pour calculer lundi à aujourd'hui, on va de l'index daysSinceMonday à l'index 0
-
-    // Parcourir de lundi à vendredi (exclure dimanche, aujourd'hui n'existe pas encore)
-    // Si on est samedi (daysSinceMonday=5), prendre index 4,3,2,1,0 (lundi à vendredi)
-    for (let i = Math.min(daysSinceMonday - 1, daily.length - 1); i >= 0; i--) {
-      // De lundi (daysSinceMonday-1) à vendredi (0)
-      if (i < daily.length) {
-        // Calculer quel jour de la semaine correspond à cet index
-        const dayDate = new Date();
-        dayDate.setDate(dayDate.getDate() - i);
-        const dayOfWeek = dayDate.getDay(); // 0=dimanche, 1=lundi, etc.
-
-        const consumption = parseFloat(daily[i]);
-
-        // Ne prendre que lundi à vendredi (pas dimanche)
-        if (dayOfWeek !== 0) {
-          if (!isNaN(consumption) && consumption !== -1 && consumption !== 0) {
-            // Données réelles disponibles
-            weekTotal += consumption;
-          } else if (dailyweek_cost) {
-            // Données manquantes mais vérifier si prix disponible
-            const dailyCostArray = dailyweek_cost.toString().split(",");
-            const dayPrice = parseFloat(dailyCostArray[i]?.replace(",", "."));
-
-            if (!isNaN(dayPrice) && dayPrice > 0) {
-              // Prix disponible mais pas kWh - utiliser l'estimation
-              const validRatios = [];
-
-              // Utiliser les autres jours disponibles pour calculer le ratio moyen
-              for (let j = 0; j < Math.min(daily.length, dailyCostArray.length, 7); j++) {
-                if (j !== i) {
-                  // Exclure le jour manquant
-                  const kwh = parseFloat(daily[j]);
-                  const cost = parseFloat(dailyCostArray[j]?.replace(",", "."));
-
-                  if (!isNaN(kwh) && !isNaN(cost) && kwh > 0 && cost > 0 && kwh !== -1 && cost !== -1) {
-                    validRatios.push(kwh / cost);
-                  }
-                }
-              }
-
-              if (validRatios.length > 0) {
-                const avgRatio = validRatios.reduce((sum, ratio) => sum + ratio, 0) / validRatios.length;
-                const estimatedKwh = dayPrice * avgRatio;
-                if (estimatedKwh > 0) {
-                  weekTotal += estimatedKwh;
-                }
-              }
-            }
-            // Si ni prix ni kWh : on ne fait rien (données en attente, pas incluses dans le total)
-          }
-        }
-      }
-    }
-
-    return weekTotal;
-  }
-
-  calculateWeekCost(dailyweek_cost, _dailyweek) {
-    if (!dailyweek_cost) return 0;
-
-    const today = new Date();
-    const daysSinceMonday = today.getDay() === 0 ? 6 : today.getDay() - 1;
-
-    const dailyCostArray = dailyweek_cost.toString().split(",");
-    let weekCost = 0;
-
-    // Même logique que calculateWeekTotal : de lundi à vendredi (exclure dimanche)
-    for (let i = Math.min(daysSinceMonday - 1, dailyCostArray.length - 1); i >= 0; i--) {
-      if (i < dailyCostArray.length) {
-        // Calculer quel jour correspond à cet index
-        const dayDate = new Date();
-        dayDate.setDate(dayDate.getDate() - i);
-        const dayOfWeek = dayDate.getDay(); // 0=dimanche, 1=lundi, etc.
-
-        const cost = parseFloat(dailyCostArray[i].replace(",", "."));
-
-        // Ne prendre que lundi à vendredi (pas dimanche)
-        if (dayOfWeek !== 0 && !isNaN(cost) && cost !== -1) {
-          weekCost += cost;
-        }
-      }
-    }
-    return weekCost;
-  }
-
-  getDynamicGradient(consumption, averageConsumption = 50) {
-    const ratio = consumption / averageConsumption;
-
-    if (ratio <= 0.7) {
-      // Très économique - Vert
-      return "linear-gradient(135deg, #4caf50 0%, #8bc34a 100%)";
-    } else if (ratio <= 1.0) {
-      // Normal - Bleu
-      return "linear-gradient(135deg, #2196f3 0%, #03dac6 100%)";
-    } else if (ratio <= 1.3) {
-      // Élevé - Orange
-      return "linear-gradient(135deg, #ff9800 0%, #ffc107 100%)";
-    } else {
-      // Très élevé - Rouge
-      return "linear-gradient(135deg, #f44336 0%, #e91e63 100%)";
-    }
-  }
-
-  getSeasonalTheme() {
-    const month = new Date().getMonth();
-
-    if (month >= 2 && month <= 4) {
-      // Printemps - Vert tendre
-      return { primary: "#66bb6a", accent: "#81c784", icon: "mdi:flower" };
-    } else if (month >= 5 && month <= 7) {
-      // Été - Bleu océan
-      return { primary: "#42a5f5", accent: "#29b6f6", icon: "mdi:white-balance-sunny" };
-    } else if (month >= 8 && month <= 10) {
-      // Automne - Orange/Marron
-      return { primary: "#ff7043", accent: "#ffab40", icon: "mdi:leaf" };
-    } else {
-      // Hiver - Bleu froid
-      return { primary: "#5c6bc0", accent: "#7986cb", icon: "mdi:snowflake" };
-    }
-  }
-
   renderWeekSummary(daily, unit_of_measurement, dailyweek, dailyweek_cost) {
     if (!this.config.showWeekSummary && this.config.showWeekSummary !== undefined) {
       return html``;
     }
 
-    const weekTotal = this.calculateWeekTotal(daily, dailyweek, dailyweek_cost);
-    const weekCost = this.calculateWeekCost(dailyweek_cost, dailyweek);
+    const weekTotal = calculateWeekTotal(daily, dailyweek_cost);
+    const weekCost = calculateWeekCost(dailyweek_cost);
     const today = new Date();
     const mondayThisWeek = new Date(today);
     mondayThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
 
     // Calcul de la moyenne pour gradient dynamique
     const avgWeekly = (daily.slice(0, 7).reduce((sum, day) => sum + parseFloat(day || 0), 0) / 7) * 5;
-    const dynamicGradient = this.getDynamicGradient(weekTotal, avgWeekly);
-    const seasonalTheme = this.getSeasonalTheme();
+    const dynamicGradient = getDynamicGradient(weekTotal, avgWeekly);
+    const seasonalTheme = getSeasonalTheme();
 
     return html`
       <div class="week-summary-card" style="background: ${dynamicGradient}">
@@ -1201,17 +1073,6 @@ class ContentCardLinky extends LitElement {
     return html`Ecowatt ${forecastDate.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric" })}`;
   }
 
-  getOneDayNextEcoWatt(ecoWattForecastEntity) {
-    const ecoWattForecastList = [];
-    for (const [rawTime, value] of Object.entries(ecoWattForecastEntity.attributes["forecast"])) {
-      if (rawTime === undefined) continue;
-      const time = rawTime.replace("h", "").replace("min", "").trim();
-      ecoWattForecastList.push([time, ecoWattForecastValues.get(value), value]);
-    }
-
-    return ecoWattForecastList;
-  }
-
   renderEcoWatt(attributes) {
     if (attributes.serviceEnedis === undefined) {
       return html``;
@@ -1242,7 +1103,7 @@ class ContentCardLinky extends LitElement {
               <td style="width:95%">
                 <ul class="flow-row oneHour">
                   ${html`
-                    ${this.getOneDayNextEcoWatt(ecoWattForecast).map(
+                    ${getOneDayNextEcoWatt(ecoWattForecast, ecoWattForecastValues).map(
                       (forecast) =>
                         html` <li
                           class="ecowatt-${forecast[0]}"
@@ -1262,7 +1123,7 @@ class ContentCardLinky extends LitElement {
                 <td style="width:95%">
                   <ul class="flow-row oneHour">
                     ${html`
-                      ${this.getOneDayNextEcoWatt(ecoWattForecastJ1).map(
+                      ${getOneDayNextEcoWatt(ecoWattForecastJ1, ecoWattForecastValues).map(
                         (forecast) =>
                           html` <li
                             class="ecowatt-${forecast[0]}"
@@ -1279,7 +1140,7 @@ class ContentCardLinky extends LitElement {
                 <td style="width:95%">
                   <ul class="flow-row oneHour">
                     ${html`
-                      ${this.getOneDayNextEcoWatt(ecoWattForecastJ2).map(
+                      ${getOneDayNextEcoWatt(ecoWattForecastJ2, ecoWattForecastValues).map(
                         (forecast) =>
                           html` <li
                             class="ecowatt-${forecast[0]}"
@@ -1296,7 +1157,7 @@ class ContentCardLinky extends LitElement {
                 <td style="width:95%">
                   <ul class="flow-row oneHourLabel">
                     ${html`
-                      ${this.getOneDayNextEcoWatt(ecoWattForecastJ2).map(
+                      ${getOneDayNextEcoWatt(ecoWattForecastJ2, ecoWattForecastValues).map(
                         (forecast) =>
                           html` <li title="${forecast[0]}">${forecast[0] % 2 === 1 ? forecast[0] : ""}</li>`,
                       )}
