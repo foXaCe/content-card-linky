@@ -5,11 +5,12 @@ import {
   calculateWeekTotal,
   calculateWeekCost,
   getDynamicGradient,
-  getOneDayNextEcoWatt,
   getSeasonalTheme,
-  parseDetailedTimeSeries,
   safeRound,
 } from "./lib/calculations.js";
+import { renderEcoWatt } from "./renderers/ecowatt.js";
+import { renderTempo } from "./renderers/tempo.js";
+import { renderDetailedComparison } from "./renderers/detailed-comparison.js";
 
 const CARD_VERSION = __CARD_VERSION__;
 
@@ -44,13 +45,6 @@ const ENTITY_CONFIG_KEYS = [
   "tempoInfo",
   "detailedComparisonEntity",
 ];
-
-const ecoWattForecastValues = new Map([
-  ["Pas de valeur", "green"],
-  [1, "green"],
-  [2, "yellow"],
-  [3, "red"],
-]);
 
 const tempoValues = new Map([
   ["unknown", "grey"],
@@ -375,8 +369,11 @@ class ContentCardLinky extends LitElement {
             attributes,
           )}
           ${this.renderMonthlyView(attributes, this.config)} ${this.renderYearlyView(attributes, this.config)}
-          ${this.renderDetailedComparison(attributes, this.config)} ${this.renderEcoWatt(attributes)}
-          ${this.renderTempo(attributes)} ${this.renderError(attributes.errorLastCall)}
+          ${renderDetailedComparison(this.hass, this.config, attributes, this._detailedExpanded, (e) =>
+            this.toggleDetailedComparison(e),
+          )}
+          ${renderEcoWatt(this.hass, this.config, attributes)} ${renderTempo(this.hass, this.config, attributes)}
+          ${this.renderError(attributes.errorLastCall)}
           ${this.renderVersion(attributes.versionUpdateAvailable, attributes.versionGit)}
           ${this.renderInformation(attributes, this.config)}
         </div>
@@ -1064,176 +1061,6 @@ class ContentCardLinky extends LitElement {
     }
   }
 
-  getOneDayNextEcoWattText(ecoWattForecastEntity) {
-    const forecastDate = new Date(ecoWattForecastEntity.attributes["date"]);
-    for (const [time, value] of Object.entries(ecoWattForecastEntity.attributes["forecast"])) {
-      if (time !== undefined && ecoWattForecastValues.get(value) !== "green") {
-        return html`Actuellement: ${ecoWattForecastValues.get(value)}`;
-      }
-    }
-    return html`Ecowatt ${forecastDate.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric" })}`;
-  }
-
-  renderEcoWatt(attributes) {
-    if (attributes.serviceEnedis === undefined) {
-      return html``;
-    }
-    if (attributes.serviceEnedis !== "myElectricalData") {
-      return html`EcoWatt : uniquement disponible avec myElectricData`;
-    }
-
-    const sensorName = this.config.ewEntity;
-    const ecoWattForecast = sensorName ? this.hass.states[sensorName] : undefined;
-    const sensorNameJ1 = this.config.ewEntityJ1;
-    const ecoWattForecastJ1 = sensorNameJ1 ? this.hass.states[sensorNameJ1] : undefined;
-    const sensorNameJ2 = this.config.ewEntityJ2;
-    const ecoWattForecastJ2 = sensorNameJ2 ? this.hass.states[sensorNameJ2] : undefined;
-
-    if (this.config.showEcoWatt && !ecoWattForecast) {
-      return html`<div class="error-msg">EcoWatt : entité J+0 non configurée ou introuvable</div>`;
-    }
-    if (this.config.showEcoWattJ12 && (!ecoWattForecastJ1 || !ecoWattForecastJ2)) {
-      return html`<div class="error-msg">EcoWatt : entité(s) J+1/J+2 non configurée(s) ou introuvable(s)</div>`;
-    }
-
-    return html`
-      <table style="width:100%">
-        ${this.config.showEcoWatt
-          ? html` <tr style="line-height:80%">
-              <td style="width:5%">J+0</td>
-              <td style="width:95%">
-                <ul class="flow-row oneHour">
-                  ${html`
-                    ${getOneDayNextEcoWatt(ecoWattForecast, ecoWattForecastValues).map(
-                      (forecast) =>
-                        html` <li
-                          class="ecowatt-${forecast[0]}"
-                          style="background: ${forecast[1]}"
-                          title="${forecast[1]} - ${forecast[0]}"
-                        ></li>`,
-                    )}
-                  `}
-                </ul>
-              </td>
-            </tr>`
-          : html``}
-        ${this.config.showEcoWattJ12
-          ? html`
-              <tr style="line-height:80%">
-                <td style="width:5%">J+1</td>
-                <td style="width:95%">
-                  <ul class="flow-row oneHour">
-                    ${html`
-                      ${getOneDayNextEcoWatt(ecoWattForecastJ1, ecoWattForecastValues).map(
-                        (forecast) =>
-                          html` <li
-                            class="ecowatt-${forecast[0]}"
-                            style="background: ${forecast[1]}"
-                            title="${forecast[1]} - ${forecast[0]}"
-                          ></li>`,
-                      )}
-                    `}
-                  </ul>
-                </td>
-              </tr>
-              <tr style="line-height:80%">
-                <td style="width:5%">J+2</td>
-                <td style="width:95%">
-                  <ul class="flow-row oneHour">
-                    ${html`
-                      ${getOneDayNextEcoWatt(ecoWattForecastJ2, ecoWattForecastValues).map(
-                        (forecast) =>
-                          html` <li
-                            class="ecowatt-${forecast[0]}"
-                            style="background: ${forecast[1]}"
-                            title="${forecast[1]} - ${forecast[0]}"
-                          ></li>`,
-                      )}
-                    `}
-                  </ul>
-                </td>
-              </tr>
-              <tr style="line-height:80%">
-                <td style="width:5%"></td>
-                <td style="width:95%">
-                  <ul class="flow-row oneHourLabel">
-                    ${html`
-                      ${getOneDayNextEcoWatt(ecoWattForecastJ2, ecoWattForecastValues).map(
-                        (forecast) =>
-                          html` <li title="${forecast[0]}">${forecast[0] % 2 === 1 ? forecast[0] : ""}</li>`,
-                      )}
-                    `}
-                  </ul>
-                </td>
-              </tr>
-            `
-          : html``}
-      </table>
-    `;
-  }
-
-  getTempoDateValue(tempoEntity) {
-    const tempoDate = new Date(tempoEntity.attributes["date"]);
-    const tempoValue = tempoEntity.state;
-    return [tempoDate, tempoValues.get(tempoValue), tempoValue];
-  }
-
-  getTempoRemainingDays(tempoEntity) {
-    const tempoRemainingRed = tempoEntity.attributes["days_red"];
-    const tempoRemainingWhite = tempoEntity.attributes["days_white"];
-    const tempoRemainingBlue = tempoEntity.attributes["days_blue"];
-    return [tempoRemainingRed, tempoRemainingWhite, tempoRemainingBlue];
-  }
-
-  renderTempo(attributes) {
-    if (attributes.serviceEnedis === undefined) {
-      return html``;
-    }
-    if (attributes.serviceEnedis !== "myElectricalData") {
-      return html`EcoWatt : uniquement disponible avec myElectricData`;
-    }
-    if (this.config.showTempo === false) {
-      return html``;
-    }
-    const sensorName = this.config.tempoEntityInfo;
-    const tempoInfo = this.hass.states[sensorName];
-    const sensorNameJ0 = this.config.tempoEntityJ0;
-    const tempoJ0 = this.hass.states[sensorNameJ0];
-    const sensorNameJ1 = this.config.tempoEntityJ1;
-    const tempoJ1 = this.hass.states[sensorNameJ1];
-
-    if (!tempoJ0 || !tempoJ0.state || !tempoJ1 || !tempoJ1.state) {
-      return html`Tempo: sensor(s) J0 et/ou J1 indisponible ou incorrecte`;
-    }
-    if (!tempoInfo || !tempoInfo.state) {
-      return html`Tempo: sensor 'info' indisponible ou incorrecte`;
-    }
-
-    const [dateJ0, valueJ0] = this.getTempoDateValue(tempoJ0);
-    const [dateJ1, valueJ1] = this.getTempoDateValue(tempoJ1);
-    const [remainingRed, remainingWhite, remainingBlue] = this.getTempoRemainingDays(tempoInfo);
-
-    return html`
-      <table class="tempo-color">
-        <tr>
-          <td class="tempo-${valueJ0}" style="width:50%">
-            ${new Date(dateJ0).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric" })}
-          </td>
-          <td class="tempo-${valueJ1}" style="width:50%">
-            ${new Date(dateJ1).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric" })}
-          </td>
-        </tr>
-      </table>
-      <table class="tempo-days">
-        <tr>
-          <td class="tempo-blue" style="width:33.33%">${remainingBlue}</td>
-          <td class="tempo-white" style="width:33.33%">${remainingWhite}</td>
-          <td class="tempo-red" style="width:33.33%">${remainingRed}</td>
-        </tr>
-      </table>
-    `;
-  }
-
   setConfig(config) {
     if (!config.entity) {
       throw new Error("You need to define an entity");
@@ -1487,191 +1314,6 @@ class ContentCardLinky extends LitElement {
               `,
             )}
           </div>
-        </div>
-      </div>
-    `;
-  }
-
-  renderDetailedComparison(attributes, config) {
-    if (!config.showDetailedComparison) {
-      return html``;
-    }
-
-    if (!config.detailedComparisonEntity) {
-      return html``;
-    }
-
-    const detailedEntity = this.hass.states[config.detailedComparisonEntity];
-    if (!detailedEntity) {
-      return html`
-        <div class="collapsible-section">
-          <div class="collapsible-header">
-            <span class="section-title">Aujourd'hui vs Hier</span>
-            <span class="section-summary">Entité ${config.detailedComparisonEntity} introuvable</span>
-          </div>
-        </div>
-      `;
-    }
-
-    const attrs = detailedEntity.attributes;
-    let comparisonData;
-
-    if (Array.isArray(attrs.time) && Array.isArray(attrs.consumption)) {
-      // Modern MyElectricalData last5day format: time[] + consumption[]
-      comparisonData = parseDetailedTimeSeries(attrs.time, attrs.consumption);
-    } else if (attrs.Daily && attrs.Dailyweek) {
-      // Legacy daily-summary format: "0, 12, 11,7" + "15/1, 14/1, 13/1"
-      comparisonData = this.parseDetailedData({ Daily: attrs.Daily, Dailyweek: attrs.Dailyweek });
-    } else {
-      const availableAttrs = Object.keys(attrs).join(", ");
-      return html`
-        <div class="collapsible-section">
-          <div class="collapsible-header">
-            <span class="section-title">Aujourd'hui vs Hier</span>
-            <span class="section-summary">Attributs disponibles: ${availableAttrs}</span>
-          </div>
-        </div>
-      `;
-    }
-
-    if (!comparisonData.today || !comparisonData.yesterday) {
-      return html`
-        <div class="collapsible-section">
-          <div class="collapsible-header">
-            <span class="section-title">Aujourd'hui vs Hier</span>
-            <span class="section-summary"
-              >Données aujourd'hui/hier manquantes (${comparisonData.today?.length || 0} /
-              ${comparisonData.yesterday?.length || 0})</span
-            >
-          </div>
-        </div>
-      `;
-    }
-
-    return html`
-      <div class="collapsible-section">
-        <div class="collapsible-header" @click="${this.toggleDetailedComparison}">
-          <ha-icon icon="${this._detailedExpanded ? "mdi:chevron-up" : "mdi:chevron-down"}"></ha-icon>
-          <span class="section-title">Aujourd'hui vs Hier</span>
-          <span class="section-summary">
-            ${comparisonData.todayTotal.toFixed(1)} vs ${comparisonData.yesterdayTotal.toFixed(1)} kWh
-          </span>
-        </div>
-        <div class="collapsible-content ${this._detailedExpanded ? "expanded" : "collapsed"}">
-          <div class="detailed-comparison">
-            ${this.renderComparisonCharts(comparisonData, attributes.unit_of_measurement)}
-            ${this.renderComparisonStats(comparisonData)}
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  parseDetailedData(attributes) {
-    // Parsing des données Daily: "0, 12, 11,7, 9,02, 9,23, 10,14, 19,67"
-    const dailyConsumptions = attributes.Daily.split(",").map((val) => parseFloat(val.trim().replace(",", ".")));
-
-    // Parsing des données Dailyweek: "15/1, 14/1, 13/1, 12/1, 11/1, 10/1, 9/1"
-    const dailyWeekDates = attributes.Dailyweek.split(",").map((dateStr) => {
-      const [day, month] = dateStr.trim().split("/");
-      const year = new Date().getFullYear();
-      return new Date(year, parseInt(month) - 1, parseInt(day));
-    });
-
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
-
-    const todayData = [];
-    const yesterdayData = [];
-
-    dailyWeekDates.forEach((date, index) => {
-      const consumption = dailyConsumptions[index] || 0;
-      const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-      if (dateOnly.getTime() === today.getTime()) {
-        todayData.push({ time: date, consumption });
-      } else if (dateOnly.getTime() === yesterday.getTime()) {
-        yesterdayData.push({ time: date, consumption });
-      }
-    });
-
-    const todayTotal = todayData.reduce((sum, item) => sum + item.consumption, 0) / 1000; // Convert W to kW
-    const yesterdayTotal = yesterdayData.reduce((sum, item) => sum + item.consumption, 0) / 1000;
-
-    return {
-      today: todayData,
-      yesterday: yesterdayData,
-      todayTotal,
-      yesterdayTotal,
-      evolution: todayTotal > 0 && yesterdayTotal !== 0 ? ((todayTotal - yesterdayTotal) / yesterdayTotal) * 100 : 0,
-    };
-  }
-
-  renderComparisonCharts(data, unit) {
-    const maxConsumption = Math.max(
-      ...data.today.map((d) => d.consumption),
-      ...data.yesterday.map((d) => d.consumption),
-    );
-
-    return html`
-      <div class="comparison-charts">
-        <div class="chart-day">
-          <h4>Aujourd'hui</h4>
-          <div class="mini-chart">${this.renderMiniChart(data.today, maxConsumption, "#2196f3")}</div>
-          <div class="day-stats">
-            <span class="total">${data.todayTotal.toFixed(1)} ${unit}</span>
-            <span class="peak">Pic: ${Math.max(...data.today.map((d) => d.consumption))}W</span>
-          </div>
-        </div>
-        <div class="chart-day">
-          <h4>Hier</h4>
-          <div class="mini-chart">${this.renderMiniChart(data.yesterday, maxConsumption, "#666")}</div>
-          <div class="day-stats">
-            <span class="total">${data.yesterdayTotal.toFixed(1)} ${unit}</span>
-            <span class="peak">Pic: ${Math.max(...data.yesterday.map((d) => d.consumption))}W</span>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  renderMiniChart(data, maxValue, color) {
-    if (!data || data.length <= 1 || maxValue === 0) {
-      return html`<svg viewBox="0 0 100 50" class="consumption-chart"></svg>`;
-    }
-    const points = data
-      .map((item, index) => {
-        const x = (index / (data.length - 1)) * 100;
-        const y = 100 - (item.consumption / maxValue) * 100;
-        return `${x},${y}`;
-      })
-      .join(" ");
-
-    return html`
-      <svg viewBox="0 0 100 50" class="consumption-chart">
-        <polyline points="${points}" fill="none" stroke="${color}" stroke-width="2" />
-      </svg>
-    `;
-  }
-
-  renderComparisonStats(data) {
-    const evolution = data.evolution;
-    const evolutionClass = evolution > 0 ? "increase" : evolution < 0 ? "decrease" : "stable";
-    const evolutionIcon =
-      evolution > 0 ? "mdi:trending-up" : evolution < 0 ? "mdi:trending-down" : "mdi:trending-neutral";
-
-    return html`
-      <div class="comparison-stats">
-        <div class="stat-item evolution ${evolutionClass}">
-          <ha-icon icon="${evolutionIcon}"></ha-icon>
-          <span class="label">Évolution</span>
-          <span class="value">${Math.abs(evolution).toFixed(1)}%</span>
-        </div>
-        <div class="stat-item difference">
-          <ha-icon icon="mdi:calculator"></ha-icon>
-          <span class="label">Différence</span>
-          <span class="value">${Math.abs(data.todayTotal - data.yesterdayTotal).toFixed(2)} kWh</span>
         </div>
       </div>
     `;

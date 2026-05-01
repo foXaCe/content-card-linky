@@ -1,0 +1,172 @@
+import { html } from "lit";
+import { parseDetailedTimeSeries } from "../lib/calculations.js";
+
+// Legacy "Daily" + "Dailyweek" string parser (kept for backwards compatibility
+// with the older MyElectricalData format).
+function parseLegacyDetailedData({ Daily, Dailyweek }, now = new Date()) {
+  const dailyConsumptions = Daily.split(",").map((v) => parseFloat(v.trim().replace(",", ".")));
+  const dailyWeekDates = Dailyweek.split(",").map((dateStr) => {
+    const [day, month] = dateStr.trim().split("/");
+    return new Date(now.getFullYear(), parseInt(month, 10) - 1, parseInt(day, 10));
+  });
+
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+
+  const todayData = [];
+  const yesterdayData = [];
+  dailyWeekDates.forEach((date, index) => {
+    const consumption = dailyConsumptions[index] || 0;
+    const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    if (dateOnly.getTime() === today.getTime()) todayData.push({ time: date, consumption });
+    else if (dateOnly.getTime() === yesterday.getTime()) yesterdayData.push({ time: date, consumption });
+  });
+
+  const todayTotal = todayData.reduce((s, x) => s + x.consumption, 0) / 1000;
+  const yesterdayTotal = yesterdayData.reduce((s, x) => s + x.consumption, 0) / 1000;
+  return {
+    today: todayData,
+    yesterday: yesterdayData,
+    todayTotal,
+    yesterdayTotal,
+    evolution: todayTotal > 0 && yesterdayTotal !== 0 ? ((todayTotal - yesterdayTotal) / yesterdayTotal) * 100 : 0,
+  };
+}
+
+function renderMiniChart(data, maxValue, color) {
+  if (!data || data.length <= 1 || maxValue === 0) {
+    return html`<svg viewBox="0 0 100 50" class="consumption-chart"></svg>`;
+  }
+  const points = data
+    .map((item, i) => {
+      const x = (i / (data.length - 1)) * 100;
+      const y = 100 - (item.consumption / maxValue) * 100;
+      return `${x},${y}`;
+    })
+    .join(" ");
+  return html`
+    <svg viewBox="0 0 100 50" class="consumption-chart">
+      <polyline points="${points}" fill="none" stroke="${color}" stroke-width="2" />
+    </svg>
+  `;
+}
+
+function renderComparisonCharts(data, unit) {
+  const maxConsumption = Math.max(...data.today.map((d) => d.consumption), ...data.yesterday.map((d) => d.consumption));
+  return html`
+    <div class="comparison-charts">
+      <div class="chart-day">
+        <h4>Aujourd'hui</h4>
+        <div class="mini-chart">${renderMiniChart(data.today, maxConsumption, "#2196f3")}</div>
+        <div class="day-stats">
+          <span class="total">${data.todayTotal.toFixed(1)} ${unit}</span>
+          <span class="peak">Pic: ${Math.max(...data.today.map((d) => d.consumption))}W</span>
+        </div>
+      </div>
+      <div class="chart-day">
+        <h4>Hier</h4>
+        <div class="mini-chart">${renderMiniChart(data.yesterday, maxConsumption, "#666")}</div>
+        <div class="day-stats">
+          <span class="total">${data.yesterdayTotal.toFixed(1)} ${unit}</span>
+          <span class="peak">Pic: ${Math.max(...data.yesterday.map((d) => d.consumption))}W</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderComparisonStats(data) {
+  const evolution = data.evolution;
+  const evolutionClass = evolution > 0 ? "increase" : evolution < 0 ? "decrease" : "stable";
+  const evolutionIcon =
+    evolution > 0 ? "mdi:trending-up" : evolution < 0 ? "mdi:trending-down" : "mdi:trending-neutral";
+  return html`
+    <div class="comparison-stats">
+      <div class="stat-item evolution ${evolutionClass}">
+        <ha-icon icon="${evolutionIcon}"></ha-icon>
+        <span class="label">Évolution</span>
+        <span class="value">${Math.abs(evolution).toFixed(1)}%</span>
+      </div>
+      <div class="stat-item difference">
+        <ha-icon icon="mdi:calculator"></ha-icon>
+        <span class="label">Différence</span>
+        <span class="value">${Math.abs(data.todayTotal - data.yesterdayTotal).toFixed(2)} kWh</span>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * @param hass HA instance
+ * @param config card config
+ * @param attributes main entity attributes (for unit)
+ * @param expanded whether the section is expanded
+ * @param onToggle click handler from the host
+ */
+export function renderDetailedComparison(hass, config, attributes, expanded, onToggle) {
+  if (!config.showDetailedComparison) return html``;
+  if (!config.detailedComparisonEntity) return html``;
+
+  const detailedEntity = hass.states[config.detailedComparisonEntity];
+  if (!detailedEntity) {
+    return html`
+      <div class="collapsible-section">
+        <div class="collapsible-header">
+          <span class="section-title">Aujourd'hui vs Hier</span>
+          <span class="section-summary">Entité ${config.detailedComparisonEntity} introuvable</span>
+        </div>
+      </div>
+    `;
+  }
+
+  const attrs = detailedEntity.attributes;
+  let comparisonData;
+
+  if (Array.isArray(attrs.time) && Array.isArray(attrs.consumption)) {
+    comparisonData = parseDetailedTimeSeries(attrs.time, attrs.consumption);
+  } else if (attrs.Daily && attrs.Dailyweek) {
+    comparisonData = parseLegacyDetailedData({ Daily: attrs.Daily, Dailyweek: attrs.Dailyweek });
+  } else {
+    const availableAttrs = Object.keys(attrs).join(", ");
+    return html`
+      <div class="collapsible-section">
+        <div class="collapsible-header">
+          <span class="section-title">Aujourd'hui vs Hier</span>
+          <span class="section-summary">Attributs disponibles: ${availableAttrs}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  if (!comparisonData.today || !comparisonData.yesterday) {
+    return html`
+      <div class="collapsible-section">
+        <div class="collapsible-header">
+          <span class="section-title">Aujourd'hui vs Hier</span>
+          <span class="section-summary"
+            >Données aujourd'hui/hier manquantes (${comparisonData.today?.length || 0} /
+            ${comparisonData.yesterday?.length || 0})</span
+          >
+        </div>
+      </div>
+    `;
+  }
+
+  return html`
+    <div class="collapsible-section">
+      <div class="collapsible-header" @click="${onToggle}">
+        <ha-icon icon="${expanded ? "mdi:chevron-up" : "mdi:chevron-down"}"></ha-icon>
+        <span class="section-title">Aujourd'hui vs Hier</span>
+        <span class="section-summary">
+          ${comparisonData.todayTotal.toFixed(1)} vs ${comparisonData.yesterdayTotal.toFixed(1)} kWh
+        </span>
+      </div>
+      <div class="collapsible-content ${expanded ? "expanded" : "collapsed"}">
+        <div class="detailed-comparison">
+          ${renderComparisonCharts(comparisonData, attributes.unit_of_measurement)}
+          ${renderComparisonStats(comparisonData)}
+        </div>
+      </div>
+    </div>
+  `;
+}
