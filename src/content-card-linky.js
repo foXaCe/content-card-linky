@@ -7,6 +7,7 @@ import {
   getDynamicGradient,
   getOneDayNextEcoWatt,
   getSeasonalTheme,
+  parseDetailedTimeSeries,
   safeRound,
 } from "./lib/calculations.js";
 
@@ -1512,12 +1513,17 @@ class ContentCardLinky extends LitElement {
       `;
     }
 
-    // Utiliser les attributs réels du capteur
-    const dailyData = detailedEntity.attributes.Daily;
-    const dailyWeekData = detailedEntity.attributes.Dailyweek;
+    const attrs = detailedEntity.attributes;
+    let comparisonData;
 
-    if (!dailyData || !dailyWeekData) {
-      const availableAttrs = Object.keys(detailedEntity.attributes).join(", ");
+    if (Array.isArray(attrs.time) && Array.isArray(attrs.consumption)) {
+      // Modern MyElectricalData last5day format: time[] + consumption[]
+      comparisonData = parseDetailedTimeSeries(attrs.time, attrs.consumption);
+    } else if (attrs.Daily && attrs.Dailyweek) {
+      // Legacy daily-summary format: "0, 12, 11,7" + "15/1, 14/1, 13/1"
+      comparisonData = this.parseDetailedData({ Daily: attrs.Daily, Dailyweek: attrs.Dailyweek });
+    } else {
+      const availableAttrs = Object.keys(attrs).join(", ");
       return html`
         <div class="collapsible-section">
           <div class="collapsible-header">
@@ -1528,7 +1534,6 @@ class ContentCardLinky extends LitElement {
       `;
     }
 
-    const comparisonData = this.parseDetailedData({ Daily: dailyData, Dailyweek: dailyWeekData });
     if (!comparisonData.today || !comparisonData.yesterday) {
       return html`
         <div class="collapsible-section">

@@ -6,6 +6,7 @@ import {
   getDynamicGradient,
   getSeasonalTheme,
   getOneDayNextEcoWatt,
+  parseDetailedTimeSeries,
 } from "../src/lib/calculations.js";
 
 const at = (iso) => new Date(iso);
@@ -142,6 +143,67 @@ describe("getSeasonalTheme", () => {
   it("returns winter colours from December to February", () => {
     expect(getSeasonalTheme(at("2026-01-15"))).toMatchObject({ icon: "mdi:snowflake" });
     expect(getSeasonalTheme(at("2026-12-15"))).toMatchObject({ icon: "mdi:snowflake" });
+  });
+});
+
+describe("parseDetailedTimeSeries (issue #6)", () => {
+  // Pin "now" to 2026-04-07 12:00 → today=2026-04-07, yesterday=2026-04-06
+  const now = at("2026-04-07T12:00:00");
+
+  it("returns empty buckets when inputs are not arrays", () => {
+    expect(parseDetailedTimeSeries(undefined, undefined, now)).toEqual({
+      today: [],
+      yesterday: [],
+      todayTotal: 0,
+      yesterdayTotal: 0,
+      evolution: 0,
+    });
+    expect(parseDetailedTimeSeries("not array", "not array", now).today).toEqual([]);
+  });
+
+  it("groups MyElectricalData last5day samples by date", () => {
+    const times = [
+      "2026-04-05 23:45:00", // older, dropped
+      "2026-04-06 00:00:00",
+      "2026-04-06 12:00:00",
+      "2026-04-06 23:45:00",
+      "2026-04-07 00:00:00",
+      "2026-04-07 06:00:00",
+    ];
+    const consumption = [100, 200, 300, 400, 500, 600];
+    const r = parseDetailedTimeSeries(times, consumption, now);
+
+    expect(r.yesterday.map((d) => d.consumption)).toEqual([200, 300, 400]);
+    expect(r.today.map((d) => d.consumption)).toEqual([500, 600]);
+    expect(r.todayTotal).toBeCloseTo(1.1, 5); // (500+600)/1000
+    expect(r.yesterdayTotal).toBeCloseTo(0.9, 5); // (200+300+400)/1000
+    expect(r.evolution).toBeCloseTo(((1.1 - 0.9) / 0.9) * 100, 5);
+  });
+
+  it("accepts ISO-8601 'T'-separated timestamps too", () => {
+    const r = parseDetailedTimeSeries(["2026-04-06T08:00:00", "2026-04-07T08:00:00"], [10, 20], now);
+    expect(r.yesterday).toHaveLength(1);
+    expect(r.today).toHaveLength(1);
+  });
+
+  it("skips invalid timestamps and non-numeric values", () => {
+    const r = parseDetailedTimeSeries(
+      ["bad-date", "2026-04-07 10:00:00", "2026-04-07 11:00:00"],
+      [99, "not-a-number", 50],
+      now,
+    );
+    expect(r.today).toHaveLength(1);
+    expect(r.today[0].consumption).toBe(50);
+  });
+
+  it("returns evolution = 0 when yesterdayTotal is 0", () => {
+    const r = parseDetailedTimeSeries(["2026-04-07 10:00:00"], [100], now);
+    expect(r.evolution).toBe(0);
+  });
+
+  it("returns evolution = 0 when todayTotal is 0", () => {
+    const r = parseDetailedTimeSeries(["2026-04-06 10:00:00"], [100], now);
+    expect(r.evolution).toBe(0);
   });
 });
 

@@ -107,6 +107,52 @@ export function getSeasonalTheme(now = new Date()) {
 }
 
 /**
+ * Parse the modern `last5day` time-series attributes (`time[]` + `consumption[]`)
+ * into the {today, yesterday, todayTotal, yesterdayTotal, evolution} shape
+ * expected by renderComparisonCharts.
+ *
+ * Timestamps are accepted in "YYYY-MM-DD HH:mm:ss" or ISO-8601 form.
+ * Consumption values are interpreted as Watts (totals are divided by 1000
+ * to match the legacy parser's behaviour).
+ */
+export function parseDetailedTimeSeries(times, values, now = new Date()) {
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+
+  const todayData = [];
+  const yesterdayData = [];
+
+  if (!Array.isArray(times) || !Array.isArray(values)) {
+    return { today: todayData, yesterday: yesterdayData, todayTotal: 0, yesterdayTotal: 0, evolution: 0 };
+  }
+
+  for (let i = 0; i < times.length; i++) {
+    const raw = times[i];
+    if (raw == null) continue;
+    // "2026-04-06 23:45:00" → "2026-04-06T23:45:00"
+    const isoish = typeof raw === "string" ? raw.replace(" ", "T") : raw;
+    const t = new Date(isoish);
+    if (isNaN(t.getTime())) continue;
+
+    const consumption = parseFloat(values[i]);
+    if (isNaN(consumption)) continue;
+
+    const dateOnly = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+    if (dateOnly.getTime() === today.getTime()) {
+      todayData.push({ time: t, consumption });
+    } else if (dateOnly.getTime() === yesterday.getTime()) {
+      yesterdayData.push({ time: t, consumption });
+    }
+  }
+
+  const todayTotal = todayData.reduce((s, x) => s + x.consumption, 0) / 1000;
+  const yesterdayTotal = yesterdayData.reduce((s, x) => s + x.consumption, 0) / 1000;
+  const evolution = todayTotal > 0 && yesterdayTotal !== 0 ? ((todayTotal - yesterdayTotal) / yesterdayTotal) * 100 : 0;
+
+  return { today: todayData, yesterday: yesterdayData, todayTotal, yesterdayTotal, evolution };
+}
+
+/**
  * Parse the EcoWatt `forecast` attribute into [time, color, value] tuples.
  * `colorMap` should be a Map(value → color).
  */
