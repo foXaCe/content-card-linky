@@ -1203,12 +1203,10 @@ class ContentCardLinky extends LitElement {
 
   getOneDayNextEcoWatt(ecoWattForecastEntity) {
     const ecoWattForecastList = [];
-    for (let [time, value] of Object.entries(ecoWattForecastEntity.attributes["forecast"])) {
-      if (time !== undefined) {
-        time = time.replace("h", "").trim();
-        time = time.replace("min", "").trim();
-        ecoWattForecastList.push([time, ecoWattForecastValues.get(value), value]);
-      }
+    for (const [rawTime, value] of Object.entries(ecoWattForecastEntity.attributes["forecast"])) {
+      if (rawTime === undefined) continue;
+      const time = rawTime.replace("h", "").replace("min", "").trim();
+      ecoWattForecastList.push([time, ecoWattForecastValues.get(value), value]);
     }
 
     return ecoWattForecastList;
