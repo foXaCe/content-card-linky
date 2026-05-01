@@ -1,119 +1,121 @@
 # content-card-linky
+
 [![HACS Supported](https://img.shields.io/badge/HACS-Supported-green.svg)](https://github.com/custom-components/hacs)
+[![CI](https://github.com/MyElectricalData/content-card-linky/actions/workflows/ci.yml/badge.svg)](https://github.com/MyElectricalData/content-card-linky/actions/workflows/ci.yml)
 
-**Cette carte est compatible qu'avec l'integration : [MyElectricalData](https://github.com/MyElectricalData/myelectricaldata_import)**
+> **Compatible uniquement avec l'intégration [MyElectricalData](https://github.com/MyElectricalData/myelectricaldata_import).**
 
-**Un question ? Un problème ? Une demande ? Venez en parler sur le [forum HACF](https://forum.hacf.fr/).**
+Une question ? Un problème ? Une demande ? Le [forum HACF](https://forum.hacf.fr/) est le bon endroit.
 
-## Bienvenue !
+---
 
-Avant de pouvoir utiliser cette intégration, assurez vous :
-* D'avoir validé l'installation correcte de [MyElectricalData](https://github.com/MyElectricalData/myelectricaldata_import)
+## Pré-requis
 
-## Installer la carte
-<details>
-  <summary><b>Via HACS (mise à jour en un clic) : </b></summary><br>
+- Home Assistant **2024.7+** (la carte expose `getGridOptions` pour la *section view*).
+- L'intégration [MyElectricalData](https://github.com/MyElectricalData/myelectricaldata_import) installée et fonctionnelle.
 
-* Ouvrez HACS, cliquez sur `Frontend`, puis selectionnez le menu 3 points en haut à droite.
+## Installation
 
- *si vous n'avez pas HACS, pour l'installer cela se passe ici : [HACS : Ajoutez des modules et des cartes personnalisées](https://forum.hacf.fr/t/hacs-ajoutez-des-modules-et-des-cartes-personnalisees/359)
+### Via HACS (recommandé)
 
-* Ajoutez le dépot personnalisé : `https://github.com/MyElectricalData/content-card-linky`
+1. Ouvre **HACS**.
+2. Menu trois-points en haut à droite → **Custom repositories**.
+3. Ajoute le dépôt `https://github.com/MyElectricalData/content-card-linky`, catégorie **Dashboard**.
+4. Recherche *Linky Content Card* dans HACS, puis **Download**.
+5. Recharge la page Lovelace (ou redémarre HA si l'asset n'est pas servi).
 
-* Choisir la catégorie `Lovelace`
+> ℹ️ Depuis HACS 2.0, l'onglet « Frontend » a disparu : tout passe par la liste unifiée et la catégorie **Dashboard**.
 
-* Cliquez sur le bouton `Installer` de la carte
+### Manuelle
 
-* Cliquez sur le bouton `Installer` de la popup
+1. Télécharge `content-card-linky.js` et `content-card-linky-editor.js` depuis la dernière [release](https://github.com/MyElectricalData/content-card-linky/releases).
+2. Place-les dans `<config>/www/content-card-linky/`.
+3. Déclare la ressource dans **Paramètres → Tableaux de bord → Ressources** (ou en YAML) :
 
-* La carte est maintenant rouge, signifiant qu'un redémarrage du serveur Home Assistant est nécessaire
-
-* Accédez à la vue `Contrôle du serveur` (`Configuration` -> `Contrôle du serveur`), puis cliquez sur le bouton `Redémarrer` dans la zone `Gestion du serveur`
-</details>
-
-<details>
-  <summary><b>Manuellement (à faire à chaque mise à jour)</b></summary>
-* Telecharger le fichier [content-card-linky.js](https://github.com/MyElectricalData/content-card-linky/blob/main/content-card-linky.js) et le dossier [images](https://github.com/MyElectricalData/content-card-linky/tree/main/images)
-
-* Les mettre dans votre repertoire `www` et l'ajouter dans l'interface ressource
-
-* Configurez la ressource dans votre fichier de configuration.
-
-```
+```yaml
 resources:
-  - url: /hacsfiles/content-card-linky/content-card-linky.js
+  - url: /local/content-card-linky/content-card-linky.js
     type: module
 ```
-</details>
 
 ## Ajouter la carte
-<details>
-  <summary><b>Via l'interface graphique</b></summary>
-  * Ajoutez une carte via l'interface graphique, et configurez les options comme vous le désirez.
 
-</details>
-<details>
-  <summary><b>En YAML</b></summary>
-  * Dans votre éditeur lovelace, ajouter ceci :
+### Via l'interface graphique
 
-````
-type: 'custom:content-card-linky'
+Ajoute une carte → recherche *Carte Enedis* → l'éditeur visuel propose toutes les options.
+
+### En YAML
+
+```yaml
+type: custom:content-card-linky
 entity: sensor.linky_<pdl>_consumption
-````
-</details>
+```
 
-### Redémarrer votre serveur Home Assistant
+## Options principales
 
-## Options disponibles
+| Clé                       | Type    | Défaut                              | Description                                                          |
+| ------------------------- | ------- | ----------------------------------- | -------------------------------------------------------------------- |
+| `entity`                  | string  | —                                   | Sensor MyElectricalData (obligatoire).                               |
+| `titleName`               | string  | `LINKY`                             | Titre de la carte.                                                   |
+| `nbJoursAffichage`        | string  | `7`                                 | Nombre de jours affichés dans l'historique.                          |
+| `showIcon`                | boolean | `false`                             | Affiche l'icône Linky.                                               |
+| `showHistory`             | boolean | `true`                              | Affiche l'historique journalier.                                     |
+| `showPrice`               | boolean | `true`                              | Affiche le prix.                                                     |
+| `showDayPrice`            | boolean | `false`                             | Affiche le prix par jour dans l'historique.                          |
+| `showCurrentMonthRatio`   | boolean | `true`                              | Affiche l'évolution du mois en cours.                                |
+| `showWeekRatio`           | boolean | `false`                             | Affiche l'évolution hebdomadaire.                                    |
+| `showDayName`             | string  | `long`                              | Format des jours : `narrow`, `short`, `long`.                        |
+| `showDayMaxPower`         | boolean | `false`                             | Affiche la puissance max et l'éventuel dépassement.                  |
+| `showEcoWatt`             | boolean | `false`                             | Indicateur EcoWatt J0.                                               |
+| `showEcoWattJ12`          | boolean | `false`                             | EcoWatt J+1 et J+2.                                                  |
+| `showTempo`               | boolean | `false`                             | Bandeau Tempo.                                                       |
+| `showTempoColor`          | boolean | `true`                              | Colore les jours de l'historique selon Tempo.                        |
+| `ewEntity`                | string  | —                                   | Sensor EcoWatt J0 (MED ≥ 0.9.1).                                     |
+| `ewEntityJ1` / `ewEntityJ2` | string | —                                  | EcoWatt J+1 / J+2.                                                   |
+| `tempoInfo`               | string  | —                                   | Sensor Tempo (jours restants par couleur, MED ≥ 0.9.2).              |
+| `tempoEntityJ0` / `tempoEntityJ1` | string | —                          | Tempo aujourd'hui / demain.                                          |
+| `detailedComparisonEntity` | string | `sensor.linky_consumption_last5day` | Sensor pour la comparaison détaillée.                                |
 
-![image](https://github.com/user-attachments/assets/c00aafd2-c631-4021-82a0-583c8f31caf6)
+## Internationalisation
 
+La carte utilise désormais `hass.locale` pour choisir la langue (FR/EN inclus). Pour ajouter une langue, dépose un fichier dans `src/translations/<lang>.json` et importe-le dans `src/lib/localize.js`.
 
+## Développement
 
-  ````
-type: custom:content-card-linky                 Type de la carte
-nbJoursAffichage: '7'                           Nombre de jours historique affiché
-titleName: LINKY                                Titre
-entity: sensor.linky_123456789_consumption      Sensor de l'integration MyElectricalData
-ewEntity: sensor.rte_ecowatt_j0                 Sensor de l'intégration Ecowatt J+0 via (!) MyElectricalData (sensor dispo dès MyElectricaldata v0.9.1)
-ewEntityJ1: sensor.rte_ecowatt_j1               Sensor de l'intégration Ecowatt J+1 via (!) MyElectricalData (sensor dispo dès MyElectricaldata v0.9.1)
-ewEntityJ2: sensor.rte_ecowatt_j2               Sensor de l'intégration Ecowatt J+2 via (!) MyElectricalData (sensor dispo dès MyElectricaldata v0.9.1)
-tempoInfo: sensor.edf_tempo_info                Sensor de l'intégration Tempo, contient des prix et jours restant par couleur (dispo dès MyElectricalData v0.9.2 ou dev 0.9.2.b4)
-tempoEntityJ0: sensor.rte_tempo_today           Sensor de l'intégration Tempo aujourd'hui
-tempoEntityJ1: sensor.rte_tempo_tomorrow        Sensor de l'intégration Tempo demain
-showIcon: false                                 Affiche l'icon Linky
-showHistory: true                               Affiche l'historique sur plusieurs jours
-showInTableUnit: false
-showDayPriceHCHP: false
-showDayHCHP: false
-showMonthRatio: false
-showTitle: true
-showPeakOffPeak: false
-showDayPrice: true
-showPrice: true                                 Affiche le prix de l'historique
-showCurrentMonthRatio: true
-showWeekRatio: true
-showDayName: long                               Affichage des jours de la semaine : "short", "narrow", "long"
-showDayMaxPower: true                           Affichage MaxPower avec indication si dépassé
-showTitleLine: true                             Affichage des titres par ligne
-showEcoWatt: true                               Affichage EcoWatt pour ajourd'hui
-showEcoWattJ12: true                            Affichage EcoWatt pour demains et après (sensor dispo dès MyElectricaldata v0.9.1)
-showTempo: false                                Affichage Tempo
-showTempoColor: true                            Affichage couleurs Tempo historique pas colorer les titres des jours (apd MED 0.9.3)
-````
+```bash
+npm install
+npm run build        # bundle dist/*.js (Lit inclus, version injectée)
+npm run build:watch  # rebuild à chaque sauvegarde
+npm run lint
+npm run format
+```
 
-![image](https://github.com/MyElectricalData/content-card-linky/assets/44190435/04dac630-1d05-43f0-bb9e-cfed3ae5a943)![image](https://github.com/MyElectricalData/content-card-linky/assets/44190435/a99ee251-c464-4199-bb33-35499e412771)
+> Le dossier `dist/` est généré. Ne le modifie jamais à la main : édite `src/`, lance `npm run build`, puis commit `dist/`. La CI vérifie que `dist/` est bien à jour.
 
+### Architecture
 
+- `src/content-card-linky.js` — la carte (Lit element).
+- `src/content-card-linky-editor.js` — éditeur visuel.
+- `src/lib/` — helpers (`fireEvent`, `localize`).
+- `src/translations/{en,fr}.json` — chaînes traduites.
+- `rollup.config.mjs` — bundle ES, terser en prod, version injectée depuis `package.json`.
 
-## Merci ##
+## Compatibilité Home Assistant
 
-Cette carte est basé sur [@saniho](https://github.com/saniho/content-card-linky)
+| Feature                                | Statut          |
+| -------------------------------------- | --------------- |
+| Lit bundlé (pas de hack `ha-panel-lovelace`) | ✅ |
+| `shouldUpdate` qui observe toutes les entités configurées | ✅ |
+| `getCardSize()` dynamique              | ✅              |
+| `getGridOptions()` (section view 2024.7+) | ✅           |
+| `getLayoutOptions()` (legacy)          | ✅              |
+| `getStubConfig()` async + auto-détection | ✅            |
+| i18n via `hass.locale`                 | ✅              |
 
-**************
+## Crédits
 
-N'hésitez pas à aller faire un tour sur ce forum ou vous trouverez pleins d'informations
+Cette carte est basée sur le travail de [@saniho](https://github.com/saniho/content-card-linky).
 
-https://forum.hacf.fr/t/hacs-ajoutez-des-modules-et-des-cartes-personnalisees/359
+---
 
-*************
+N'hésite pas à passer sur le forum : <https://forum.hacf.fr/t/hacs-ajoutez-des-modules-et-des-cartes-personnalisees/359>
