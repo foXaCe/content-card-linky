@@ -10,17 +10,14 @@ function daysSinceMondayFor(date) {
 }
 
 /**
- * Sum the kWh for the indices [daysSinceMonday-1 .. 0].
- * On a Thursday this is i ∈ {2, 1, 0} → Tue, Wed, today.
- * Sunday is the only day actively skipped via dayOfWeek check.
+ * Sum the kWh consumed from Monday up to (and including) yesterday.
+ * `daily[0]` is today, `daily[1]` is yesterday, etc., so the loop visits
+ * indices `[daysSinceMonday .. 1]`. Today (`daily[0]`) is excluded because
+ * it is still in progress. On Monday, the loop is empty (no completed
+ * weekdays yet) and the function returns 0.
  *
- * FIXME: the historical inline comments claim "Monday through yesterday",
- *        but the loop bounds are off by one (Monday is never visited and
- *        today usually IS counted). Behaviour preserved for backwards
- *        compatibility — see test/calculations.test.js for the matrix.
- *
- * If kWh is missing for a day but its cost is known, estimate kWh
- * via the average kWh/cost ratio of the available days.
+ * If kWh is missing for a day but its cost is known, estimate kWh via the
+ * average kWh/cost ratio of the available days.
  */
 export function calculateWeekTotal(daily, dailyweek_cost, now = new Date()) {
   if (!daily) return 0;
@@ -28,13 +25,7 @@ export function calculateWeekTotal(daily, dailyweek_cost, now = new Date()) {
   const daysSinceMonday = daysSinceMondayFor(now);
   let weekTotal = 0;
 
-  for (let i = Math.min(daysSinceMonday - 1, daily.length - 1); i >= 0; i--) {
-    if (i >= daily.length) continue;
-
-    const dayDate = new Date(now);
-    dayDate.setDate(dayDate.getDate() - i);
-    if (dayDate.getDay() === 0) continue; // skip Sunday
-
+  for (let i = Math.min(daysSinceMonday, daily.length - 1); i >= 1; i--) {
     const consumption = parseFloat(daily[i]);
     if (!isNaN(consumption) && consumption !== -1 && consumption !== 0) {
       weekTotal += consumption;
@@ -67,8 +58,9 @@ export function calculateWeekTotal(daily, dailyweek_cost, now = new Date()) {
 }
 
 /**
- * Sum the cost (€) since Monday (excluding Sunday and today).
- * `dailyweek_cost` is a comma-separated string aligned with `daily`.
+ * Sum the cost (€) from Monday up to (and including) yesterday.
+ * Same indexing convention as calculateWeekTotal — today (`daily[0]`) is
+ * excluded.
  */
 export function calculateWeekCost(dailyweek_cost, now = new Date()) {
   if (!dailyweek_cost) return 0;
@@ -77,13 +69,7 @@ export function calculateWeekCost(dailyweek_cost, now = new Date()) {
   const dailyCostArray = dailyweek_cost.toString().split(",");
   let weekCost = 0;
 
-  for (let i = Math.min(daysSinceMonday - 1, dailyCostArray.length - 1); i >= 0; i--) {
-    if (i >= dailyCostArray.length) continue;
-
-    const dayDate = new Date(now);
-    dayDate.setDate(dayDate.getDate() - i);
-    if (dayDate.getDay() === 0) continue; // skip Sunday
-
+  for (let i = Math.min(daysSinceMonday, dailyCostArray.length - 1); i >= 1; i--) {
     const cost = parseFloat(dailyCostArray[i].replace(",", "."));
     if (!isNaN(cost) && cost !== -1) weekCost += cost;
   }

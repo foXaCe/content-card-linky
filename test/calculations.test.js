@@ -24,59 +24,64 @@ describe("safeRound", () => {
   });
 });
 
-// NOTE: the loop iterates from i = (daysSinceMonday - 1) down to 0,
-// so on a Thursday it visits daily[2], daily[1], daily[0] — i.e. Tue, Wed, today.
-// Sunday is the only weekday explicitly skipped via `dayOfWeek !== 0`.
-// (The inline comments in calculations.js claim "Mon..Fri", which does not match
-// the actual loop bounds — see CHANGELOG / FIXME.)
+// daily[0] = today (in progress, excluded from totals).
+// daily[1] = yesterday, daily[2] = day before, etc.
+// On Thursday (daysSinceMonday=3), loop visits i ∈ {3, 2, 1} → Mon, Tue, Wed.
 describe("calculateWeekTotal", () => {
-  const thursday = at("2026-05-07T12:00:00"); // daysSinceMonday=3 → i ∈ {2,1,0}
+  const thursday = at("2026-05-07T12:00:00"); // i ∈ {3, 2, 1}
 
   it("returns 0 when daily is null/undefined", () => {
     expect(calculateWeekTotal(null, "1,2,3", thursday)).toBe(0);
     expect(calculateWeekTotal(undefined, undefined, thursday)).toBe(0);
   });
 
-  it("sums daily[2], daily[1], daily[0] on a Thursday", () => {
-    const daily = ["10", "20", "30", "40", "50", "60", "70"];
-    expect(calculateWeekTotal(daily, "", thursday)).toBe(30 + 20 + 10);
+  it("sums daily[3..1] on a Thursday (Mon, Tue, Wed) and excludes today", () => {
+    const daily = ["999", "20", "30", "40", "50", "60", "70"]; // today=999, yesterday=20, ...
+    expect(calculateWeekTotal(daily, "", thursday)).toBe(40 + 30 + 20);
   });
 
   it("ignores -1 and 0 sentinel values when no cost is available", () => {
-    const daily = ["0", "0", "-1", "5"]; // i=2 → -1 skipped, i=1 → 0 skipped, i=0 → 0 skipped
-    expect(calculateWeekTotal(daily, "", thursday)).toBe(0);
+    const daily = ["999", "0", "-1", "5"]; // today=999 (excluded), Wed=0, Tue=-1, Mon=5
+    expect(calculateWeekTotal(daily, "", thursday)).toBe(5);
   });
 
   it("estimates missing kWh from cost via the average kWh/€ ratio", () => {
-    // i=2 (Tue): daily[2]=0 → estimate. cost[2]=0.5. ratios from j=1 (8/2=4), j=3 (4/1=4) → avg=4. est = 0.5*4 = 2.
-    // i=1 (Wed): daily[1]=8 → add 8.
-    // i=0 (Thu): daily[0]=10 → add 10.
-    const daily = ["10", "8", "0", "4"];
+    // today=daily[0]=999 (excluded). yesterday=Wed (8), day-before=Tue (0 → estimate), Mon (4).
+    // ratios from non-i indices where kWh AND cost > 0: j=0 (999/0 invalid), j=1 (8/2=4), j=3 (4/1=4) → avg 4
+    // Tue cost=0.5 → est = 0.5*4 = 2
+    const daily = ["999", "8", "0", "4"];
     const cost = "0,2,0.5,1";
-    expect(calculateWeekTotal(daily, cost, thursday)).toBeCloseTo(10 + 8 + 2, 5);
+    expect(calculateWeekTotal(daily, cost, thursday)).toBeCloseTo(4 + 2 + 8, 5);
   });
 
   it("does not estimate when neither cost nor ratios are available", () => {
-    const daily = ["0", "0", "-1", "0"];
+    const daily = ["999", "0", "-1", "0"];
     expect(calculateWeekTotal(daily, "0,0,0,0", thursday)).toBe(0);
   });
 
-  it("on Sunday iterates Mon..Sat and skips Sunday itself", () => {
-    const sunday = at("2026-05-10T12:00:00"); // daysSinceMonday=6 → i ∈ {5..0}
-    // i=5 → Mon (daily[5]=50), 4 → Tue (40), 3 → Wed (30), 2 → Thu (20), 1 → Fri (10), 0 → Sun (skipped)
-    const daily = ["100", "10", "20", "30", "40", "50"];
-    expect(calculateWeekTotal(daily, "", sunday)).toBe(50 + 40 + 30 + 20 + 10);
+  it("on Sunday iterates Mon..Sat (whole work week) and excludes Sunday", () => {
+    const sunday = at("2026-05-10T12:00:00"); // daysSinceMonday=6 → i ∈ {6..1}
+    // today=daily[0]=Sun (excluded), Sat=10, Fri=20, Thu=30, Wed=40, Tue=50, Mon=60
+    const daily = ["999", "10", "20", "30", "40", "50", "60"];
+    expect(calculateWeekTotal(daily, "", sunday)).toBe(60 + 50 + 40 + 30 + 20 + 10);
   });
 
-  it("on Monday returns 0 (loop bound is -1)", () => {
-    const monday = at("2026-05-04T12:00:00"); // daysSinceMonday=0 → i ∈ {-1..0}, no iterations
+  it("on Monday returns 0 (no completed weekdays yet)", () => {
+    const monday = at("2026-05-04T12:00:00"); // daysSinceMonday=0 → loop empty
     const daily = ["100", "10", "20", "30", "40", "50", "60"];
     expect(calculateWeekTotal(daily, "", monday)).toBe(0);
   });
 
+  it("on Tuesday sums only Monday", () => {
+    const tuesday = at("2026-05-05T12:00:00"); // daysSinceMonday=1 → i ∈ {1}
+    const daily = ["999", "42"];
+    expect(calculateWeekTotal(daily, "", tuesday)).toBe(42);
+  });
+
   it("handles arrays shorter than the lookback window", () => {
-    const friday = at("2026-05-08T12:00:00"); // daysSinceMonday=4 → i ∈ {min(3, length-1)..0}
-    const daily = ["10", "20"]; // length=2, loop i ∈ {1, 0}
+    const friday = at("2026-05-08T12:00:00"); // daysSinceMonday=4 → wants i ∈ {4..1}
+    // Only 3 days available → i ∈ {min(4, 2)..1} = {2, 1}
+    const daily = ["999", "10", "20"]; // today excluded, Thu=10, Wed=20
     expect(calculateWeekTotal(daily, "", friday)).toBe(20 + 10);
   });
 });
@@ -89,26 +94,24 @@ describe("calculateWeekCost", () => {
     expect(calculateWeekCost("", thursday)).toBe(0);
   });
 
-  it("sums cost entries for i=2..0 and accepts dot decimals", () => {
-    // index 0=today (Thu, included), 1=Wed, 2=Tue, 3=Mon (not visited)
-    expect(calculateWeekCost("0.50,2.50,1.25,9.99", thursday)).toBeCloseTo(0.5 + 2.5 + 1.25, 5);
-  });
-
-  it("converts comma decimals to dots", () => {
-    // Authors' format uses comma decimals and slash separators? Here values use commas
-    // BUT the field separator is also a comma → cannot mix; this test ensures the
-    // dot-decimal path works.
-    expect(calculateWeekCost("1.0,2.0,3.0,4.0", thursday)).toBeCloseTo(1 + 2 + 3, 5);
+  it("sums Monday through yesterday and accepts dot decimals", () => {
+    // today=999.99 (excluded), Wed=0.50, Tue=2.50, Mon=1.25
+    expect(calculateWeekCost("999.99,0.50,2.50,1.25", thursday)).toBeCloseTo(1.25 + 2.5 + 0.5, 5);
   });
 
   it("ignores -1 sentinel values", () => {
-    // i=2 → "-1" skipped, i=1 → 2, i=0 → 3
-    expect(calculateWeekCost("3,2,-1,9", thursday)).toBe(2 + 3);
+    // today=999 (excluded), Wed=2, Tue=-1 (skip), Mon=3
+    expect(calculateWeekCost("999,2,-1,3", thursday)).toBe(2 + 3);
   });
 
   it("on Monday returns 0", () => {
     const monday = at("2026-05-04T12:00:00");
     expect(calculateWeekCost("0,1,2,3,4,5,6", monday)).toBe(0);
+  });
+
+  it("on Tuesday returns just Monday", () => {
+    const tuesday = at("2026-05-05T12:00:00");
+    expect(calculateWeekCost("999,4.20", tuesday)).toBeCloseTo(4.2, 5);
   });
 });
 
