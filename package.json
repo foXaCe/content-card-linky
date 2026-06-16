@@ -21,7 +21,7 @@
     "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^1.0.0",
     "@vitest/coverage-v8": "^4.1.9",
-    "eslint": "^9.18.0",
+    "eslint": "^10.5.0",
     "happy-dom": "^20.10.4",
     "prettier": "^3.8.4",
     "rollup": "^4.62.0",
