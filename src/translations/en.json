@@ -71,8 +71,7 @@
       "evolution": "Trend",
       "difference": "Difference",
       "entity_not_found": "Entity {entity} not found",
-      "available_attrs": "Available attributes: {attrs}",
-      "missing_data": "Missing today/yesterday data ({today} / {yesterday})"
+      "available_attrs": "Available attributes: {attrs}"
     },
     "ecowatt": {
       "only_med": "EcoWatt: only available with MyElectricalData",
@@ -126,6 +125,7 @@
       "tempoEntityInfo": "Tempo information",
       "tempoEntityJ0": "Tempo today",
       "tempoEntityJ1": "Tempo tomorrow",
+      "tempoEntity": "Tempo entity (per-day history colours)",
       "detailedComparisonEntity": "Detailed comparison entity",
       "showIcon": "Show icon",
       "showTitle": "Show title",
@@ -133,6 +133,7 @@
       "showError": "Show errors",
       "showInformation": "Show information",
       "showHistory": "Show history",
+      "showWeekSummary": "Show week summary",
       "showInTableUnit": "Show units in table",
       "showTitleLign": "Show row titles",
       "showPrice": "Show prices",

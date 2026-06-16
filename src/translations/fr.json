@@ -71,8 +71,7 @@
       "evolution": "Évolution",
       "difference": "Différence",
       "entity_not_found": "Entité {entity} introuvable",
-      "available_attrs": "Attributs disponibles : {attrs}",
-      "missing_data": "Données aujourd'hui/hier manquantes ({today} / {yesterday})"
+      "available_attrs": "Attributs disponibles : {attrs}"
     },
     "ecowatt": {
       "only_med": "EcoWatt : uniquement disponible avec MyElectricalData",
@@ -126,6 +125,7 @@
       "tempoEntityInfo": "Tempo informations",
       "tempoEntityJ0": "Tempo aujourd'hui",
       "tempoEntityJ1": "Tempo demain",
+      "tempoEntity": "Entité Tempo (couleurs par jour de l'historique)",
       "detailedComparisonEntity": "Entité données détaillées",
       "showIcon": "Afficher l'icône",
       "showTitle": "Afficher le titre",
@@ -133,6 +133,7 @@
       "showError": "Afficher les erreurs",
       "showInformation": "Afficher les informations",
       "showHistory": "Afficher l'historique",
+      "showWeekSummary": "Afficher le résumé hebdo",
       "showInTableUnit": "Afficher les unités",
       "showTitleLign": "Afficher les titres de ligne",
       "showPrice": "Afficher les prix",

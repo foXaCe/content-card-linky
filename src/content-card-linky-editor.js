@@ -72,6 +72,7 @@ const SCHEMA = [
           { name: "tempoEntityInfo", selector: SENSOR },
           { name: "tempoEntityJ0", selector: SENSOR },
           { name: "tempoEntityJ1", selector: SENSOR },
+          { name: "tempoEntity", selector: SENSOR },
         ],
       },
     ],
@@ -100,6 +101,7 @@ const SCHEMA = [
         type: "grid",
         schema: [
           { name: "showHistory", selector: BOOL },
+          { name: "showWeekSummary", selector: BOOL },
           { name: "showInTableUnit", selector: BOOL },
           { name: "showTitleLign", selector: BOOL },
         ],

@@ -151,22 +151,6 @@ export function renderDetailedComparison(hass, config, attributes, expanded, onT
     `;
   }
 
-  if (!comparisonData.today || !comparisonData.yesterday) {
-    return html`
-      <div class="collapsible-section">
-        <div class="collapsible-header">
-          <span class="section-title">${localize(hass, "card.comparison.title")}</span>
-          <span class="section-summary"
-            >${localize(hass, "card.comparison.missing_data", {
-              today: comparisonData.today?.length || 0,
-              yesterday: comparisonData.yesterday?.length || 0,
-            })}</span
-          >
-        </div>
-      </div>
-    `;
-  }
-
   return html`
     <div class="collapsible-section">
       <div class="collapsible-header" @click="${onToggle}">

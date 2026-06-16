@@ -28,13 +28,13 @@ Une question ? Un problème ? Une demande ? Le [forum HACF](https://forum.hacf.f
 
 ### Manuelle
 
-1. Télécharge `content-card-linky.js` et `content-card-linky-editor.js` depuis la dernière [release](https://github.com/MyElectricalData/content-card-linky/releases).
-2. Place-les dans `<config>/www/content-card-linky/`.
+1. Télécharge `content-card-linky.js`, `content-card-linky-editor.js` **et le dossier `icons/`** depuis la dernière [release](https://github.com/MyElectricalData/content-card-linky/releases).
+2. Place-les dans `<config>/www/community/content-card-linky/` (ce chemin `community/` est requis : l'icône Linky est servie depuis `/local/community/content-card-linky/icons/linky.svg`).
 3. Déclare la ressource dans **Paramètres → Tableaux de bord → Ressources** (ou en YAML) :
 
 ```yaml
 resources:
-  - url: /local/content-card-linky/content-card-linky.js
+  - url: /local/community/content-card-linky/content-card-linky.js
     type: module
 ```
 
