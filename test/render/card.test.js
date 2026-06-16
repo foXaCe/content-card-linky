@@ -70,6 +70,51 @@ describe("content-card-linky render", () => {
     expect(text).toContain("sensor.linky_consumption");
   });
 
+  it("orchestrates every section when fully configured (post-split smoke test)", async () => {
+    const hass = makeHass({ states: { [baseConfig.entity]: makeLinkyEntity() } });
+    const card = await mountCard(
+      {
+        ...baseConfig,
+        showHistory: true,
+        showWeekSummary: true,
+        showSmartInsights: true,
+        showMonthlyView: true,
+        showYearlyView: true,
+        showCurrentMonthRatio: true,
+        showPeakOffPeak: true,
+      },
+      hass,
+    );
+    const root = card.shadowRoot;
+    const text = root.textContent;
+
+    // Variations grid (renderers/variations.js)
+    expect(root.querySelector(".variations")).toBeTruthy();
+    // Week summary card (renderers/week-summary.js)
+    expect(root.querySelector(".week-summary-card")).toBeTruthy();
+    expect(text).toMatch(/Semaine en cours/);
+    // History table with at least one day cell (renderers/history.js)
+    expect(root.querySelectorAll(".week-history .day").length).toBeGreaterThan(0);
+    // Smart insights (renderers/smart-insights.js)
+    expect(text).toMatch(/Prédiction mensuelle/);
+    // Collapsible temporal views (renderers/temporal-views.js)
+    expect(text).toMatch(/Mensuel/);
+    expect(text).toMatch(/Annuel/);
+  });
+
+  it("renders the production layout for a production meter", async () => {
+    const hass = makeHass({
+      states: {
+        [baseConfig.entity]: makeLinkyEntity({ typeCompteur: "production" }),
+      },
+    });
+    const card = await mountCard({ ...baseConfig, showIcon: true }, hass);
+    const root = card.shadowRoot;
+    // Production branch shows the main value, no week-history table
+    expect(root.querySelector(".main-info")).toBeTruthy();
+    expect(root.querySelector(".week-history")).toBeFalsy();
+  });
+
   it("renders the consumption header for a normal entity", async () => {
     const hass = makeHass({ states: { [baseConfig.entity]: makeLinkyEntity() } });
     const card = await mountCard(baseConfig, hass);

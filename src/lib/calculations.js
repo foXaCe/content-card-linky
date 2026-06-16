@@ -76,6 +76,38 @@ export function calculateWeekCost(dailyweek_cost, now = new Date()) {
   return weekCost;
 }
 
+/**
+ * Estimate a day's kWh from its known cost, using the average kWh/€ ratio of
+ * the (up to 7) available days. Returns 0 when no estimate can be derived.
+ *
+ * `dayNumber` is 1-based: it indexes `dailyweek_cost[dayNumber - 1]`.
+ */
+export function estimateMissingKwh(daily, dayNumber, dailyweek_cost) {
+  if (!daily || !dailyweek_cost) return 0;
+
+  const dailyCostArray = dailyweek_cost.toString().split(",");
+  const currentDayPrice = parseFloat(dailyCostArray[dayNumber - 1]?.replace(",", "."));
+
+  if (isNaN(currentDayPrice) || currentDayPrice <= 0) return 0;
+
+  // Calculer la moyenne des ratios kWh/€ des 7 derniers jours disponibles
+  const validRatios = [];
+
+  for (let i = 0; i < Math.min(daily.length, dailyCostArray.length, 7); i++) {
+    const kwh = parseFloat(daily[i]);
+    const cost = parseFloat(dailyCostArray[i]?.replace(",", "."));
+
+    if (!isNaN(kwh) && !isNaN(cost) && kwh > 0 && cost > 0 && kwh !== -1 && cost !== -1) {
+      validRatios.push(kwh / cost);
+    }
+  }
+
+  if (validRatios.length === 0) return 0;
+
+  const avgRatio = validRatios.reduce((sum, ratio) => sum + ratio, 0) / validRatios.length;
+  return currentDayPrice * avgRatio;
+}
+
 export function getDynamicGradient(consumption, averageConsumption = 50) {
   const ratio = consumption / averageConsumption;
   if (ratio <= 0.7) return "linear-gradient(135deg, #4caf50 0%, #8bc34a 100%)";
