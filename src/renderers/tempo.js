@@ -24,6 +24,13 @@ function getTempoRemainingDays(tempoEntity) {
   ];
 }
 
+/**
+ * Tempo day colours (today/tomorrow) and remaining blue/white/red days.
+ * @param {object} hass - Home Assistant object
+ * @param {object} config - card configuration
+ * @param {object} attributes - main entity attributes
+ * @returns {import("lit").TemplateResult}
+ */
 export function renderTempo(hass, config, attributes) {
   if (attributes.serviceEnedis === undefined) return html``;
   if (attributes.serviceEnedis !== "myElectricalData") {

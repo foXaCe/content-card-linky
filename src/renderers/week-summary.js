@@ -5,7 +5,11 @@ import { calculateWeekTotal, calculateWeekCost, getDynamicGradient, getSeasonalT
 
 /**
  * "Current week" summary card with a seasonal gradient and running total.
- * `now` is injectable for deterministic tests (defaults to the current time).
+ * @param {object} hass - Home Assistant object
+ * @param {object} config - card configuration
+ * @param {object} attributes - main entity attributes
+ * @param {Date} [now] - injectable clock for deterministic tests
+ * @returns {import("lit").TemplateResult}
  */
 export function renderWeekSummary(hass, config, attributes, now = new Date()) {
   if (!config.showWeekSummary && config.showWeekSummary !== undefined) {

@@ -265,7 +265,11 @@ function renderDay(hass, config, day, dayNumber, attributes, now) {
 
 /**
  * Horizontally-scrolling per-day history table with a week summary on top.
- * `now` is injectable for deterministic tests (defaults to the current time).
+ * @param {object} hass - Home Assistant object
+ * @param {object} config - card configuration
+ * @param {object} attributes - main entity attributes
+ * @param {Date} [now] - injectable clock for deterministic tests
+ * @returns {import("lit").TemplateResult | undefined}
  */
 export function renderHistory(hass, config, attributes, now = new Date()) {
   if (config.showHistory !== true) {

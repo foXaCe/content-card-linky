@@ -1,8 +1,17 @@
 import { html } from "lit";
 import { toFloat } from "../lib/format.js";
 import { localize } from "../lib/localize.js";
+import { onActivate } from "../lib/a11y.js";
 
-/** Collapsible monthly comparison (current vs previous month, with Y-1). */
+/**
+ * Collapsible monthly comparison (current vs previous month, with Y-1).
+ * @param {object} hass - Home Assistant object
+ * @param {object} config - card configuration
+ * @param {object} attributes - main entity attributes
+ * @param {boolean} expanded - whether the section is expanded
+ * @param {(event: Event) => void} onToggle - toggle handler from the host
+ * @returns {import("lit").TemplateResult}
+ */
 export function renderMonthlyView(hass, config, attributes, expanded, onToggle) {
   if (!config.showMonthlyView) return html``;
 
@@ -50,7 +59,14 @@ export function renderMonthlyView(hass, config, attributes, expanded, onToggle) 
 
   return html`
     <div class="collapsible-section">
-      <div class="collapsible-header" @click="${onToggle}">
+      <div
+        class="collapsible-header"
+        role="button"
+        tabindex="0"
+        aria-expanded="${expanded}"
+        @click="${onToggle}"
+        @keydown="${onActivate(onToggle)}"
+      >
         <ha-icon icon="${expanded ? "mdi:chevron-up" : "mdi:chevron-down"}"></ha-icon>
         <span class="section-title">${localize(hass, "card.temporal.monthly")}</span>
         <span class="section-summary">
@@ -84,7 +100,15 @@ export function renderMonthlyView(hass, config, attributes, expanded, onToggle) 
   `;
 }
 
-/** Collapsible yearly comparison (current year vs Y-1). */
+/**
+ * Collapsible yearly comparison (current year vs Y-1).
+ * @param {object} hass - Home Assistant object
+ * @param {object} config - card configuration
+ * @param {object} attributes - main entity attributes
+ * @param {boolean} expanded - whether the section is expanded
+ * @param {(event: Event) => void} onToggle - toggle handler from the host
+ * @returns {import("lit").TemplateResult}
+ */
 export function renderYearlyView(hass, config, attributes, expanded, onToggle) {
   if (!config.showYearlyView) return html``;
 
@@ -113,7 +137,14 @@ export function renderYearlyView(hass, config, attributes, expanded, onToggle) {
 
   return html`
     <div class="collapsible-section">
-      <div class="collapsible-header" @click="${onToggle}">
+      <div
+        class="collapsible-header"
+        role="button"
+        tabindex="0"
+        aria-expanded="${expanded}"
+        @click="${onToggle}"
+        @keydown="${onActivate(onToggle)}"
+      >
         <ha-icon icon="${expanded ? "mdi:chevron-up" : "mdi:chevron-down"}"></ha-icon>
         <span class="section-title">${localize(hass, "card.temporal.yearly")}</span>
         <span class="section-summary">

@@ -1,6 +1,7 @@
 import { html } from "lit";
 import { parseDetailedTimeSeries } from "../lib/calculations.js";
 import { localize } from "../lib/localize.js";
+import { onActivate } from "../lib/a11y.js";
 
 // Legacy "Daily" + "Dailyweek" string parser (kept for backwards compatibility
 // with the older MyElectricalData format).
@@ -106,11 +107,13 @@ function renderComparisonStats(hass, data) {
 }
 
 /**
- * @param hass HA instance
- * @param config card config
- * @param attributes main entity attributes (for unit)
- * @param expanded whether the section is expanded
- * @param onToggle click handler from the host
+ * "Today vs yesterday" detailed comparison (modern time-series or legacy format).
+ * @param {object} hass - Home Assistant object
+ * @param {object} config - card configuration
+ * @param {object} attributes - main entity attributes (for the unit)
+ * @param {boolean} expanded - whether the section is expanded
+ * @param {(event: Event) => void} onToggle - toggle handler from the host
+ * @returns {import("lit").TemplateResult}
  */
 export function renderDetailedComparison(hass, config, attributes, expanded, onToggle) {
   if (!config.showDetailedComparison) return html``;
@@ -153,7 +156,14 @@ export function renderDetailedComparison(hass, config, attributes, expanded, onT
 
   return html`
     <div class="collapsible-section">
-      <div class="collapsible-header" @click="${onToggle}">
+      <div
+        class="collapsible-header"
+        role="button"
+        tabindex="0"
+        aria-expanded="${expanded}"
+        @click="${onToggle}"
+        @keydown="${onActivate(onToggle)}"
+      >
         <ha-icon icon="${expanded ? "mdi:chevron-up" : "mdi:chevron-down"}"></ha-icon>
         <span class="section-title">${localize(hass, "card.comparison.title")}</span>
         <span class="section-summary">

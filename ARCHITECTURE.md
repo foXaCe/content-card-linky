@@ -19,6 +19,7 @@ src/
 │   │                            #   seasonal theme, time-series parsing,
 │   │                            #   estimateMissingKwh, EcoWatt parsing).
 │   ├── format.js                # toFloat() + localeOf() (locale resolution).
+│   ├── a11y.js                  # onActivate() — Enter/Space keyboard helper.
 │   ├── fire-event.js            # DOM CustomEvent helper.
 │   └── localize.js              # Translation lookup (en/fr) with placeholders.
 ├── translations/
@@ -91,7 +92,16 @@ sections), toggled by `toggle*` methods passed into the relevant renderers as
 
 Use `localeOf(hass)` from `lib/format.js` as the locale argument to
 `toLocaleDateString` / `toLocaleTimeString` so the value follows the HA
-frontend language.
+frontend language. If a renderer branches on the current date, accept an
+optional `now = new Date()` parameter (as `renderWeekSummary`/`renderHistory`
+do) so tests can inject a fixed clock.
+
+### Add a clickable (non-native) control
+
+For a `<div>`/`<span>` that acts as a button, add `role="button"`,
+`tabindex="0"`, `aria-expanded` (if it toggles), and
+`@keydown=${onActivate(handler)}` (from `lib/a11y.js`) alongside `@click`, so
+keyboard users can activate it with Enter/Space.
 
 ## Build & test
 

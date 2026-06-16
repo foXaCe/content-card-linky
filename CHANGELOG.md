@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Keyboard accessibility**: the collapsible sections (monthly, yearly,
+  detailed comparison) are now exposed as `role="button"` with `tabindex="0"`,
+  `aria-expanded`, and Enter/Space activation via a shared `onActivate` helper.
+- **Editor**: two previously YAML-only options are now editable in the visual
+  editor — `showWeekSummary` (history) and `tempoEntity` (Tempo).
+
 ### Changed
 
 - **Architecture**: the 2501-line `content-card-linky.js` monolith was split
@@ -30,12 +38,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   by the week summary and Tempo sections.
 - `getStubConfig` now sets the correct `showTitleLign` key (was `showTitleLine`,
   silently ignored), so freshly added cards enable row titles as intended.
+- **README**: the manual-install instructions now use the `www/community/...`
+  path (and ship the `icons/` folder), so the Linky icon — served from
+  `/local/community/content-card-linky/icons/linky.svg` — is no longer broken
+  for manual installs.
+- Removed an unreachable "missing data" branch in the detailed comparison
+  (the today/yesterday buckets are always initialised arrays).
 
 ### Tests
 
-- Coverage now spans the whole `src/` tree (previously `src/lib` only): 168
-  tests across 16 files, ~97% statements / ~92% branches / ~99% functions /
-  ~98% lines. Every renderer, the editor and the card lifecycle are covered.
+- Coverage now spans the whole `src/` tree (previously `src/lib` only): 176
+  tests across 18 files, ~98% statements / ~94% branches / ~99% functions /
+  ~99% lines. Every renderer, the editor and the card lifecycle are covered.
+- Date-dependent renderers (`renderWeekSummary`, `renderHistory`) accept an
+  injectable `now`, so coverage is deterministic day-to-day.
+- Renderer functions carry JSDoc `@param`/`@returns` annotations.
 
 ## [1.7.1] - 2026-05-01
 

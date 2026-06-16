@@ -3,7 +3,11 @@ import { localize } from "../lib/localize.js";
 import { toFloat } from "../lib/format.js";
 import { estimateMissingKwh } from "../lib/calculations.js";
 
-/** Optional centered card title. */
+/**
+ * Optional centered card title.
+ * @param {object} config - card configuration
+ * @returns {import("lit").TemplateResult | undefined}
+ */
 export function renderTitle(config) {
   if (config.showTitle === true) {
     return html` <div class="card">
@@ -14,7 +18,11 @@ export function renderTitle(config) {
   }
 }
 
-/** Linky logo block (consumption header). */
+/**
+ * Linky logo block (consumption header).
+ * @param {object} config - card configuration
+ * @returns {import("lit").TemplateResult}
+ */
 export function renderIcon(config) {
   if (config.showIcon) {
     return html` <div class="icon-block">
@@ -27,7 +35,13 @@ export function renderIcon(config) {
   return html``;
 }
 
-/** Daily cost block on the right of the consumption header. */
+/**
+ * Daily cost block on the right of the consumption header.
+ * @param {object} hass - Home Assistant object
+ * @param {object} config - card configuration
+ * @param {object} attributes - main entity attributes
+ * @returns {import("lit").TemplateResult}
+ */
 export function renderPrice(hass, config, attributes) {
   if (config.showPrice) {
     return html` <div class="cout-block">
@@ -38,7 +52,14 @@ export function renderPrice(hass, config, attributes) {
   return html``;
 }
 
-/** Consumption header: icon + main value (or HC/HP split) + daily price. */
+/**
+ * Consumption header: icon + main value (or HC/HP split) + daily price.
+ * @param {object} hass - Home Assistant object
+ * @param {object} config - card configuration
+ * @param {object} attributes - main entity attributes
+ * @param {object} stateObj - the entity state object
+ * @returns {import("lit").TemplateResult | undefined}
+ */
 export function renderHeader(hass, config, attributes, stateObj) {
   if (config.showHeader === true) {
     if (config.showPeakOffPeak) {
@@ -70,7 +91,13 @@ export function renderHeader(hass, config, attributes, stateObj) {
   }
 }
 
-/** Production-mode value with estimation/pending fallbacks. */
+/**
+ * Production-mode value with estimation/pending fallbacks.
+ * @param {object} hass - Home Assistant object
+ * @param {string} state - the raw entity state
+ * @param {object} attributes - main entity attributes
+ * @returns {import("lit").TemplateResult}
+ */
 export function renderProductionValue(hass, state, attributes) {
   const value = parseFloat(state);
 

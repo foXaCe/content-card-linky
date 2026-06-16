@@ -22,7 +22,13 @@ function currentMonth(hass) {
   return d.toLocaleDateString(localeOf(hass), { month: "long", year: "numeric" });
 }
 
-/** Grid of consumption-evolution percentage tiles. */
+/**
+ * Grid of consumption-evolution percentage tiles.
+ * @param {object} hass - Home Assistant object
+ * @param {object} config - card configuration
+ * @param {object} attributes - main entity attributes
+ * @returns {import("lit").TemplateResult}
+ */
 export function renderVariations(hass, config, attributes) {
   return html` <div class="variations">
     ${config.showYearRatio

@@ -12,6 +12,7 @@ export default [
         HTMLElement: "readonly",
         Event: "readonly",
         CustomEvent: "readonly",
+        KeyboardEvent: "readonly",
         Map: "readonly",
         Set: "readonly",
         Promise: "readonly",

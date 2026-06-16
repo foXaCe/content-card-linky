@@ -35,6 +35,19 @@ describe("renderMonthlyView", () => {
     expect(el.textContent).toMatch(/Aucune donnée/);
   });
 
+  it("exposes the collapsible header as a keyboard-accessible button", () => {
+    let toggled = 0;
+    const onToggle = () => toggled++;
+    const el = renderTpl(renderMonthlyView(hass, { showMonthlyView: true }, { current_month: "1" }, false, onToggle));
+    const header = el.querySelector(".collapsible-header");
+    expect(header.getAttribute("role")).toBe("button");
+    expect(header.getAttribute("tabindex")).toBe("0");
+    expect(header.getAttribute("aria-expanded")).toBe("false");
+    header.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
+    header.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" })); // ignored
+    expect(toggled).toBe(1);
+  });
+
   it("collapses/expands via the expanded flag", () => {
     const collapsed = renderTpl(
       renderMonthlyView(hass, { showMonthlyView: true }, { current_month: "1" }, false, noop),

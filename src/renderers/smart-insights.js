@@ -4,6 +4,11 @@ import { localize } from "../lib/localize.js";
 /**
  * Smart insights row: monthly prediction + week/month/year trend tiles.
  * Reads the live evolution figures straight from the main entity.
+ * @param {object} hass - Home Assistant object
+ * @param {object} config - card configuration
+ * @param {string[]|undefined} weekTotal - per-day kWh series (attributes.dailyweek)
+ * @param {string[]|undefined} weekCost - per-day cost series (attributes.dailyweek_cost)
+ * @returns {import("lit").TemplateResult}
  */
 export function renderSmartInsights(hass, config, weekTotal, weekCost) {
   // Utiliser les données réelles de l'entité si disponibles

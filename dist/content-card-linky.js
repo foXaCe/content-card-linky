@@ -1242,17 +1242,17 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     `}}(e,t)}
       ${i.slice(-s).map((n,r)=>{const l=i.length-s+r+1;return He(e,t,n,l,o,a)}).reverse()}
     </div>
-  `}function ze(e,t){if(!0===e.showError&&""!==t)return O`
+  `}function ze(e){return t=>{"Enter"!==t.key&&" "!==t.key||e(t)}}function We(e,t){if(!0===e.showError&&""!==t)return O`
         <div class="error-msg" style="color: var(--error-color, red)">
           <ha-icon id="icon" icon="mdi:alert-outline"></ha-icon>
           ${t}
         </div>
-      `}const We=new Map([["Pas de valeur","green"],[1,"green"],[2,"yellow"],[3,"red"]]);function Fe(e,t){return O`
+      `}const Fe=new Map([["Pas de valeur","green"],[1,"green"],[2,"yellow"],[3,"red"]]);function Re(e,t){return O`
     <tr style="line-height:80%">
       <td style="width:5%">${e}</td>
       <td style="width:95%">
         <ul class="flow-row oneHour">
-          ${_e(t,We).map(e=>O`<li
+          ${_e(t,Fe).map(e=>O`<li
                 class="ecowatt-${e[0]}"
                 style="background: ${e[1]}"
                 title="${e[1]} - ${e[0]}"
@@ -1260,11 +1260,11 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         </ul>
       </td>
     </tr>
-  `}const Re=new Map([["unknown","grey"],["Inconnu","grey"],["BLUE","blue"],["WHITE","white"],["RED","red"]]);function Le(e){const t=new Date(e.attributes.date),o=e.state;return[t,Re.get(o),o]}function Ue(e,t,o){if(!e||e.length<=1||0===t)return O`<svg viewBox="0 0 100 50" class="consumption-chart"></svg>`;const a=e.map((o,a)=>`${a/(e.length-1)*100},${100-o.consumption/t*100}`).join(" ");return O`
+  `}const Le=new Map([["unknown","grey"],["Inconnu","grey"],["BLUE","blue"],["WHITE","white"],["RED","red"]]);function Ue(e){const t=new Date(e.attributes.date),o=e.state;return[t,Le.get(o),o]}function Oe(e,t,o){if(!e||e.length<=1||0===t)return O`<svg viewBox="0 0 100 50" class="consumption-chart"></svg>`;const a=e.map((o,a)=>`${a/(e.length-1)*100},${100-o.consumption/t*100}`).join(" ");return O`
     <svg viewBox="0 0 100 50" class="consumption-chart">
       <polyline points="${a}" fill="none" stroke="${o}" stroke-width="2" />
     </svg>
-  `}function Oe(e,t,o,a,i){if(!t.showDetailedComparison)return O``;if(!t.detailedComparisonEntity)return O``;const n=e.states[t.detailedComparisonEntity];if(!n)return O`
+  `}function Ye(e,t,o,a,i){if(!t.showDetailedComparison)return O``;if(!t.detailedComparisonEntity)return O``;const n=e.states[t.detailedComparisonEntity];if(!n)return O`
       <div class="collapsible-section">
         <div class="collapsible-header">
           <span class="section-title">${de(e,"card.comparison.title")}</span>
@@ -1284,7 +1284,14 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       </div>
     `}r=function({Daily:e,Dailyweek:t},o=new Date){const a=e.split(",").map(e=>parseFloat(e.trim().replace(",","."))),i=t.split(",").map(e=>{const[t,a]=e.trim().split("/");return new Date(o.getFullYear(),parseInt(a,10)-1,parseInt(t,10))}),n=new Date(o.getFullYear(),o.getMonth(),o.getDate()),s=new Date(n.getTime()-864e5),r=[],l=[];i.forEach((e,t)=>{const o=a[t]||0,i=new Date(e.getFullYear(),e.getMonth(),e.getDate());i.getTime()===n.getTime()?r.push({time:e,consumption:o}):i.getTime()===s.getTime()&&l.push({time:e,consumption:o})});const c=r.reduce((e,t)=>e+t.consumption,0)/1e3,d=l.reduce((e,t)=>e+t.consumption,0)/1e3;return{today:r,yesterday:l,todayTotal:c,yesterdayTotal:d,evolution:c>0&&0!==d?(c-d)/d*100:0}}({Daily:s.Daily,Dailyweek:s.Dailyweek})}return O`
     <div class="collapsible-section">
-      <div class="collapsible-header" @click="${i}">
+      <div
+        class="collapsible-header"
+        role="button"
+        tabindex="0"
+        aria-expanded="${a}"
+        @click="${i}"
+        @keydown="${ze(i)}"
+      >
         <ha-icon icon="${a?"mdi:chevron-up":"mdi:chevron-down"}"></ha-icon>
         <span class="section-title">${de(e,"card.comparison.title")}</span>
         <span class="section-summary">
@@ -1297,7 +1304,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     <div class="comparison-charts">
       <div class="chart-day">
         <h4>${de(e,"card.comparison.today")}</h4>
-        <div class="mini-chart">${Ue(t.today,a,"#2196f3")}</div>
+        <div class="mini-chart">${Oe(t.today,a,"#2196f3")}</div>
         <div class="day-stats">
           <span class="total">${t.todayTotal.toFixed(1)} ${o}</span>
           <span class="peak"
@@ -1307,7 +1314,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       </div>
       <div class="chart-day">
         <h4>${de(e,"card.comparison.yesterday")}</h4>
-        <div class="mini-chart">${Ue(t.yesterday,a,"#666")}</div>
+        <div class="mini-chart">${Oe(t.yesterday,a,"#666")}</div>
         <div class="day-stats">
           <span class="total">${t.yesterdayTotal.toFixed(1)} ${o}</span>
           <span class="peak"
@@ -1334,7 +1341,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         </div>
       </div>
     </div>
-  `}const Ye="1.7.1";window.customCards=window.customCards||[],window.customCards.push({type:"content-card-linky",name:"Carte Enedis",description:"Carte pour l'intégration MyElectricalData - Affichage moderne des données Linky avec évolutions colorées",preview:!0,documentationURL:"https://github.com/MyElectricalData/content-card-linky",version:Ye}),console.info(`%c content-card-linky %c v${Ye} `,"color: white; background: #4caf50; font-weight: 700;","color: white; background: #1976d2; font-weight: 700;");customElements.define("content-card-linky",class extends ne{static get properties(){return{config:{attribute:!1},hass:{attribute:!1},_monthlyExpanded:{state:!0},_yearlyExpanded:{state:!0},_detailedExpanded:{state:!0}}}constructor(){super(),this._monthlyExpanded=!1,this._yearlyExpanded=!1,this._detailedExpanded=!1}static async getConfigElement(){return await import("./content-card-linky-editor.js"),document.createElement("content-card-linky-editor")}static async getStubConfig(e){let t="sensor.linky_consumption";if(e&&e.states){const o=Object.keys(e.states).find(t=>{if(!t.startsWith("sensor."))return!1;const o=e.states[t].attributes||{};return/linky/i.test(t)||"consommation"===o.typeCompteur||void 0!==o.daily&&void 0!==o.dailyweek});o&&(t=o)}return{type:"custom:content-card-linky",entity:t,titleName:"LINKY",nbJoursAffichage:"7",showIcon:!0,showHistory:!0,showPrice:!0,showDayPrice:!0,showCurrentMonthRatio:!0,showWeekRatio:!0,showDayName:"long",showDayMaxPower:!0,showTitleLign:!0,showEcoWatt:!0,showTempo:!1,showMonthlyView:!0,showYearlyView:!0,showDetailedComparison:!0,detailedComparisonEntity:"sensor.linky_consumption_last5day"}}render(){if(!this.config||!this.hass)return O``;const e=this.hass.states[this.config.entity];if(!e)return O`
+  `}const Ie="1.7.1";window.customCards=window.customCards||[],window.customCards.push({type:"content-card-linky",name:"Carte Enedis",description:"Carte pour l'intégration MyElectricalData - Affichage moderne des données Linky avec évolutions colorées",preview:!0,documentationURL:"https://github.com/MyElectricalData/content-card-linky",version:Ie}),console.info(`%c content-card-linky %c v${Ie} `,"color: white; background: #4caf50; font-weight: 700;","color: white; background: #1976d2; font-weight: 700;");customElements.define("content-card-linky",class extends ne{static get properties(){return{config:{attribute:!1},hass:{attribute:!1},_monthlyExpanded:{state:!0},_yearlyExpanded:{state:!0},_detailedExpanded:{state:!0}}}constructor(){super(),this._monthlyExpanded=!1,this._yearlyExpanded=!1,this._detailedExpanded=!1}static async getConfigElement(){return await import("./content-card-linky-editor.js"),document.createElement("content-card-linky-editor")}static async getStubConfig(e){let t="sensor.linky_consumption";if(e&&e.states){const o=Object.keys(e.states).find(t=>{if(!t.startsWith("sensor."))return!1;const o=e.states[t].attributes||{};return/linky/i.test(t)||"consommation"===o.typeCompteur||void 0!==o.daily&&void 0!==o.dailyweek});o&&(t=o)}return{type:"custom:content-card-linky",entity:t,titleName:"LINKY",nbJoursAffichage:"7",showIcon:!0,showHistory:!0,showPrice:!0,showDayPrice:!0,showCurrentMonthRatio:!0,showWeekRatio:!0,showDayName:"long",showDayMaxPower:!0,showTitleLign:!0,showEcoWatt:!0,showTempo:!1,showMonthlyView:!0,showYearlyView:!0,showDetailedComparison:!0,detailedComparisonEntity:"sensor.linky_consumption_last5day"}}render(){if(!this.config||!this.hass)return O``;const e=this.hass.states[this.config.entity];if(!e)return O`
         <ha-card>
           <div class="card">
             <div id="states">
@@ -1390,7 +1397,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     <span class="cout-unit">${o.unit_of_measurement}</span>
   `}(this.hass,e.state,t)}</div>
           </div>
-          ${ze(this.config,t.errorLastCall)}
+          ${We(this.config,t.errorLastCall)}
         </div>
       </ha-card>`:void 0:O` <ha-card id="card" @click="${()=>this._showDetails(this.config.entity)}">
         ${function(e){if(!0===e.showTitle)return O` <div class="card">
@@ -1597,7 +1604,14 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
           ${Ne(this.hass,this.config,t)}
           ${function(e,t,o,a,i){if(!t.showMonthlyView)return O``;const n=o.current_month||"N/A",s=o.last_month||"N/A",r=o.current_month_last_year||"N/A",l=o.last_month_last_year||"N/A",c=[{name:de(e,"card.temporal.current_month"),value:n,year:(new Date).getFullYear(),evolution:"N/A"!==r&&"N/A"!==n?((parseFloat(n)-parseFloat(r))/parseFloat(r)*100).toFixed(1):null},{name:de(e,"card.temporal.previous_month"),value:s,year:(new Date).getFullYear(),evolution:"N/A"!==l&&"N/A"!==s?((parseFloat(s)-parseFloat(l))/parseFloat(l)*100).toFixed(1):null},{name:de(e,"card.temporal.current_month_prev_year"),value:r,year:(new Date).getFullYear()-1,evolution:null},{name:de(e,"card.temporal.previous_month_prev_year"),value:l,year:(new Date).getFullYear()-1,evolution:null}].filter(e=>"N/A"!==e.value);return O`
     <div class="collapsible-section">
-      <div class="collapsible-header" @click="${i}">
+      <div
+        class="collapsible-header"
+        role="button"
+        tabindex="0"
+        aria-expanded="${a}"
+        @click="${i}"
+        @keydown="${ze(i)}"
+      >
         <ha-icon icon="${a?"mdi:chevron-up":"mdi:chevron-down"}"></ha-icon>
         <span class="section-title">${de(e,"card.temporal.monthly")}</span>
         <span class="section-summary">
@@ -1625,7 +1639,14 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
   `}(this.hass,this.config,t,this._monthlyExpanded,e=>this.toggleMonthlyView(e))}
           ${function(e,t,o,a,i){if(!t.showYearlyView)return O``;const n=o.current_year||"N/A",s=o.current_year_last_year||"N/A",r=[{name:(new Date).getFullYear(),value:n,evolution:"N/A"!==s&&"N/A"!==n?((parseFloat(n)-parseFloat(s))/parseFloat(s)*100).toFixed(1):null},{name:(new Date).getFullYear()-1,value:s,evolution:null}].filter(e=>"N/A"!==e.value);return O`
     <div class="collapsible-section">
-      <div class="collapsible-header" @click="${i}">
+      <div
+        class="collapsible-header"
+        role="button"
+        tabindex="0"
+        aria-expanded="${a}"
+        @click="${i}"
+        @keydown="${ze(i)}"
+      >
         <ha-icon icon="${a?"mdi:chevron-up":"mdi:chevron-down"}"></ha-icon>
         <span class="section-title">${de(e,"card.temporal.yearly")}</span>
         <span class="section-summary">
@@ -1651,24 +1672,24 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       </div>
     </div>
   `}(this.hass,this.config,t,this._yearlyExpanded,e=>this.toggleYearlyView(e))}
-          ${Oe(this.hass,this.config,t,this._detailedExpanded,e=>this.toggleDetailedComparison(e))}
+          ${Ye(this.hass,this.config,t,this._detailedExpanded,e=>this.toggleDetailedComparison(e))}
           ${function(e,t,o){if(void 0===o.serviceEnedis)return O``;if("myElectricalData"!==o.serviceEnedis)return O`${de(e,"card.ecowatt.only_med")}`;const a=t.ewEntity?e.states[t.ewEntity]:void 0,i=t.ewEntityJ1?e.states[t.ewEntityJ1]:void 0,n=t.ewEntityJ2?e.states[t.ewEntityJ2]:void 0;return t.showEcoWatt&&!a?O`<div class="error-msg">${de(e,"card.ecowatt.missing_today")}</div>`:!t.showEcoWattJ12||i&&n?O`
     <table style="width:100%">
-      ${t.showEcoWatt?Fe(de(e,"card.ecowatt.today"),a):O``}
+      ${t.showEcoWatt?Re(de(e,"card.ecowatt.today"),a):O``}
       ${t.showEcoWattJ12?O`
-            ${Fe(de(e,"card.ecowatt.tomorrow"),i)}
-            ${Fe(de(e,"card.ecowatt.after_tomorrow"),n)}
+            ${Re(de(e,"card.ecowatt.tomorrow"),i)}
+            ${Re(de(e,"card.ecowatt.after_tomorrow"),n)}
             <tr style="line-height:80%">
               <td style="width:5%"></td>
               <td style="width:95%">
                 <ul class="flow-row oneHourLabel">
-                  ${_e(n,We).map(e=>O`<li title="${e[0]}">${e[0]%2==1?e[0]:""}</li>`)}
+                  ${_e(n,Fe).map(e=>O`<li title="${e[0]}">${e[0]%2==1?e[0]:""}</li>`)}
                 </ul>
               </td>
             </tr>
           `:O``}
     </table>
-  `:O`<div class="error-msg">${de(e,"card.ecowatt.missing_j12")}</div>`}(this.hass,this.config,t)} ${function(e,t,o){if(void 0===o.serviceEnedis)return O``;if("myElectricalData"!==o.serviceEnedis)return O`${de(e,"card.tempo.only_med")}`;if(!1===t.showTempo)return O``;const a=e.states[t.tempoEntityInfo],i=e.states[t.tempoEntityJ0],n=e.states[t.tempoEntityJ1];if(!(i&&i.state&&n&&n.state))return O`${de(e,"card.tempo.missing_j01")}`;if(!a||!a.state)return O`${de(e,"card.tempo.missing_info")}`;const[s,r]=Le(i),[l,c]=Le(n),[d,p,h]=[(u=a).attributes.days_red,u.attributes.days_white,u.attributes.days_blue];var u;const m=t=>new Date(t).toLocaleDateString(ve(e),{weekday:"long",day:"numeric"});return O`
+  `:O`<div class="error-msg">${de(e,"card.ecowatt.missing_j12")}</div>`}(this.hass,this.config,t)} ${function(e,t,o){if(void 0===o.serviceEnedis)return O``;if("myElectricalData"!==o.serviceEnedis)return O`${de(e,"card.tempo.only_med")}`;if(!1===t.showTempo)return O``;const a=e.states[t.tempoEntityInfo],i=e.states[t.tempoEntityJ0],n=e.states[t.tempoEntityJ1];if(!(i&&i.state&&n&&n.state))return O`${de(e,"card.tempo.missing_j01")}`;if(!a||!a.state)return O`${de(e,"card.tempo.missing_info")}`;const[s,r]=Ue(i),[l,c]=Ue(n),[d,p,h]=[(u=a).attributes.days_red,u.attributes.days_white,u.attributes.days_blue];var u;const m=t=>new Date(t).toLocaleDateString(ve(e),{weekday:"long",day:"numeric"});return O`
     <table class="tempo-color">
       <tr>
         <td class="tempo-${r}" style="width:50%">${m(s)}</td>
@@ -1683,7 +1704,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       </tr>
     </table>
   `}(this.hass,this.config,t)}
-          ${ze(this.config,t.errorLastCall)}
+          ${We(this.config,t.errorLastCall)}
           ${a=this.hass,i=t.versionUpdateAvailable,n=t.versionGit,!0===i?O`
       <div class="information-msg" style="color: var(--error-color, red)">
         <ha-icon id="icon" icon="mdi:alert-outline"></ha-icon>
