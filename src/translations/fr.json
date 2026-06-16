@@ -10,19 +10,94 @@
     "current_month": "vs {month}",
     "previous_week": "vs {week}",
     "before_yesterday": "vs {date}",
+    "week_noun": "semaine dernière",
+    "day_before_noun": "avant-hier",
     "in_off_peak": "(en HC)",
     "in_peak": "(en HP)",
+    "peak_pct": "% HP",
     "daily_cost": "Coût journalier",
     "version_available": "Nouvelle version disponible {version}",
     "migrate_med": "Merci de migrer sur MyElectricalData. EnedisGateway n'est plus supporté.",
-    "monthly_view": "Vue mensuelle",
-    "yearly_view": "Vue annuelle",
-    "detailed_comparison": "Comparaison détaillée",
-    "ecowatt": "EcoWatt",
-    "tempo": "Tempo",
-    "remaining_blue_days": "Jours bleus restants",
-    "remaining_white_days": "Jours blancs restants",
-    "remaining_red_days": "Jours rouges restants"
+    "aria": {
+      "yearly_trend": "Évolution annuelle : {value} %",
+      "monthly_trend": "Évolution mensuelle : {value} %",
+      "current_month_trend": "Évolution du mois courant : {value} %",
+      "weekly_trend": "Évolution hebdomadaire : {value} %",
+      "daily_trend": "Évolution quotidienne : {value} %"
+    },
+    "tooltip": {
+      "year_prev": "A-1 : {value}",
+      "year": "A : {value}",
+      "prev_month_prev_year": "Mois précédent A-1 : {value}",
+      "prev_month": "Mois précédent : {value}",
+      "month_prev_year": "Mois A-1 : {value}",
+      "month": "Mois : {value}",
+      "last_week": "Semaine dernière : {value}",
+      "this_week": "Semaine courante : {value}",
+      "day_before_yesterday": "Avant-hier : {value}",
+      "yesterday": "Hier : {value}"
+    },
+    "insights": {
+      "monthly_prediction": "Prédiction mensuelle",
+      "vs_last_week": "vs semaine dernière",
+      "vs_last_month": "vs mois dernier",
+      "vs_last_year": "vs année dernière"
+    },
+    "history": {
+      "data_unavailable": "Donnée indisponible",
+      "data_pending": "Données en attente de remontée",
+      "tempo_day": "Tempo : {color} — Date : {date}",
+      "estimated": "Estimation basée sur les jours précédents — données kWh non disponibles",
+      "col_consumption": "Conso",
+      "col_price": "Prix",
+      "col_price_offpeak": "Prix HC",
+      "col_price_offpeak_mobile": "€ HC",
+      "col_price_peak": "Prix HP",
+      "col_price_peak_mobile": "€ HP",
+      "col_offpeak": "HC",
+      "col_peak": "HP",
+      "col_max_power": "MP",
+      "col_max_power_time": "MPtime"
+    },
+    "production": {
+      "estimate": "Estimation production basée sur les données précédentes",
+      "pending": "Données de production en attente"
+    },
+    "comparison": {
+      "title": "Aujourd'hui vs Hier",
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "peak": "Pic : {value} W",
+      "evolution": "Évolution",
+      "difference": "Différence",
+      "entity_not_found": "Entité {entity} introuvable",
+      "available_attrs": "Attributs disponibles : {attrs}",
+      "missing_data": "Données aujourd'hui/hier manquantes ({today} / {yesterday})"
+    },
+    "ecowatt": {
+      "only_med": "EcoWatt : uniquement disponible avec MyElectricalData",
+      "missing_today": "EcoWatt : entité J+0 non configurée ou introuvable",
+      "missing_j12": "EcoWatt : entité(s) J+1/J+2 non configurée(s) ou introuvable(s)",
+      "today": "J+0",
+      "tomorrow": "J+1",
+      "after_tomorrow": "J+2"
+    },
+    "tempo": {
+      "only_med": "Tempo : uniquement disponible avec MyElectricalData",
+      "missing_j01": "Tempo : sensor(s) J0 et/ou J1 indisponible(s) ou incorrect(s)",
+      "missing_info": "Tempo : sensor « info » indisponible ou incorrect"
+    },
+    "temporal": {
+      "monthly": "Mensuel",
+      "yearly": "Annuel",
+      "no_data": "Aucune donnée",
+      "months_count": "{count} mois",
+      "years_count": "{count} ans",
+      "current_month": "Mois actuel",
+      "previous_month": "Mois précédent",
+      "current_month_prev_year": "Mois actuel A-1",
+      "previous_month_prev_year": "Mois préc. A-1"
+    }
   },
   "editor": {
     "section": {

@@ -157,8 +157,10 @@ class ContentCardLinky extends LitElement {
             ? renderSmartInsights(this.hass, this.config, attributes.dailyweek, attributes.dailyweek_cost)
             : html``}
           ${renderHistory(this.hass, this.config, attributes)}
-          ${renderMonthlyView(this.config, attributes, this._monthlyExpanded, (e) => this.toggleMonthlyView(e))}
-          ${renderYearlyView(this.config, attributes, this._yearlyExpanded, (e) => this.toggleYearlyView(e))}
+          ${renderMonthlyView(this.hass, this.config, attributes, this._monthlyExpanded, (e) =>
+            this.toggleMonthlyView(e),
+          )}
+          ${renderYearlyView(this.hass, this.config, attributes, this._yearlyExpanded, (e) => this.toggleYearlyView(e))}
           ${renderDetailedComparison(this.hass, this.config, attributes, this._detailedExpanded, (e) =>
             this.toggleDetailedComparison(e),
           )}
@@ -181,7 +183,7 @@ class ContentCardLinky extends LitElement {
                   ></span>
                 </div>`
               : html``}
-            <div class="cout-block">${renderProductionValue(stateObj.state, attributes)}</div>
+            <div class="cout-block">${renderProductionValue(this.hass, stateObj.state, attributes)}</div>
           </div>
           ${renderError(this.config, attributes.errorLastCall)}
         </div>

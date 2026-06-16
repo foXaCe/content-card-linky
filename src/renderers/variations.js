@@ -1,5 +1,6 @@
 import { html } from "lit";
 import { safeRound } from "../lib/calculations.js";
+import { localize } from "../lib/localize.js";
 import { localeOf } from "../lib/format.js";
 
 function previousYear(hass) {
@@ -19,14 +20,6 @@ function currentMonth(hass) {
   const d = new Date();
   d.setFullYear(d.getFullYear() - 1);
   return d.toLocaleDateString(localeOf(hass), { month: "long", year: "numeric" });
-}
-
-function weekBefore() {
-  return "semaine";
-}
-
-function dayBeforeYesterday() {
-  return "avant-hier";
 }
 
 /** Grid of consumption-evolution percentage tiles. */
@@ -52,15 +45,21 @@ export function renderVariations(hass, config, attributes) {
                 : attributes.yearly_evolution < 0
                   ? "percentage-negative"
                   : "percentage-neutral"}"
-              aria-label="Évolution annuelle: ${safeRound(attributes.yearly_evolution)}%"
+              aria-label="${localize(hass, "card.aria.yearly_trend", {
+                value: safeRound(attributes.yearly_evolution),
+              })}"
               role="text"
               >${safeRound(attributes.yearly_evolution)}<span class="unit"> %</span></span
             >
           </div>
           <div class="tooltip">
-            <span class="year">vs ${previousYear(hass)}</span>
+            <span class="year">${localize(hass, "card.previous_year", { year: previousYear(hass) })}</span>
             <span class="tooltiptext"
-              >A-1 : ${attributes.current_year_last_year}<br />A : ${attributes.current_year}</span
+              >${localize(hass, "card.tooltip.year_prev", { value: attributes.current_year_last_year })}<br />${localize(
+                hass,
+                "card.tooltip.year",
+                { value: attributes.current_year },
+              )}</span
             >
           </div>
         </span>`
@@ -85,16 +84,19 @@ export function renderVariations(hass, config, attributes) {
                 : attributes.monthly_evolution < 0
                   ? "percentage-negative"
                   : "percentage-neutral"}"
-              aria-label="Évolution mensuelle: ${safeRound(attributes.monthly_evolution)}%"
+              aria-label="${localize(hass, "card.aria.monthly_trend", {
+                value: safeRound(attributes.monthly_evolution),
+              })}"
               role="text"
               >${safeRound(attributes.monthly_evolution)}<span class="unit"> %</span></span
             >
           </div>
           <div class="tooltip">
-            <span class="previous-month">vs ${previousMonth(hass)}</span>
+            <span class="previous-month">${localize(hass, "card.previous_month", { month: previousMonth(hass) })}</span>
             <span class="tooltiptext"
-              >Mois Precedent A-1 : ${attributes.last_month_last_year}<br />Mois Precedent :
-              ${attributes.last_month}</span
+              >${localize(hass, "card.tooltip.prev_month_prev_year", {
+                value: attributes.last_month_last_year,
+              })}<br />${localize(hass, "card.tooltip.prev_month", { value: attributes.last_month })}</span
             >
           </div>
         </span>`
@@ -119,15 +121,19 @@ export function renderVariations(hass, config, attributes) {
                 : attributes.current_month_evolution < 0
                   ? "percentage-negative"
                   : "percentage-neutral"}"
-              aria-label="Évolution du mois courant: ${safeRound(attributes.current_month_evolution)}%"
+              aria-label="${localize(hass, "card.aria.current_month_trend", {
+                value: safeRound(attributes.current_month_evolution),
+              })}"
               role="text"
               >${safeRound(attributes.current_month_evolution)}<span class="unit"> %</span></span
             >
           </div>
           <div class="tooltip">
-            <span class="current-month">vs ${currentMonth(hass)}</span>
+            <span class="current-month">${localize(hass, "card.current_month", { month: currentMonth(hass) })}</span>
             <span class="tooltiptext"
-              >Mois A-1 : ${attributes.current_month_last_year}<br />Mois : ${attributes.current_month}</span
+              >${localize(hass, "card.tooltip.month_prev_year", {
+                value: attributes.current_month_last_year,
+              })}<br />${localize(hass, "card.tooltip.month", { value: attributes.current_month })}</span
             >
           </div>
         </span>`
@@ -152,15 +158,23 @@ export function renderVariations(hass, config, attributes) {
                 : attributes.current_week_evolution < 0
                   ? "percentage-negative"
                   : "percentage-neutral"}"
-              aria-label="Évolution hebdomadaire: ${safeRound(attributes.current_week_evolution)}%"
+              aria-label="${localize(hass, "card.aria.weekly_trend", {
+                value: safeRound(attributes.current_week_evolution),
+              })}"
               role="text"
               >${safeRound(attributes.current_week_evolution)}<span class="unit"> %</span></span
             >
           </div>
           <div class="tooltip">
-            <span class="previous-month">vs ${weekBefore()}</span>
+            <span class="previous-month"
+              >${localize(hass, "card.previous_week", { week: localize(hass, "card.week_noun") })}</span
+            >
             <span class="tooltiptext"
-              >Semaine dernière : ${attributes.last_week}<br />Semaine courante : ${attributes.current_week}</span
+              >${localize(hass, "card.tooltip.last_week", { value: attributes.last_week })}<br />${localize(
+                hass,
+                "card.tooltip.this_week",
+                { value: attributes.current_week },
+              )}</span
             >
           </div>
         </span>`
@@ -185,14 +199,24 @@ export function renderVariations(hass, config, attributes) {
                 : attributes.yesterday_evolution < 0
                   ? "percentage-negative"
                   : "percentage-neutral"}"
-              aria-label="Évolution quotidienne: ${safeRound(attributes.yesterday_evolution)}%"
+              aria-label="${localize(hass, "card.aria.daily_trend", {
+                value: safeRound(attributes.yesterday_evolution),
+              })}"
               role="text"
               >${safeRound(attributes.yesterday_evolution)}<span class="unit"> %</span></span
             >
           </div>
           <div class="tooltip">
-            <span class="previous-month">vs ${dayBeforeYesterday()}</span>
-            <span class="tooltiptext">Avant-hier : ${attributes.day_2}<br />Hier : ${attributes.yesterday}</span>
+            <span class="previous-month"
+              >${localize(hass, "card.before_yesterday", { date: localize(hass, "card.day_before_noun") })}</span
+            >
+            <span class="tooltiptext"
+              >${localize(hass, "card.tooltip.day_before_yesterday", { value: attributes.day_2 })}<br />${localize(
+                hass,
+                "card.tooltip.yesterday",
+                { value: attributes.yesterday },
+              )}</span
+            >
           </div>
         </span>`
       : html``}
@@ -201,7 +225,7 @@ export function renderVariations(hass, config, attributes) {
           <span class="ha-icon">
             <ha-icon icon="mdi:flash"></ha-icon>
           </span>
-          ${safeRound(attributes.peak_offpeak_percent)}<span class="unit"> % HP</span>
+          ${safeRound(attributes.peak_offpeak_percent)}<span class="unit"> ${localize(hass, "card.peak_pct")}</span>
         </span>`
       : html``}
   </div>`;

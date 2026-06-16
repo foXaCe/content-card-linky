@@ -1,5 +1,6 @@
 import { html } from "lit";
 import { getOneDayNextEcoWatt } from "../lib/calculations.js";
+import { localize } from "../lib/localize.js";
 
 const ECOWATT_COLORS = new Map([
   ["Pas de valeur", "green"],
@@ -31,7 +32,7 @@ function renderRow(label, entity) {
 export function renderEcoWatt(hass, config, attributes) {
   if (attributes.serviceEnedis === undefined) return html``;
   if (attributes.serviceEnedis !== "myElectricalData") {
-    return html`EcoWatt : uniquement disponible avec myElectricData`;
+    return html`${localize(hass, "card.ecowatt.only_med")}`;
   }
 
   const ew = config.ewEntity ? hass.states[config.ewEntity] : undefined;
@@ -39,18 +40,19 @@ export function renderEcoWatt(hass, config, attributes) {
   const ewJ2 = config.ewEntityJ2 ? hass.states[config.ewEntityJ2] : undefined;
 
   if (config.showEcoWatt && !ew) {
-    return html`<div class="error-msg">EcoWatt : entité J+0 non configurée ou introuvable</div>`;
+    return html`<div class="error-msg">${localize(hass, "card.ecowatt.missing_today")}</div>`;
   }
   if (config.showEcoWattJ12 && (!ewJ1 || !ewJ2)) {
-    return html`<div class="error-msg">EcoWatt : entité(s) J+1/J+2 non configurée(s) ou introuvable(s)</div>`;
+    return html`<div class="error-msg">${localize(hass, "card.ecowatt.missing_j12")}</div>`;
   }
 
   return html`
     <table style="width:100%">
-      ${config.showEcoWatt ? renderRow("J+0", ew) : html``}
+      ${config.showEcoWatt ? renderRow(localize(hass, "card.ecowatt.today"), ew) : html``}
       ${config.showEcoWattJ12
         ? html`
-            ${renderRow("J+1", ewJ1)} ${renderRow("J+2", ewJ2)}
+            ${renderRow(localize(hass, "card.ecowatt.tomorrow"), ewJ1)}
+            ${renderRow(localize(hass, "card.ecowatt.after_tomorrow"), ewJ2)}
             <tr style="line-height:80%">
               <td style="width:5%"></td>
               <td style="width:95%">

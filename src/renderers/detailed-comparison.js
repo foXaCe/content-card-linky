@@ -1,5 +1,6 @@
 import { html } from "lit";
 import { parseDetailedTimeSeries } from "../lib/calculations.js";
+import { localize } from "../lib/localize.js";
 
 // Legacy "Daily" + "Dailyweek" string parser (kept for backwards compatibility
 // with the older MyElectricalData format).
@@ -51,31 +52,39 @@ function renderMiniChart(data, maxValue, color) {
   `;
 }
 
-function renderComparisonCharts(data, unit) {
+function renderComparisonCharts(hass, data, unit) {
   const maxConsumption = Math.max(...data.today.map((d) => d.consumption), ...data.yesterday.map((d) => d.consumption));
   return html`
     <div class="comparison-charts">
       <div class="chart-day">
-        <h4>Aujourd'hui</h4>
+        <h4>${localize(hass, "card.comparison.today")}</h4>
         <div class="mini-chart">${renderMiniChart(data.today, maxConsumption, "#2196f3")}</div>
         <div class="day-stats">
           <span class="total">${data.todayTotal.toFixed(1)} ${unit}</span>
-          <span class="peak">Pic: ${Math.max(...data.today.map((d) => d.consumption))}W</span>
+          <span class="peak"
+            >${localize(hass, "card.comparison.peak", {
+              value: Math.max(...data.today.map((d) => d.consumption)),
+            })}</span
+          >
         </div>
       </div>
       <div class="chart-day">
-        <h4>Hier</h4>
+        <h4>${localize(hass, "card.comparison.yesterday")}</h4>
         <div class="mini-chart">${renderMiniChart(data.yesterday, maxConsumption, "#666")}</div>
         <div class="day-stats">
           <span class="total">${data.yesterdayTotal.toFixed(1)} ${unit}</span>
-          <span class="peak">Pic: ${Math.max(...data.yesterday.map((d) => d.consumption))}W</span>
+          <span class="peak"
+            >${localize(hass, "card.comparison.peak", {
+              value: Math.max(...data.yesterday.map((d) => d.consumption)),
+            })}</span
+          >
         </div>
       </div>
     </div>
   `;
 }
 
-function renderComparisonStats(data) {
+function renderComparisonStats(hass, data) {
   const evolution = data.evolution;
   const evolutionClass = evolution > 0 ? "increase" : evolution < 0 ? "decrease" : "stable";
   const evolutionIcon =
@@ -84,12 +93,12 @@ function renderComparisonStats(data) {
     <div class="comparison-stats">
       <div class="stat-item evolution ${evolutionClass}">
         <ha-icon icon="${evolutionIcon}"></ha-icon>
-        <span class="label">Évolution</span>
+        <span class="label">${localize(hass, "card.comparison.evolution")}</span>
         <span class="value">${Math.abs(evolution).toFixed(1)}%</span>
       </div>
       <div class="stat-item difference">
         <ha-icon icon="mdi:calculator"></ha-icon>
-        <span class="label">Différence</span>
+        <span class="label">${localize(hass, "card.comparison.difference")}</span>
         <span class="value">${Math.abs(data.todayTotal - data.yesterdayTotal).toFixed(2)} kWh</span>
       </div>
     </div>
@@ -112,8 +121,10 @@ export function renderDetailedComparison(hass, config, attributes, expanded, onT
     return html`
       <div class="collapsible-section">
         <div class="collapsible-header">
-          <span class="section-title">Aujourd'hui vs Hier</span>
-          <span class="section-summary">Entité ${config.detailedComparisonEntity} introuvable</span>
+          <span class="section-title">${localize(hass, "card.comparison.title")}</span>
+          <span class="section-summary"
+            >${localize(hass, "card.comparison.entity_not_found", { entity: config.detailedComparisonEntity })}</span
+          >
         </div>
       </div>
     `;
@@ -131,8 +142,10 @@ export function renderDetailedComparison(hass, config, attributes, expanded, onT
     return html`
       <div class="collapsible-section">
         <div class="collapsible-header">
-          <span class="section-title">Aujourd'hui vs Hier</span>
-          <span class="section-summary">Attributs disponibles: ${availableAttrs}</span>
+          <span class="section-title">${localize(hass, "card.comparison.title")}</span>
+          <span class="section-summary"
+            >${localize(hass, "card.comparison.available_attrs", { attrs: availableAttrs })}</span
+          >
         </div>
       </div>
     `;
@@ -142,10 +155,12 @@ export function renderDetailedComparison(hass, config, attributes, expanded, onT
     return html`
       <div class="collapsible-section">
         <div class="collapsible-header">
-          <span class="section-title">Aujourd'hui vs Hier</span>
+          <span class="section-title">${localize(hass, "card.comparison.title")}</span>
           <span class="section-summary"
-            >Données aujourd'hui/hier manquantes (${comparisonData.today?.length || 0} /
-            ${comparisonData.yesterday?.length || 0})</span
+            >${localize(hass, "card.comparison.missing_data", {
+              today: comparisonData.today?.length || 0,
+              yesterday: comparisonData.yesterday?.length || 0,
+            })}</span
           >
         </div>
       </div>
@@ -156,15 +171,15 @@ export function renderDetailedComparison(hass, config, attributes, expanded, onT
     <div class="collapsible-section">
       <div class="collapsible-header" @click="${onToggle}">
         <ha-icon icon="${expanded ? "mdi:chevron-up" : "mdi:chevron-down"}"></ha-icon>
-        <span class="section-title">Aujourd'hui vs Hier</span>
+        <span class="section-title">${localize(hass, "card.comparison.title")}</span>
         <span class="section-summary">
           ${comparisonData.todayTotal.toFixed(1)} vs ${comparisonData.yesterdayTotal.toFixed(1)} kWh
         </span>
       </div>
       <div class="collapsible-content ${expanded ? "expanded" : "collapsed"}">
         <div class="detailed-comparison">
-          ${renderComparisonCharts(comparisonData, attributes.unit_of_measurement)}
-          ${renderComparisonStats(comparisonData)}
+          ${renderComparisonCharts(hass, comparisonData, attributes.unit_of_measurement)}
+          ${renderComparisonStats(hass, comparisonData)}
         </div>
       </div>
     </div>

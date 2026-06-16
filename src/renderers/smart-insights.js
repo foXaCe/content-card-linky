@@ -1,4 +1,5 @@
 import { html } from "lit";
+import { localize } from "../lib/localize.js";
 
 /**
  * Smart insights row: monthly prediction + week/month/year trend tiles.
@@ -52,7 +53,7 @@ export function renderSmartInsights(hass, config, weekTotal, weekCost) {
         <div class="insight-item">
           <ha-icon icon="mdi:calendar-month" class="insight-icon"></ha-icon>
           <div class="insight-content">
-            <div class="insight-label">Prédiction mensuelle</div>
+            <div class="insight-label">${localize(hass, "card.insights.monthly_prediction")}</div>
             <div class="insight-value">${monthlyPrediction.toFixed(0)} kWh • ${monthlyCostPrediction.toFixed(0)}€</div>
           </div>
         </div>
@@ -60,7 +61,7 @@ export function renderSmartInsights(hass, config, weekTotal, weekCost) {
         <div class="insight-item">
           <ha-icon icon="${weekTrendIcon}" class="insight-icon" style="color: ${weekTrendColor}"></ha-icon>
           <div class="insight-content">
-            <div class="insight-label">vs semaine dernière</div>
+            <div class="insight-label">${localize(hass, "card.insights.vs_last_week")}</div>
             <div class="insight-value" style="color: ${weekTrendColor}">
               ${weekEvolution > 0 ? "+" : ""}${weekEvolution}%
             </div>
@@ -72,7 +73,7 @@ export function renderSmartInsights(hass, config, weekTotal, weekCost) {
         <div class="insight-item">
           <ha-icon icon="${monthTrendIcon}" class="insight-icon" style="color: ${monthTrendColor}"></ha-icon>
           <div class="insight-content">
-            <div class="insight-label">vs mois dernier</div>
+            <div class="insight-label">${localize(hass, "card.insights.vs_last_month")}</div>
             <div class="insight-value" style="color: ${monthTrendColor}">
               ${monthlyEvolution > 0 ? "+" : ""}${monthlyEvolution}%
             </div>
@@ -82,7 +83,7 @@ export function renderSmartInsights(hass, config, weekTotal, weekCost) {
         <div class="insight-item">
           <ha-icon icon="${yearTrendIcon}" class="insight-icon" style="color: ${yearTrendColor}"></ha-icon>
           <div class="insight-content">
-            <div class="insight-label">vs année dernière</div>
+            <div class="insight-label">${localize(hass, "card.insights.vs_last_year")}</div>
             <div class="insight-value" style="color: ${yearTrendColor}">
               ${yearlyEvolution > 0 ? "+" : ""}${yearlyEvolution}%
             </div>

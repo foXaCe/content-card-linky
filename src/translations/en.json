@@ -10,19 +10,94 @@
     "current_month": "vs {month}",
     "previous_week": "vs {week}",
     "before_yesterday": "vs {date}",
+    "week_noun": "last week",
+    "day_before_noun": "day before",
     "in_off_peak": "(off-peak)",
     "in_peak": "(peak)",
+    "peak_pct": "% peak",
     "daily_cost": "Daily cost",
     "version_available": "New version available {version}",
     "migrate_med": "Please migrate to MyElectricalData. EnedisGateway is no longer supported.",
-    "monthly_view": "Monthly view",
-    "yearly_view": "Yearly view",
-    "detailed_comparison": "Detailed comparison",
-    "ecowatt": "EcoWatt",
-    "tempo": "Tempo",
-    "remaining_blue_days": "Remaining blue days",
-    "remaining_white_days": "Remaining white days",
-    "remaining_red_days": "Remaining red days"
+    "aria": {
+      "yearly_trend": "Yearly trend: {value}%",
+      "monthly_trend": "Monthly trend: {value}%",
+      "current_month_trend": "Current-month trend: {value}%",
+      "weekly_trend": "Weekly trend: {value}%",
+      "daily_trend": "Daily trend: {value}%"
+    },
+    "tooltip": {
+      "year_prev": "Y-1: {value}",
+      "year": "Y: {value}",
+      "prev_month_prev_year": "Previous month Y-1: {value}",
+      "prev_month": "Previous month: {value}",
+      "month_prev_year": "Month Y-1: {value}",
+      "month": "Month: {value}",
+      "last_week": "Last week: {value}",
+      "this_week": "Current week: {value}",
+      "day_before_yesterday": "Day before yesterday: {value}",
+      "yesterday": "Yesterday: {value}"
+    },
+    "insights": {
+      "monthly_prediction": "Monthly forecast",
+      "vs_last_week": "vs last week",
+      "vs_last_month": "vs last month",
+      "vs_last_year": "vs last year"
+    },
+    "history": {
+      "data_unavailable": "Data unavailable",
+      "data_pending": "Data awaiting upload",
+      "tempo_day": "Tempo: {color} — Date: {date}",
+      "estimated": "Estimate based on previous days — kWh data unavailable",
+      "col_consumption": "Cons.",
+      "col_price": "Price",
+      "col_price_offpeak": "OP price",
+      "col_price_offpeak_mobile": "€ OP",
+      "col_price_peak": "P price",
+      "col_price_peak_mobile": "€ P",
+      "col_offpeak": "OP",
+      "col_peak": "P",
+      "col_max_power": "MP",
+      "col_max_power_time": "MP time"
+    },
+    "production": {
+      "estimate": "Production estimate based on previous data",
+      "pending": "Production data awaiting upload"
+    },
+    "comparison": {
+      "title": "Today vs yesterday",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "peak": "Peak: {value}W",
+      "evolution": "Trend",
+      "difference": "Difference",
+      "entity_not_found": "Entity {entity} not found",
+      "available_attrs": "Available attributes: {attrs}",
+      "missing_data": "Missing today/yesterday data ({today} / {yesterday})"
+    },
+    "ecowatt": {
+      "only_med": "EcoWatt: only available with MyElectricalData",
+      "missing_today": "EcoWatt: today (D+0) entity not configured or not found",
+      "missing_j12": "EcoWatt: D+1/D+2 entity(ies) not configured or not found",
+      "today": "D+0",
+      "tomorrow": "D+1",
+      "after_tomorrow": "D+2"
+    },
+    "tempo": {
+      "only_med": "Tempo: only available with MyElectricalData",
+      "missing_j01": "Tempo: J0 and/or J1 sensor(s) unavailable or invalid",
+      "missing_info": "Tempo: 'info' sensor unavailable or invalid"
+    },
+    "temporal": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "no_data": "No data",
+      "months_count": "{count} months",
+      "years_count": "{count} years",
+      "current_month": "Current month",
+      "previous_month": "Previous month",
+      "current_month_prev_year": "Current month Y-1",
+      "previous_month_prev_year": "Prev. month Y-1"
+    }
   },
   "editor": {
     "section": {

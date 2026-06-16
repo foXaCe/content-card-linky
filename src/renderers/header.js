@@ -71,7 +71,7 @@ export function renderHeader(hass, config, attributes, stateObj) {
 }
 
 /** Production-mode value with estimation/pending fallbacks. */
-export function renderProductionValue(state, attributes) {
+export function renderProductionValue(hass, state, attributes) {
   const value = parseFloat(state);
 
   // Traiter les cas de données manquantes ou invalides pour la production
@@ -87,7 +87,7 @@ export function renderProductionValue(state, attributes) {
 
         if (estimatedProduction > 0) {
           return html`
-            <span class="cout estimated" title="Estimation production basée sur les données précédentes"
+            <span class="cout estimated" title="${localize(hass, "card.production.estimate")}"
               >${toFloat(estimatedProduction)}</span
             >
             <span class="cout-unit">${attributes.unit_of_measurement}</span>
@@ -98,7 +98,7 @@ export function renderProductionValue(state, attributes) {
         return html`
           <span
             class="cout pending"
-            title="Données de production en attente"
+            title="${localize(hass, "card.production.pending")}"
             style="color: #ff9800; font-style: italic;"
           >
             <ha-icon icon="mdi:clock-outline"></ha-icon>
@@ -109,7 +109,11 @@ export function renderProductionValue(state, attributes) {
     } else {
       // Pas de données de prix - en attente
       return html`
-        <span class="cout pending" title="Données de production en attente" style="color: #ff9800; font-style: italic;">
+        <span
+          class="cout pending"
+          title="${localize(hass, "card.production.pending")}"
+          style="color: #ff9800; font-style: italic;"
+        >
           <ha-icon icon="mdi:clock-outline"></ha-icon>
         </span>
         <span class="cout-unit">${attributes.unit_of_measurement}</span>

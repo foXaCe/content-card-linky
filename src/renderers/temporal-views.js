@@ -1,8 +1,9 @@
 import { html } from "lit";
 import { toFloat } from "../lib/format.js";
+import { localize } from "../lib/localize.js";
 
-/** Collapsible monthly comparison (current vs previous month, with A-1). */
-export function renderMonthlyView(config, attributes, expanded, onToggle) {
+/** Collapsible monthly comparison (current vs previous month, with Y-1). */
+export function renderMonthlyView(hass, config, attributes, expanded, onToggle) {
   if (!config.showMonthlyView) return html``;
 
   // Pour l'instant, on affiche les données de base disponibles
@@ -13,7 +14,7 @@ export function renderMonthlyView(config, attributes, expanded, onToggle) {
 
   const monthData = [
     {
-      name: "Mois actuel",
+      name: localize(hass, "card.temporal.current_month"),
       value: currentMonth,
       year: new Date().getFullYear(),
       evolution:
@@ -25,7 +26,7 @@ export function renderMonthlyView(config, attributes, expanded, onToggle) {
           : null,
     },
     {
-      name: "Mois précédent",
+      name: localize(hass, "card.temporal.previous_month"),
       value: lastMonth,
       year: new Date().getFullYear(),
       evolution:
@@ -34,13 +35,13 @@ export function renderMonthlyView(config, attributes, expanded, onToggle) {
           : null,
     },
     {
-      name: "Mois actuel A-1",
+      name: localize(hass, "card.temporal.current_month_prev_year"),
       value: currentMonthLastYear,
       year: new Date().getFullYear() - 1,
       evolution: null,
     },
     {
-      name: "Mois préc. A-1",
+      name: localize(hass, "card.temporal.previous_month_prev_year"),
       value: lastMonthLastYear,
       year: new Date().getFullYear() - 1,
       evolution: null,
@@ -51,8 +52,12 @@ export function renderMonthlyView(config, attributes, expanded, onToggle) {
     <div class="collapsible-section">
       <div class="collapsible-header" @click="${onToggle}">
         <ha-icon icon="${expanded ? "mdi:chevron-up" : "mdi:chevron-down"}"></ha-icon>
-        <span class="section-title">Mensuel</span>
-        <span class="section-summary"> ${monthData.length > 0 ? `${monthData.length} mois` : "Aucune donnée"} </span>
+        <span class="section-title">${localize(hass, "card.temporal.monthly")}</span>
+        <span class="section-summary">
+          ${monthData.length > 0
+            ? localize(hass, "card.temporal.months_count", { count: monthData.length })
+            : localize(hass, "card.temporal.no_data")}
+        </span>
       </div>
       <div class="collapsible-content ${expanded ? "expanded" : "collapsed"}">
         <div class="month-history">
@@ -79,8 +84,8 @@ export function renderMonthlyView(config, attributes, expanded, onToggle) {
   `;
 }
 
-/** Collapsible yearly comparison (current year vs A-1). */
-export function renderYearlyView(config, attributes, expanded, onToggle) {
+/** Collapsible yearly comparison (current year vs Y-1). */
+export function renderYearlyView(hass, config, attributes, expanded, onToggle) {
   if (!config.showYearlyView) return html``;
 
   // Utilise les données annuelles disponibles
@@ -110,8 +115,12 @@ export function renderYearlyView(config, attributes, expanded, onToggle) {
     <div class="collapsible-section">
       <div class="collapsible-header" @click="${onToggle}">
         <ha-icon icon="${expanded ? "mdi:chevron-up" : "mdi:chevron-down"}"></ha-icon>
-        <span class="section-title">Annuel</span>
-        <span class="section-summary"> ${yearData.length > 0 ? `${yearData.length} ans` : "Aucune donnée"} </span>
+        <span class="section-title">${localize(hass, "card.temporal.yearly")}</span>
+        <span class="section-summary">
+          ${yearData.length > 0
+            ? localize(hass, "card.temporal.years_count", { count: yearData.length })
+            : localize(hass, "card.temporal.no_data")}
+        </span>
       </div>
       <div class="collapsible-content ${expanded ? "expanded" : "collapsed"}">
         <div class="year-history">

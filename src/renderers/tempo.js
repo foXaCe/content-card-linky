@@ -1,5 +1,6 @@
 import { html } from "lit";
 import { localeOf } from "../lib/format.js";
+import { localize } from "../lib/localize.js";
 
 const TEMPO_COLORS = new Map([
   ["unknown", "grey"],
@@ -26,7 +27,7 @@ function getTempoRemainingDays(tempoEntity) {
 export function renderTempo(hass, config, attributes) {
   if (attributes.serviceEnedis === undefined) return html``;
   if (attributes.serviceEnedis !== "myElectricalData") {
-    return html`Tempo : uniquement disponible avec myElectricData`;
+    return html`${localize(hass, "card.tempo.only_med")}`;
   }
   if (config.showTempo === false) return html``;
 
@@ -35,10 +36,10 @@ export function renderTempo(hass, config, attributes) {
   const tempoJ1 = hass.states[config.tempoEntityJ1];
 
   if (!tempoJ0 || !tempoJ0.state || !tempoJ1 || !tempoJ1.state) {
-    return html`Tempo: sensor(s) J0 et/ou J1 indisponible ou incorrecte`;
+    return html`${localize(hass, "card.tempo.missing_j01")}`;
   }
   if (!tempoInfo || !tempoInfo.state) {
-    return html`Tempo: sensor 'info' indisponible ou incorrecte`;
+    return html`${localize(hass, "card.tempo.missing_info")}`;
   }
 
   const [dateJ0, valueJ0] = getTempoDateValue(tempoJ0);

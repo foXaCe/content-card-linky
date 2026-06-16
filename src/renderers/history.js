@@ -1,20 +1,21 @@
 import { html } from "lit";
 import { toFloat, localeOf } from "../lib/format.js";
+import { localize } from "../lib/localize.js";
 import { estimateMissingKwh } from "../lib/calculations.js";
 import { TEMPO_VALUES } from "../const.js";
 import { renderWeekSummary } from "./week-summary.js";
 
-function renderNoData() {
+function renderNoData(hass) {
   return html`
-    <br /><span class="cons-val" title="Donnée indisponible"
+    <br /><span class="cons-val" title="${localize(hass, "card.history.data_unavailable")}"
       ><ha-icon id="icon" icon="mdi:alert-outline"></ha-icon
     ></span>
   `;
 }
 
-function renderPendingData() {
+function renderPendingData(hass) {
   return html`
-    <br /><span class="cons-val pending" title="Données en attente de remontée"
+    <br /><span class="cons-val pending" title="${localize(hass, "card.history.data_pending")}"
       ><ha-icon id="icon" icon="mdi:clock-outline" style="color: #ff9800;"></ha-icon
     ></span>
   `;
@@ -108,7 +109,7 @@ function renderDailyWeek(hass, config, dailyweek, dailyweekTempo, dayNumber) {
       <span
         class="tempoday-${finalColor}"
         style="display: inline-block;"
-        title="Tempo: ${finalColor} - Date: ${dayDate}"
+        title="${localize(hass, "card.history.tempo_day", { color: finalColor, date: dayDate })}"
         >${new Date(dayDate).toLocaleDateString(localeOf(hass), { weekday: config.showDayName })}</span
       >
     </span>
@@ -129,22 +130,20 @@ function renderDailyValue(hass, config, day, dayNumber, unit_of_measurement, dai
 
         if (estimatedKwh > 0) {
           return html`
-            <br /><span
-              class="cons-val estimated"
-              title="Estimation basée sur les jours précédents - Données kWh non disponibles"
+            <br /><span class="cons-val estimated" title="${localize(hass, "card.history.estimated")}"
               >${toFloat(estimatedKwh)} ${config.showInTableUnit ? html` ${unit_of_measurement}` : html``}</span
             >
           `;
         }
       } else if (!dayPrice || dayPrice === "-1") {
         // Ni prix ni kWh disponibles - données en attente
-        return renderPendingData();
+        return renderPendingData(hass);
       }
     } else {
       // Pas de données de prix du tout - données en attente
-      return renderPendingData();
+      return renderPendingData(hass);
     }
-    return renderNoData();
+    return renderNoData(hass);
   }
   return html`
     <br /><span class="cons-val"
@@ -153,11 +152,11 @@ function renderDailyValue(hass, config, day, dayNumber, unit_of_measurement, dai
   `;
 }
 
-function renderDayPrice(config, value, dayNumber) {
+function renderDayPrice(hass, config, value, dayNumber) {
   if (config.showDayPrice) {
     const valeur = value.toString().split(",")[dayNumber - 1];
     if (valeur === "-1") {
-      return renderNoData();
+      return renderNoData(hass);
     }
     return html` <br /><span class="cons-val">${toFloat(valeur, 2)} €</span> `;
   }
@@ -166,21 +165,21 @@ function renderDayPrice(config, value, dayNumber) {
   }
 }
 
-function renderDayPriceHCHP(config, value, dayNumber) {
+function renderDayPriceHCHP(hass, config, value, dayNumber) {
   if (config.showDayPriceHCHP) {
     const valeur = value.toString().split(",")[dayNumber - 1];
     if (valeur === "-1") {
-      return renderNoData();
+      return renderNoData(hass);
     }
     return html` <br /><span class="cons-val">${toFloat(valeur, 2)} €</span> `;
   }
 }
 
-function renderDayHCHP(config, value, dayNumber, unit_of_measurement) {
+function renderDayHCHP(hass, config, value, dayNumber, unit_of_measurement) {
   if (config.showDayHCHP) {
     const valeur = value.toString().split(",")[dayNumber - 1];
     if (valeur === "-1") {
-      return renderNoData();
+      return renderNoData(hass);
     }
     return html`
       <br /><span class="cons-val"
@@ -195,7 +194,7 @@ function renderDayMaxPower(hass, config, value, dayNumber, overMP, MPtime) {
     const valeur = value.toString().split(",")[dayNumber - 1];
     const over = overMP.toString().split(",")[dayNumber - 1];
     if (valeur === "-1") {
-      return renderNoData();
+      return renderNoData(hass);
     }
     const time = new Date(MPtime.toString().split(",")[dayNumber - 1]).toLocaleTimeString(localeOf(hass), {
       hour: "2-digit",
@@ -216,29 +215,26 @@ function renderDayMaxPower(hass, config, value, dayNumber, overMP, MPtime) {
   }
 }
 
-function renderDailyWeekTitre(maConfig, monTitre) {
-  if (maConfig === true) {
-    // Version mobile pour les titres longs
-    const titresMobiles = {
-      "Prix HC": "€ HC",
-      "Prix HP": "€ HP",
-    };
-    const titreMobile = titresMobiles[monTitre] || monTitre;
-
-    return html`<span class="titre-desktop">${monTitre}</span><span class="titre-mobile">${titreMobile}</span><br /> `;
+function renderDailyWeekTitre(show, desktop, mobile) {
+  if (show === true) {
+    return html`<span class="titre-desktop">${desktop}</span><span class="titre-mobile">${mobile}</span><br /> `;
   }
   return html``;
 }
 
-function renderTitreLigne(config) {
+function renderTitreLigne(hass, config) {
   if (config.showTitleLign === true) {
+    const t = (key) => localize(hass, `card.history.${key}`);
     return html`
       <div class="day">
-        ${renderDailyWeekTitre(true, "")} ${renderDailyWeekTitre(true, "Conso")}
-        ${renderDailyWeekTitre(config.showDayPrice, "Prix")} ${renderDailyWeekTitre(config.showDayPriceHCHP, "Prix HC")}
-        ${renderDailyWeekTitre(config.showDayPriceHCHP, "Prix HP")} ${renderDailyWeekTitre(config.showDayHCHP, "HC")}
-        ${renderDailyWeekTitre(config.showDayHCHP, "HP")} ${renderDailyWeekTitre(config.showDayMaxPower, "MP")}
-        ${renderDailyWeekTitre(config.showDayMaxPowerTime, "MPtime")}
+        ${renderDailyWeekTitre(true, "", "")} ${renderDailyWeekTitre(true, t("col_consumption"), t("col_consumption"))}
+        ${renderDailyWeekTitre(config.showDayPrice, t("col_price"), t("col_price"))}
+        ${renderDailyWeekTitre(config.showDayPriceHCHP, t("col_price_offpeak"), t("col_price_offpeak_mobile"))}
+        ${renderDailyWeekTitre(config.showDayPriceHCHP, t("col_price_peak"), t("col_price_peak_mobile"))}
+        ${renderDailyWeekTitre(config.showDayHCHP, t("col_offpeak"), t("col_offpeak"))}
+        ${renderDailyWeekTitre(config.showDayHCHP, t("col_peak"), t("col_peak"))}
+        ${renderDailyWeekTitre(config.showDayMaxPower, t("col_max_power"), t("col_max_power"))}
+        ${renderDailyWeekTitre(config.showDayMaxPowerTime, t("col_max_power_time"), t("col_max_power_time"))}
       </div>
     `;
   }
@@ -250,11 +246,11 @@ function renderDay(hass, config, day, dayNumber, attributes) {
     <div class="day">
       ${renderDailyWeek(hass, config, attributes.dailyweek, attributes.dailyweek_Tempo, dayNumber)}
       ${renderDailyValue(hass, config, day, dayNumber, unit_of_measurement, attributes.dailyweek_cost)}
-      ${renderDayPrice(config, attributes.dailyweek_cost, dayNumber)}
-      ${renderDayPriceHCHP(config, attributes.dailyweek_costHC, dayNumber)}
-      ${renderDayPriceHCHP(config, attributes.dailyweek_costHP, dayNumber)}
-      ${renderDayHCHP(config, attributes.dailyweek_HC, dayNumber, unit_of_measurement)}
-      ${renderDayHCHP(config, attributes.dailyweek_HP, dayNumber, unit_of_measurement)}
+      ${renderDayPrice(hass, config, attributes.dailyweek_cost, dayNumber)}
+      ${renderDayPriceHCHP(hass, config, attributes.dailyweek_costHC, dayNumber)}
+      ${renderDayPriceHCHP(hass, config, attributes.dailyweek_costHP, dayNumber)}
+      ${renderDayHCHP(hass, config, attributes.dailyweek_HC, dayNumber, unit_of_measurement)}
+      ${renderDayHCHP(hass, config, attributes.dailyweek_HP, dayNumber, unit_of_measurement)}
       ${renderDayMaxPower(
         hass,
         config,
@@ -286,7 +282,7 @@ export function renderHistory(hass, config, attributes) {
   return html`
     ${renderWeekSummary(hass, config, attributes)}
     <div class="week-history">
-      ${renderTitreLigne(config)}
+      ${renderTitreLigne(hass, config)}
       ${daily
         .slice(-nbJours)
         .map((day, index) => {
