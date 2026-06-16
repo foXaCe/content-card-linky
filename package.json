@@ -12,7 +12,8 @@
     "format": "prettier --write src/ test/",
     "format:check": "prettier --check src/ test/",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",

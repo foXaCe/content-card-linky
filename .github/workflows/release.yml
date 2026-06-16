@@ -22,8 +22,22 @@ jobs:
 
       - run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
+      - name: Test + coverage
+        run: npm run test:coverage
+
       - name: Build
         run: npm run build
+
+      - name: Verify version matches tag
+        run: |
+          PKG_VERSION="v$(node -p "require('./package.json').version")"
+          if [ "$PKG_VERSION" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::package.json version ($PKG_VERSION) does not match tag (${GITHUB_REF_NAME})."
+            exit 1
+          fi
 
       - name: Create release
         uses: softprops/action-gh-release@v3

@@ -35,6 +35,11 @@ describe("localize", () => {
     expect(localize(frHass, "card.does_not_exist")).toBe("card.does_not_exist");
   });
 
+  it("returns the key when it resolves to a non-string (a nested section)", () => {
+    // "card" points to an object, not a leaf string → must not be returned raw.
+    expect(localize(frHass, "card")).toBe("card");
+  });
+
   it("handles a missing or empty hass object", () => {
     expect(localize(undefined, "card.daily_cost")).toBe("Daily cost");
     expect(localize({}, "card.daily_cost")).toBe("Daily cost");

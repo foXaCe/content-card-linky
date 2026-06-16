@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question ou aide à la configuration
+    url: https://github.com/saniho/content-card-linky/discussions
+    about: Pour les questions d'utilisation et l'entraide, utilisez les Discussions.
+  - name: Documentation
+    url: https://github.com/saniho/content-card-linky#readme
+    about: Consultez le README avant d'ouvrir une issue.

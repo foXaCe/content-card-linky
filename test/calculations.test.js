@@ -59,6 +59,19 @@ describe("calculateWeekTotal", () => {
     expect(calculateWeekTotal(daily, "0,0,0,0", thursday)).toBe(0);
   });
 
+  it("skips estimation when a day has a price but no other day yields a ratio", () => {
+    // Every day's kWh is invalid (-1), so no kWh/€ ratio can be built even
+    // though the costs are valid → estimation is skipped for all days.
+    const daily = ["-1", "-1", "-1", "-1"];
+    expect(calculateWeekTotal(daily, "1,2,3,4", thursday)).toBe(0);
+  });
+
+  it("falls through when an invalid day has no usable cost entry", () => {
+    // Invalid kWh + falsy dailyweek_cost → the cost branch is short-circuited.
+    const daily = ["999", "-1", "5", "8"];
+    expect(calculateWeekTotal(daily, "", thursday)).toBe(5 + 8);
+  });
+
   it("on Sunday iterates Mon..Sat (whole work week) and excludes Sunday", () => {
     const sunday = at("2026-05-10T12:00:00"); // daysSinceMonday=6 → i ∈ {6..1}
     // today=daily[0]=Sun (excluded), Sat=10, Fri=20, Thu=30, Wed=40, Tue=50, Mon=60
@@ -207,6 +220,21 @@ describe("parseDetailedTimeSeries (issue #6)", () => {
   it("returns evolution = 0 when todayTotal is 0", () => {
     const r = parseDetailedTimeSeries(["2026-04-06 10:00:00"], [100], now);
     expect(r.evolution).toBe(0);
+  });
+
+  it("skips null/undefined timestamps", () => {
+    const r = parseDetailedTimeSeries([null, undefined, "2026-04-07 10:00:00"], [11, 22, 33], now);
+    expect(r.today).toHaveLength(1);
+    expect(r.today[0].consumption).toBe(33);
+  });
+
+  it("accepts numeric epoch timestamps (non-string raw values)", () => {
+    const todayEpoch = at("2026-04-07T08:00:00").getTime();
+    const yesterdayEpoch = at("2026-04-06T08:00:00").getTime();
+    const r = parseDetailedTimeSeries([yesterdayEpoch, todayEpoch], [400, 600], now);
+    expect(r.today.map((d) => d.consumption)).toEqual([600]);
+    expect(r.yesterday.map((d) => d.consumption)).toEqual([400]);
+    expect(r.todayTotal).toBeCloseTo(0.6, 5);
   });
 });
 
