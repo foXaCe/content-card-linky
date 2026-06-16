@@ -1,23 +1,24 @@
 import { html } from "lit";
 import { safeRound } from "../lib/calculations.js";
+import { localeOf } from "../lib/format.js";
 
-function previousYear() {
+function previousYear(hass) {
   const d = new Date();
   d.setFullYear(d.getFullYear() - 1);
-  return d.toLocaleDateString("fr-FR", { year: "numeric" });
+  return d.toLocaleDateString(localeOf(hass), { year: "numeric" });
 }
 
-function previousMonth() {
+function previousMonth(hass) {
   const d = new Date();
   d.setMonth(d.getMonth() - 1);
   d.setFullYear(d.getFullYear() - 1);
-  return d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+  return d.toLocaleDateString(localeOf(hass), { month: "long", year: "numeric" });
 }
 
-function currentMonth() {
+function currentMonth(hass) {
   const d = new Date();
   d.setFullYear(d.getFullYear() - 1);
-  return d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+  return d.toLocaleDateString(localeOf(hass), { month: "long", year: "numeric" });
 }
 
 function weekBefore() {
@@ -29,7 +30,7 @@ function dayBeforeYesterday() {
 }
 
 /** Grid of consumption-evolution percentage tiles. */
-export function renderVariations(config, attributes) {
+export function renderVariations(hass, config, attributes) {
   return html` <div class="variations">
     ${config.showYearRatio
       ? html` <span class="variations-linky">
@@ -57,7 +58,7 @@ export function renderVariations(config, attributes) {
             >
           </div>
           <div class="tooltip">
-            <span class="year">vs ${previousYear()}</span>
+            <span class="year">vs ${previousYear(hass)}</span>
             <span class="tooltiptext"
               >A-1 : ${attributes.current_year_last_year}<br />A : ${attributes.current_year}</span
             >
@@ -90,7 +91,7 @@ export function renderVariations(config, attributes) {
             >
           </div>
           <div class="tooltip">
-            <span class="previous-month">vs ${previousMonth()}</span>
+            <span class="previous-month">vs ${previousMonth(hass)}</span>
             <span class="tooltiptext"
               >Mois Precedent A-1 : ${attributes.last_month_last_year}<br />Mois Precedent :
               ${attributes.last_month}</span
@@ -124,7 +125,7 @@ export function renderVariations(config, attributes) {
             >
           </div>
           <div class="tooltip">
-            <span class="current-month">vs ${currentMonth()}</span>
+            <span class="current-month">vs ${currentMonth(hass)}</span>
             <span class="tooltiptext"
               >Mois A-1 : ${attributes.current_month_last_year}<br />Mois : ${attributes.current_month}</span
             >

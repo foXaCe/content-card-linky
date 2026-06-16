@@ -1,5 +1,5 @@
 import { html } from "lit";
-import { toFloat } from "../lib/format.js";
+import { toFloat, localeOf } from "../lib/format.js";
 import { estimateMissingKwh } from "../lib/calculations.js";
 import { TEMPO_VALUES } from "../const.js";
 import { renderWeekSummary } from "./week-summary.js";
@@ -109,7 +109,7 @@ function renderDailyWeek(hass, config, dailyweek, dailyweekTempo, dayNumber) {
         class="tempoday-${finalColor}"
         style="display: inline-block;"
         title="Tempo: ${finalColor} - Date: ${dayDate}"
-        >${new Date(dayDate).toLocaleDateString("fr-FR", { weekday: config.showDayName })}</span
+        >${new Date(dayDate).toLocaleDateString(localeOf(hass), { weekday: config.showDayName })}</span
       >
     </span>
   `;
@@ -190,32 +190,28 @@ function renderDayHCHP(config, value, dayNumber, unit_of_measurement) {
   }
 }
 
-function renderDayMaxPower(config, value, dayNumber, overMP, MPtime) {
+function renderDayMaxPower(hass, config, value, dayNumber, overMP, MPtime) {
   if (config.showDayMaxPower) {
     const valeur = value.toString().split(",")[dayNumber - 1];
     const over = overMP.toString().split(",")[dayNumber - 1];
     if (valeur === "-1") {
       return renderNoData();
     }
+    const time = new Date(MPtime.toString().split(",")[dayNumber - 1]).toLocaleTimeString(localeOf(hass), {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
     if (over === "true") {
       return html`
         <br /><span class="cons-val" style="color:red">${toFloat(valeur, 2)}</span> <br /><span
           class="cons-val"
           style="color:red"
-          >${new Date(MPtime.toString().split(",")[dayNumber - 1]).toLocaleTimeString("fr-FR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}</span
+          >${time}</span
         >
       `;
     }
     return html`
-      <br /><span class="cons-val">${toFloat(valeur, 2)}</span> <br /><span class="cons-val"
-        >${new Date(MPtime.toString().split(",")[dayNumber - 1]).toLocaleTimeString("fr-FR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}</span
-      >
+      <br /><span class="cons-val">${toFloat(valeur, 2)}</span> <br /><span class="cons-val">${time}</span>
     `;
   }
 }
@@ -260,6 +256,7 @@ function renderDay(hass, config, day, dayNumber, attributes) {
       ${renderDayHCHP(config, attributes.dailyweek_HC, dayNumber, unit_of_measurement)}
       ${renderDayHCHP(config, attributes.dailyweek_HP, dayNumber, unit_of_measurement)}
       ${renderDayMaxPower(
+        hass,
         config,
         attributes.dailyweek_MP,
         dayNumber,

@@ -1,4 +1,5 @@
 import { html } from "lit";
+import { localeOf } from "../lib/format.js";
 
 const TEMPO_COLORS = new Map([
   ["unknown", "grey"],
@@ -44,8 +45,7 @@ export function renderTempo(hass, config, attributes) {
   const [dateJ1, valueJ1] = getTempoDateValue(tempoJ1);
   const [remainingRed, remainingWhite, remainingBlue] = getTempoRemainingDays(tempoInfo);
 
-  const lang = hass?.locale?.language || "fr-FR";
-  const fmt = (d) => new Date(d).toLocaleDateString(lang, { weekday: "long", day: "numeric" });
+  const fmt = (d) => new Date(d).toLocaleDateString(localeOf(hass), { weekday: "long", day: "numeric" });
 
   return html`
     <table class="tempo-color">

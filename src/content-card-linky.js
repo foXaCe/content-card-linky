@@ -104,7 +104,7 @@ class ContentCardLinky extends LitElement {
       showWeekRatio: true,
       showDayName: "long",
       showDayMaxPower: true,
-      showTitleLine: true,
+      showTitleLign: true,
       showEcoWatt: true,
       showTempo: false,
       showMonthlyView: true,
@@ -151,7 +151,8 @@ class ContentCardLinky extends LitElement {
       return html` <ha-card id="card" @click="${() => this._showDetails(this.config.entity)}">
         ${renderTitle(this.config)}
         <div class="card">
-          ${renderHeader(this.hass, this.config, attributes, stateObj)} ${renderVariations(this.config, attributes)}
+          ${renderHeader(this.hass, this.config, attributes, stateObj)}
+          ${renderVariations(this.hass, this.config, attributes)}
           ${this.config.showSmartInsights !== false
             ? renderSmartInsights(this.hass, this.config, attributes.dailyweek, attributes.dailyweek_cost)
             : html``}

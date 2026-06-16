@@ -48,6 +48,8 @@ export const DEFAULT_CONFIG = {
   showInformation: true,
   showPrice: true,
   showTitle: false,
+  showSmartInsights: true,
+  showYearRatio: false,
   showCurrentMonthRatio: true,
   showMonthRatio: true,
   showWeekRatio: false,

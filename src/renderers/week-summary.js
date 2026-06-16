@@ -1,6 +1,6 @@
 import { html } from "lit";
 import { localize } from "../lib/localize.js";
-import { toFloat } from "../lib/format.js";
+import { toFloat, localeOf } from "../lib/format.js";
 import { calculateWeekTotal, calculateWeekCost, getDynamicGradient, getSeasonalTheme } from "../lib/calculations.js";
 
 /** "Current week" summary card with a seasonal gradient and running total. */
@@ -29,7 +29,7 @@ export function renderWeekSummary(hass, config, attributes) {
         <span class="week-summary-title">${localize(hass, "card.current_week")}</span>
         <span class="week-summary-period"
           >${localize(hass, "card.since")}
-          ${mondayThisWeek.toLocaleDateString(hass?.locale?.language || "fr-FR", {
+          ${mondayThisWeek.toLocaleDateString(localeOf(hass), {
             day: "numeric",
             month: "short",
           })}</span
