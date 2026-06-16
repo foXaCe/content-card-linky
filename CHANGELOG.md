@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- **Architecture**: the 2501-line `content-card-linky.js` monolith was split
+  into focused modules with no behaviour change — `const.js` (config defaults
+  & constants), `styles.js` (CSS), `lib/format.js` (`toFloat`/`localeOf`), and
+  per-section renderers under `src/renderers/` (`header`, `variations`,
+  `smart-insights`, `week-summary`, `history`, `temporal-views`, `messages`).
+  The card class is now a ~280-line orchestrator. See `ARCHITECTURE.md`.
+- **Internationalisation**: every displayed string now goes through the
+  `localize()` system. Hardcoded French in the card, the smart insights, the
+  monthly/yearly views, the history table, the production messages and the
+  EcoWatt/Tempo/detailed-comparison renderers has been wired to the EN/FR
+  translation files, which are now in full parity (134 keys each). French is in
+  `vouvoiement` with corrected accents.
+
+### Fixed
+
+- Date and time formatting now follow the Home Assistant frontend language
+  everywhere (history weekday & max-power time, variation tooltips) instead of a
+  hardcoded `fr-FR`. Aligns the whole card with the locale handling already used
+  by the week summary and Tempo sections.
+- `getStubConfig` now sets the correct `showTitleLign` key (was `showTitleLine`,
+  silently ignored), so freshly added cards enable row titles as intended.
+
+### Tests
+
+- Coverage now spans the whole `src/` tree (previously `src/lib` only): 168
+  tests across 16 files, ~97% statements / ~92% branches / ~99% functions /
+  ~98% lines. Every renderer, the editor and the card lifecycle are covered.
+
 ## [1.7.1] - 2026-05-01
 
 ### Fixed
