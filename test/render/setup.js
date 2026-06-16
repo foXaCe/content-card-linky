@@ -1,3 +1,5 @@
+import { render } from "lit";
+
 // Stub Home Assistant custom elements that the card uses but happy-dom
 // has no idea about. We register them as inert HTMLElements so the card's
 // render() doesn't blow up when Lit tries to upgrade them.
@@ -68,4 +70,15 @@ export async function mountCard(config, hass) {
   document.body.appendChild(el);
   await el.updateComplete;
   return el;
+}
+
+/**
+ * Render a renderer's TemplateResult into a detached container so individual
+ * renderer modules can be unit-tested in isolation (without mounting the card).
+ * Returns the container element; read `.textContent` or query it.
+ */
+export function renderTpl(templateResult) {
+  const container = document.createElement("div");
+  render(templateResult, container);
+  return container;
 }

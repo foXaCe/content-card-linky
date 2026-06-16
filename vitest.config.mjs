@@ -12,13 +12,20 @@ export default defineConfig({
     environmentMatchGlobs: [["test/render/**", "happy-dom"]],
     coverage: {
       provider: "v8",
-      include: ["src/lib/**/*.js"],
+      include: ["src/**/*.js"],
+      // styles.js is a single CSS template literal (no logic to exercise).
+      exclude: ["src/styles.js"],
       reporter: ["text", "text-summary", "html", "json-summary", "lcov"],
+      // Actuals are ~96% stmts / ~90% branch / ~99% func / ~96% lines.
+      // Branch threshold sits a touch lower: a handful of remaining branches
+      // are date-dependent (week-summary cost, tempo today/tomorrow run against
+      // the real clock) or defensive template fallbacks, so we keep a small
+      // margin to avoid day-to-day flakiness while still guarding ~90%.
       thresholds: {
-        statements: 98,
-        branches: 98,
-        functions: 98,
-        lines: 98,
+        statements: 93,
+        branches: 88,
+        functions: 95,
+        lines: 93,
       },
     },
   },

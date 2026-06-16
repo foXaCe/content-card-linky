@@ -7,6 +7,7 @@ import {
   getSeasonalTheme,
   getOneDayNextEcoWatt,
   parseDetailedTimeSeries,
+  estimateMissingKwh,
 } from "../src/lib/calculations.js";
 
 const at = (iso) => new Date(iso);
@@ -125,6 +126,33 @@ describe("calculateWeekCost", () => {
   it("on Tuesday returns just Monday", () => {
     const tuesday = at("2026-05-05T12:00:00");
     expect(calculateWeekCost("999,4.20", tuesday)).toBeCloseTo(4.2, 5);
+  });
+});
+
+describe("estimateMissingKwh", () => {
+  it("returns 0 when daily or cost is missing", () => {
+    expect(estimateMissingKwh(null, 1, "1,2")).toBe(0);
+    expect(estimateMissingKwh(["1"], 1, null)).toBe(0);
+  });
+
+  it("returns 0 when the target day has no positive price", () => {
+    expect(estimateMissingKwh(["10", "20"], 1, "0,2")).toBe(0);
+    expect(estimateMissingKwh(["10", "20"], 1, "-1,2")).toBe(0);
+  });
+
+  it("estimates kWh from the average kWh/€ ratio of valid days", () => {
+    // daily=[10,20], cost="1,2" → ratios 10/1=10, 20/2=10 → avg 10
+    // target day 1 price=1 → 1 * 10 = 10
+    expect(estimateMissingKwh(["10", "20"], 1, "1,2")).toBeCloseTo(10, 5);
+  });
+
+  it("accepts comma decimals in the cost string", () => {
+    // daily=[4], cost="2,5" (=2.5) → ratio 4/2.5=1.6 → 2.5*1.6=4
+    expect(estimateMissingKwh(["4"], 1, "2,5")).toBeCloseTo(4, 5);
+  });
+
+  it("returns 0 when no valid ratio can be built", () => {
+    expect(estimateMissingKwh(["-1", "-1"], 1, "1,2")).toBe(0);
   });
 });
 

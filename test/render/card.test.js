@@ -164,6 +164,104 @@ describe("content-card-linky render", () => {
     expect(() => card.setConfig({})).toThrow(/entity/i);
   });
 
+  it("setConfig validates kWhPrice and merges defaults", async () => {
+    await import("../../src/content-card-linky.js");
+    const Card = customElements.get("content-card-linky");
+    const card = new Card();
+    expect(() => card.setConfig({ entity: "sensor.x", kWhPrice: "abc" })).toThrow(/kWhPrice/);
+    card.setConfig({ entity: "sensor.x", kWhPrice: 0.15 });
+    expect(card.config.kWhPrice).toBe(0.15);
+    expect(card.config.showHistory).toBe(true); // default merged in
+  });
+
+  it("toggle handlers flip their expansion state and stop event propagation", async () => {
+    const hass = makeHass({ states: { [baseConfig.entity]: makeLinkyEntity() } });
+    const card = await mountCard(baseConfig, hass);
+    let stopped = 0;
+    const ev = () => ({ stopPropagation: () => stopped++, preventDefault: () => {} });
+    expect(card._monthlyExpanded).toBe(false);
+    card.toggleMonthlyView(ev());
+    expect(card._monthlyExpanded).toBe(true);
+    card.toggleYearlyView(ev());
+    expect(card._yearlyExpanded).toBe(true);
+    card.toggleDetailedComparison(ev());
+    expect(card._detailedExpanded).toBe(true);
+    expect(stopped).toBe(3);
+  });
+
+  it("renders an empty template before hass is available", async () => {
+    await import("../../src/content-card-linky.js");
+    const Card = customElements.get("content-card-linky");
+    const card = new Card();
+    card.setConfig(baseConfig);
+    const el = document.createElement("div");
+    const { render } = await import("lit");
+    render(card.render(), el);
+    expect(el.textContent.trim()).toBe("");
+  });
+
+  it("renders the consumption layout when typeCompteur is absent", async () => {
+    const entity = makeLinkyEntity();
+    delete entity.attributes.typeCompteur;
+    const hass = makeHass({ states: { [baseConfig.entity]: entity } });
+    const card = await mountCard(baseConfig, hass);
+    expect(card.shadowRoot.querySelector("ha-card")).toBeTruthy();
+  });
+
+  it("renders the production layout without the icon when showIcon is off", async () => {
+    const hass = makeHass({
+      states: { [baseConfig.entity]: makeLinkyEntity({ typeCompteur: "production" }) },
+    });
+    const card = await mountCard({ ...baseConfig, showIcon: false }, hass);
+    expect(card.shadowRoot.querySelector(".main-info")).toBeTruthy();
+    expect(card.shadowRoot.querySelector(".linky-icon")).toBeFalsy();
+  });
+
+  it("renders nothing for an unknown meter type", async () => {
+    const hass = makeHass({
+      states: { [baseConfig.entity]: makeLinkyEntity({ typeCompteur: "autre" }) },
+    });
+    const card = await mountCard(baseConfig, hass);
+    expect(card.shadowRoot.querySelector("ha-card")).toBeFalsy();
+  });
+
+  it("expands the monthly/yearly sections when their headers are clicked", async () => {
+    const hass = makeHass({ states: { [baseConfig.entity]: makeLinkyEntity() } });
+    const card = await mountCard({ ...baseConfig, showMonthlyView: true, showYearlyView: true }, hass);
+    const headers = card.shadowRoot.querySelectorAll(".collapsible-header");
+    expect(headers.length).toBeGreaterThanOrEqual(2);
+    headers[0].click();
+    await card.updateComplete;
+    expect(card._monthlyExpanded).toBe(true);
+    headers[1].click();
+    await card.updateComplete;
+    expect(card._yearlyExpanded).toBe(true);
+  });
+
+  it("omits smart insights when disabled", async () => {
+    const hass = makeHass({ states: { [baseConfig.entity]: makeLinkyEntity() } });
+    const card = await mountCard({ ...baseConfig, showSmartInsights: false }, hass);
+    expect(card.shadowRoot.querySelector(".smart-insights")).toBeFalsy();
+  });
+
+  it("getConfigElement lazily loads the editor element", async () => {
+    await import("../../src/content-card-linky.js");
+    const Card = customElements.get("content-card-linky");
+    const editor = await Card.getConfigElement();
+    expect(editor.tagName.toLowerCase()).toBe("content-card-linky-editor");
+  });
+
+  it("fires hass-more-info when the card is clicked", async () => {
+    const hass = makeHass({ states: { [baseConfig.entity]: makeLinkyEntity() } });
+    const card = await mountCard(baseConfig, hass);
+    let detail;
+    card.addEventListener("hass-more-info", (e) => {
+      detail = e.detail;
+    });
+    card.shadowRoot.querySelector("ha-card").click();
+    expect(detail.entityId).toBe(baseConfig.entity);
+  });
+
   it("renders the legacy detailed-comparison fallback when both formats are missing", async () => {
     const hass = makeHass({
       states: {
