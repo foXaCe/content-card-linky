@@ -3,24 +3,26 @@ import { localize } from "../lib/localize.js";
 import { toFloat, localeOf } from "../lib/format.js";
 import { calculateWeekTotal, calculateWeekCost, getDynamicGradient, getSeasonalTheme } from "../lib/calculations.js";
 
-/** "Current week" summary card with a seasonal gradient and running total. */
-export function renderWeekSummary(hass, config, attributes) {
+/**
+ * "Current week" summary card with a seasonal gradient and running total.
+ * `now` is injectable for deterministic tests (defaults to the current time).
+ */
+export function renderWeekSummary(hass, config, attributes, now = new Date()) {
   if (!config.showWeekSummary && config.showWeekSummary !== undefined) {
     return html``;
   }
 
   const { daily, unit_of_measurement, dailyweek_cost } = attributes;
 
-  const weekTotal = calculateWeekTotal(daily, dailyweek_cost);
-  const weekCost = calculateWeekCost(dailyweek_cost);
-  const today = new Date();
-  const mondayThisWeek = new Date(today);
-  mondayThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
+  const weekTotal = calculateWeekTotal(daily, dailyweek_cost, now);
+  const weekCost = calculateWeekCost(dailyweek_cost, now);
+  const mondayThisWeek = new Date(now);
+  mondayThisWeek.setDate(now.getDate() - (now.getDay() === 0 ? 6 : now.getDay() - 1));
 
   // Calcul de la moyenne pour gradient dynamique
   const avgWeekly = (daily.slice(0, 7).reduce((sum, day) => sum + parseFloat(day || 0), 0) / 7) * 5;
   const dynamicGradient = getDynamicGradient(weekTotal, avgWeekly);
-  const seasonalTheme = getSeasonalTheme();
+  const seasonalTheme = getSeasonalTheme(now);
 
   return html`
     <div class="week-summary-card" style="background: ${dynamicGradient}">

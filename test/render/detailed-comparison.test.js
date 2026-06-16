@@ -97,6 +97,30 @@ describe("renderDetailedComparison", () => {
     expect(el.querySelector(".comparison-charts")).toBeTruthy();
   });
 
+  it("marks the trend as stable when today equals yesterday", () => {
+    const hass = makeHass({
+      states: {
+        "sensor.d": {
+          attributes: {
+            unit_of_measurement: "kWh",
+            time: [tsFmt(yesterday), tsFmt(today)],
+            consumption: [400, 400],
+          },
+        },
+      },
+    });
+    const el = renderTpl(
+      renderDetailedComparison(
+        hass,
+        { showDetailedComparison: true, detailedComparisonEntity: "sensor.d" },
+        unit,
+        true,
+        noop,
+      ),
+    );
+    expect(el.querySelector(".stat-item.evolution.stable")).toBeTruthy();
+  });
+
   it("renders the legacy Daily/Dailyweek comparison", () => {
     const hass = makeHass({
       states: {

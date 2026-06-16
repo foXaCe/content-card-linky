@@ -1154,7 +1154,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     </div>`:O``}function $e(e,t,o){return t.showPrice?O` <div class="cout-block">
       <span class="cout" title="${de(e,"card.daily_cost")}">${ye(o.daily_cost,2)}</span
       ><span class="cout-unit"> €</span>
-    </div>`:O``}function ke(e){const t=new Date;return t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ve(e),{year:"numeric"})}function xe(e){const t=new Date;return t.setMonth(t.getMonth()-1),t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ve(e),{month:"long",year:"numeric"})}function Ee(e){const t=new Date;return t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ve(e),{month:"long",year:"numeric"})}function Ae(e,t,o){if(!t.showWeekSummary&&void 0!==t.showWeekSummary)return O``;const{daily:a,unit_of_measurement:i,dailyweek_cost:n}=o,s=function(e,t,o=new Date){if(!e)return 0;const a=ge(o);let i=0;for(let o=Math.min(a,e.length-1);o>=1;o--){const a=parseFloat(e[o]);if(!isNaN(a)&&-1!==a&&0!==a){i+=a;continue}if(!t)continue;const n=t.toString().split(","),s=parseFloat(n[o]?.replace(",","."));if(isNaN(s)||s<=0)continue;const r=[];for(let t=0;t<Math.min(e.length,n.length,7);t++){if(t===o)continue;const a=parseFloat(e[t]),i=parseFloat(n[t]?.replace(",","."));!isNaN(a)&&!isNaN(i)&&a>0&&i>0&&-1!==a&&-1!==i&&r.push(a/i)}if(0===r.length)continue;const l=r.reduce((e,t)=>e+t,0)/r.length,c=s*l;c>0&&(i+=c)}return i}(a,n),r=function(e,t=new Date){if(!e)return 0;const o=ge(t),a=e.toString().split(",");let i=0;for(let e=Math.min(o,a.length-1);e>=1;e--){const t=parseFloat(a[e].replace(",","."));isNaN(t)||-1===t||(i+=t)}return i}(n),l=new Date,c=new Date(l);c.setDate(l.getDate()-(0===l.getDay()?6:l.getDay()-1));const d=function(e,t=50){const o=e/t;return o<=.7?"linear-gradient(135deg, #4caf50 0%, #8bc34a 100%)":o<=1?"linear-gradient(135deg, #2196f3 0%, #03dac6 100%)":o<=1.3?"linear-gradient(135deg, #ff9800 0%, #ffc107 100%)":"linear-gradient(135deg, #f44336 0%, #e91e63 100%)"}(s,a.slice(0,7).reduce((e,t)=>e+parseFloat(t||0),0)/7*5),p=function(e=new Date){const t=e.getMonth();return t>=2&&t<=4?{primary:"#66bb6a",accent:"#81c784",icon:"mdi:flower"}:t>=5&&t<=7?{primary:"#42a5f5",accent:"#29b6f6",icon:"mdi:white-balance-sunny"}:t>=8&&t<=10?{primary:"#ff7043",accent:"#ffab40",icon:"mdi:leaf"}:{primary:"#5c6bc0",accent:"#7986cb",icon:"mdi:snowflake"}}();return O`
+    </div>`:O``}function ke(e){const t=new Date;return t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ve(e),{year:"numeric"})}function xe(e){const t=new Date;return t.setMonth(t.getMonth()-1),t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ve(e),{month:"long",year:"numeric"})}function Ee(e){const t=new Date;return t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ve(e),{month:"long",year:"numeric"})}function Ae(e,t,o,a=new Date){if(!t.showWeekSummary&&void 0!==t.showWeekSummary)return O``;const{daily:i,unit_of_measurement:n,dailyweek_cost:s}=o,r=function(e,t,o=new Date){if(!e)return 0;const a=ge(o);let i=0;for(let o=Math.min(a,e.length-1);o>=1;o--){const a=parseFloat(e[o]);if(!isNaN(a)&&-1!==a&&0!==a){i+=a;continue}if(!t)continue;const n=t.toString().split(","),s=parseFloat(n[o]?.replace(",","."));if(isNaN(s)||s<=0)continue;const r=[];for(let t=0;t<Math.min(e.length,n.length,7);t++){if(t===o)continue;const a=parseFloat(e[t]),i=parseFloat(n[t]?.replace(",","."));!isNaN(a)&&!isNaN(i)&&a>0&&i>0&&-1!==a&&-1!==i&&r.push(a/i)}if(0===r.length)continue;const l=r.reduce((e,t)=>e+t,0)/r.length,c=s*l;c>0&&(i+=c)}return i}(i,s,a),l=function(e,t=new Date){if(!e)return 0;const o=ge(t),a=e.toString().split(",");let i=0;for(let e=Math.min(o,a.length-1);e>=1;e--){const t=parseFloat(a[e].replace(",","."));isNaN(t)||-1===t||(i+=t)}return i}(s,a),c=new Date(a);c.setDate(a.getDate()-(0===a.getDay()?6:a.getDay()-1));const d=function(e,t=50){const o=e/t;return o<=.7?"linear-gradient(135deg, #4caf50 0%, #8bc34a 100%)":o<=1?"linear-gradient(135deg, #2196f3 0%, #03dac6 100%)":o<=1.3?"linear-gradient(135deg, #ff9800 0%, #ffc107 100%)":"linear-gradient(135deg, #f44336 0%, #e91e63 100%)"}(r,i.slice(0,7).reduce((e,t)=>e+parseFloat(t||0),0)/7*5),p=function(e=new Date){const t=e.getMonth();return t>=2&&t<=4?{primary:"#66bb6a",accent:"#81c784",icon:"mdi:flower"}:t>=5&&t<=7?{primary:"#42a5f5",accent:"#29b6f6",icon:"mdi:white-balance-sunny"}:t>=8&&t<=10?{primary:"#ff7043",accent:"#ffab40",icon:"mdi:leaf"}:{primary:"#5c6bc0",accent:"#7986cb",icon:"mdi:snowflake"}}(a);return O`
     <div class="week-summary-card" style="background: ${d}">
       <div class="week-summary-header">
         <ha-icon icon="${p.icon}" class="week-summary-icon"></ha-icon>
@@ -1166,12 +1166,12 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       </div>
       <div class="week-summary-content">
         <div class="week-summary-main">
-          <span class="week-summary-value">${ye(s,1)}</span>
-          <span class="week-summary-unit">${i}</span>
+          <span class="week-summary-value">${ye(r,1)}</span>
+          <span class="week-summary-unit">${n}</span>
         </div>
-        ${r>0?O`
+        ${l>0?O`
               <div class="week-summary-cost">
-                <span class="week-summary-cost-value">${r.toFixed(2).replace(/\.00$/,"")}</span>
+                <span class="week-summary-cost-value">${l.toFixed(2).replace(/\.00$/,"")}</span>
                 <span class="week-summary-cost-unit">€</span>
               </div>
             `:O``}
@@ -1185,22 +1185,22 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     <br /><span class="cons-val pending" title="${de(e,"card.history.data_pending")}"
       ><ha-icon id="icon" icon="mdi:clock-outline" style="color: #ff9800;"></ha-icon
     ></span>
-  `}function Pe(e,t,o,a,i){if(o&&"undefined"!==o.toString()){const e=o.toString().split(",")[a-1];if(e&&"-1"!==e)return e.toLowerCase()}const n=function(e,t){const o=["sensor.rte_tempo_today","sensor.edf_tempo_today","sensor.tempo_today","sensor.rte_tempo_tomorrow","sensor.edf_tempo_tomorrow","sensor.tempo_tomorrow"],a={};for(const t of o)if(e.states[t]){const o=e.states[t];o.state&&he.has(o.state)&&(t.includes("today")?a.today=t:t.includes("tomorrow")&&(a.tomorrow=t))}if(t.tempoEntity&&e.states[t.tempoEntity]){const o=e.states[t.tempoEntity];o.state&&he.has(o.state)&&(a.today=t.tempoEntity)}return a}(e,t);if(i&&Object.keys(n).length>0){const t=new Date(i),o=new Date,a=new Date;if(a.setDate(o.getDate()+1),t.toDateString()===o.toDateString()&&n.today){const t=e.states[n.today];if(t&&t.state&&he.has(t.state))return he.get(t.state)}if(t.toDateString()===a.toDateString()&&n.tomorrow){const t=e.states[n.tomorrow];if(t&&t.state&&he.has(t.state))return he.get(t.state)}}return"grey"}function Ce(e,t,o,a){if(t.showDayPriceHCHP){const t=o.toString().split(",")[a-1];return"-1"===t?De(e):O` <br /><span class="cons-val">${ye(t,2)} €</span> `}}function Me(e,t,o,a,i){if(t.showDayHCHP){const n=o.toString().split(",")[a-1];return"-1"===n?De(e):O`
+  `}function Pe(e,t,o,a,i,n=new Date){if(o&&"undefined"!==o.toString()){const e=o.toString().split(",")[a-1];if(e&&"-1"!==e)return e.toLowerCase()}const s=function(e,t){const o=["sensor.rte_tempo_today","sensor.edf_tempo_today","sensor.tempo_today","sensor.rte_tempo_tomorrow","sensor.edf_tempo_tomorrow","sensor.tempo_tomorrow"],a={};for(const t of o)if(e.states[t]){const o=e.states[t];o.state&&he.has(o.state)&&(t.includes("today")?a.today=t:t.includes("tomorrow")&&(a.tomorrow=t))}if(t.tempoEntity&&e.states[t.tempoEntity]){const o=e.states[t.tempoEntity];o.state&&he.has(o.state)&&(a.today=t.tempoEntity)}return a}(e,t);if(i&&Object.keys(s).length>0){const t=new Date(i),o=new Date(n),a=new Date(n);if(a.setDate(o.getDate()+1),t.toDateString()===o.toDateString()&&s.today){const t=e.states[s.today];if(t&&t.state&&he.has(t.state))return he.get(t.state)}if(t.toDateString()===a.toDateString()&&s.tomorrow){const t=e.states[s.tomorrow];if(t&&t.state&&he.has(t.state))return he.get(t.state)}}return"grey"}function Ce(e,t,o,a){if(t.showDayPriceHCHP){const t=o.toString().split(",")[a-1];return"-1"===t?De(e):O` <br /><span class="cons-val">${ye(t,2)} €</span> `}}function Me(e,t,o,a,i){if(t.showDayHCHP){const n=o.toString().split(",")[a-1];return"-1"===n?De(e):O`
       <br /><span class="cons-val"
         >${ye(n,2)} ${t.showInTableUnit?O` ${i}`:O``}</span
       >
-    `}}function Te(e,t,o){return!0===e?O`<span class="titre-desktop">${t}</span><span class="titre-mobile">${o}</span><br /> `:O``}function He(e,t,o,a,i){const{unit_of_measurement:n}=i;return O`
+    `}}function Te(e,t,o){return!0===e?O`<span class="titre-desktop">${t}</span><span class="titre-mobile">${o}</span><br /> `:O``}function He(e,t,o,a,i,n){const{unit_of_measurement:s}=i;return O`
     <div class="day">
-      ${function(e,t,o,a,i){const n=o.toString().split(",")[i-1];let s="grey";return t.showTempoColor&&(s=Pe(e,t,a,i,n)),O`
+      ${function(e,t,o,a,i,n){const s=o.toString().split(",")[i-1];let r="grey";return t.showTempoColor&&(r=Pe(e,t,a,i,s,n)),O`
     <span class="tempo-day-wrapper">
       <span
-        class="tempoday-${s}"
+        class="tempoday-${r}"
         style="display: inline-block;"
-        title="${de(e,"card.history.tempo_day",{color:s,date:n})}"
-        >${new Date(n).toLocaleDateString(ve(e),{weekday:t.showDayName})}</span
+        title="${de(e,"card.history.tempo_day",{color:r,date:s})}"
+        >${new Date(s).toLocaleDateString(ve(e),{weekday:t.showDayName})}</span
       >
     </span>
-  `}(e,t,i.dailyweek,i.dailyweek_Tempo,a)}
+  `}(e,t,i.dailyweek,i.dailyweek_Tempo,a,n)}
       ${function(e,t,o,a,i,n){if(-1===o||0===o||"0"===o||null==o){if(!n)return Se(e);{const o=n.toString().split(",")[a-1];if(o&&"-1"!==o&&parseFloat(o.replace(",","."))>0){const o=we(e.states[t.entity].attributes.daily,a,n);if(o>0)return O`
             <br /><span class="cons-val estimated" title="${de(e,"card.history.estimated")}"
               >${ye(o)} ${t.showInTableUnit?O` ${i}`:O``}</span
@@ -1209,12 +1209,12 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     <br /><span class="cons-val"
       >${ye(o)} ${t.showInTableUnit?O` ${i}`:O``}</span
     >
-  `}(e,t,o,a,n,i.dailyweek_cost)}
+  `}(e,t,o,a,s,i.dailyweek_cost)}
       ${function(e,t,o,a){if(t.showDayPrice){const t=o.toString().split(",")[a-1];return"-1"===t?De(e):O` <br /><span class="cons-val">${ye(t,2)} €</span> `}if(t.kWhPrice)return O` <br /><span class="cons-val">${ye(o*t.kWhPrice,2)} €</span> `}(e,t,i.dailyweek_cost,a)}
       ${Ce(e,t,i.dailyweek_costHC,a)}
       ${Ce(e,t,i.dailyweek_costHP,a)}
-      ${Me(e,t,i.dailyweek_HC,a,n)}
-      ${Me(e,t,i.dailyweek_HP,a,n)}
+      ${Me(e,t,i.dailyweek_HC,a,s)}
+      ${Me(e,t,i.dailyweek_HP,a,s)}
       ${function(e,t,o,a,i,n){if(t.showDayMaxPower){const t=o.toString().split(",")[a-1],s=i.toString().split(",")[a-1];if("-1"===t)return De(e);const r=new Date(n.toString().split(",")[a-1]).toLocaleTimeString(ve(e),{hour:"2-digit",minute:"2-digit"});return"true"===s?O`
         <br /><span class="cons-val" style="color:red">${ye(t,2)}</span> <br /><span
           class="cons-val"
@@ -1225,8 +1225,8 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       <br /><span class="cons-val">${ye(t,2)}</span> <br /><span class="cons-val">${r}</span>
     `}}(e,t,i.dailyweek_MP,a,i.dailyweek_MP_over,i.dailyweek_MP_time)}
     </div>
-  `}function Ne(e,t,o){if(!0!==t.showHistory)return;const{daily:a,dailyweek:i}=o;if(void 0===i)return;let n=i.toString().split(",").length;return t.nbJoursAffichage<=n&&(n=t.nbJoursAffichage),O`
-    ${Ae(e,t,o)}
+  `}function Ne(e,t,o,a=new Date){if(!0!==t.showHistory)return;const{daily:i,dailyweek:n}=o;if(void 0===n)return;let s=n.toString().split(",").length;return t.nbJoursAffichage<=s&&(s=t.nbJoursAffichage),O`
+    ${Ae(e,t,o,a)}
     <div class="week-history">
       ${function(e,t){if(!0===t.showTitleLign){const o=t=>de(e,`card.history.${t}`);return O`
       <div class="day">
@@ -1240,7 +1240,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         ${Te(t.showDayMaxPowerTime,o("col_max_power_time"),o("col_max_power_time"))}
       </div>
     `}}(e,t)}
-      ${a.slice(-n).map((i,s)=>{const r=a.length-n+s+1;return He(e,t,i,r,o)}).reverse()}
+      ${i.slice(-s).map((n,r)=>{const l=i.length-s+r+1;return He(e,t,n,l,o,a)}).reverse()}
     </div>
   `}function ze(e,t){if(!0===e.showError&&""!==t)return O`
         <div class="error-msg" style="color: var(--error-color, red)">

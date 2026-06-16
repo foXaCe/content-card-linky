@@ -244,6 +244,29 @@ describe("content-card-linky render", () => {
     expect(card.shadowRoot.querySelector(".smart-insights")).toBeFalsy();
   });
 
+  it("shouldUpdate fires on config or watched-entity changes only", async () => {
+    await import("../../src/content-card-linky.js");
+    const Card = customElements.get("content-card-linky");
+    const card = new Card();
+    card.setConfig(baseConfig);
+
+    // config changed → always re-render
+    expect(card.shouldUpdate(new Map([["config", {}]]))).toBe(true);
+    // no previous hass → re-render
+    card.hass = makeHass({ states: { [baseConfig.entity]: makeLinkyEntity() } });
+    expect(card.shouldUpdate(new Map([["hass", undefined]]))).toBe(true);
+
+    // watched entity changed between old and new hass → re-render
+    const oldHass = makeHass({ states: { [baseConfig.entity]: makeLinkyEntity() } });
+    expect(card.shouldUpdate(new Map([["hass", oldHass]]))).toBe(true);
+
+    // identical state object → skip
+    const same = makeLinkyEntity();
+    card.hass = makeHass({ states: { [baseConfig.entity]: same } });
+    const old2 = makeHass({ states: { [baseConfig.entity]: same } });
+    expect(card.shouldUpdate(new Map([["hass", old2]]))).toBe(false);
+  });
+
   it("getConfigElement lazily loads the editor element", async () => {
     await import("../../src/content-card-linky.js");
     const Card = customElements.get("content-card-linky");

@@ -58,7 +58,7 @@ function findTempoEntities(hass, config) {
   return availableEntities;
 }
 
-function getTempoColorForDay(hass, config, valueC, dayNumber, dayDate) {
+function getTempoColorForDay(hass, config, valueC, dayNumber, dayDate, now = new Date()) {
   // Récupération depuis les données Tempo transmises (format original)
   if (valueC && valueC.toString() !== "undefined") {
     const valeurColor = valueC.toString().split(",")[dayNumber - 1];
@@ -72,8 +72,8 @@ function getTempoColorForDay(hass, config, valueC, dayNumber, dayDate) {
 
   if (dayDate && Object.keys(tempoEntities).length > 0) {
     const targetDate = new Date(dayDate);
-    const today = new Date();
-    const tomorrow = new Date();
+    const today = new Date(now);
+    const tomorrow = new Date(now);
     tomorrow.setDate(today.getDate() + 1);
 
     // Vérifier si c'est aujourd'hui
@@ -96,12 +96,12 @@ function getTempoColorForDay(hass, config, valueC, dayNumber, dayDate) {
   return "grey"; // Couleur par défaut si pas de données
 }
 
-function renderDailyWeek(hass, config, dailyweek, dailyweekTempo, dayNumber) {
+function renderDailyWeek(hass, config, dailyweek, dailyweekTempo, dayNumber, now) {
   const dayDate = dailyweek.toString().split(",")[dayNumber - 1];
   let finalColor = "grey";
 
   if (config.showTempoColor) {
-    finalColor = getTempoColorForDay(hass, config, dailyweekTempo, dayNumber, dayDate);
+    finalColor = getTempoColorForDay(hass, config, dailyweekTempo, dayNumber, dayDate, now);
   }
 
   return html`
@@ -240,11 +240,11 @@ function renderTitreLigne(hass, config) {
   }
 }
 
-function renderDay(hass, config, day, dayNumber, attributes) {
+function renderDay(hass, config, day, dayNumber, attributes, now) {
   const { unit_of_measurement } = attributes;
   return html`
     <div class="day">
-      ${renderDailyWeek(hass, config, attributes.dailyweek, attributes.dailyweek_Tempo, dayNumber)}
+      ${renderDailyWeek(hass, config, attributes.dailyweek, attributes.dailyweek_Tempo, dayNumber, now)}
       ${renderDailyValue(hass, config, day, dayNumber, unit_of_measurement, attributes.dailyweek_cost)}
       ${renderDayPrice(hass, config, attributes.dailyweek_cost, dayNumber)}
       ${renderDayPriceHCHP(hass, config, attributes.dailyweek_costHC, dayNumber)}
@@ -263,8 +263,11 @@ function renderDay(hass, config, day, dayNumber, attributes) {
   `;
 }
 
-/** Horizontally-scrolling per-day history table with a week summary on top. */
-export function renderHistory(hass, config, attributes) {
+/**
+ * Horizontally-scrolling per-day history table with a week summary on top.
+ * `now` is injectable for deterministic tests (defaults to the current time).
+ */
+export function renderHistory(hass, config, attributes, now = new Date()) {
   if (config.showHistory !== true) {
     return undefined;
   }
@@ -280,14 +283,14 @@ export function renderHistory(hass, config, attributes) {
   }
 
   return html`
-    ${renderWeekSummary(hass, config, attributes)}
+    ${renderWeekSummary(hass, config, attributes, now)}
     <div class="week-history">
       ${renderTitreLigne(hass, config)}
       ${daily
         .slice(-nbJours)
         .map((day, index) => {
           const dayIndex = daily.length - nbJours + index + 1;
-          return renderDay(hass, config, day, dayIndex, attributes);
+          return renderDay(hass, config, day, dayIndex, attributes, now);
         })
         .reverse()}
     </div>
