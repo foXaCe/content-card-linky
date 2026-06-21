@@ -10,6 +10,9 @@ coverage/
 .vitest/
 .eslintcache
 
+# TypeScript
+*.tsbuildinfo
+
 # OS
 .DS_Store
 Thumbs.db

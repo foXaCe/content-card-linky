@@ -31,6 +31,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Typecheck
+        run: npm run typecheck
+
       - name: ESLint
         run: npm run lint
 

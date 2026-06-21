@@ -154,12 +154,17 @@
       "showTempoColor": "Couleurs Tempo du jour",
       "showMonthlyView": "Vue mensuelle (repliable)",
       "showYearlyView": "Vue annuelle (repliable)",
-      "showDetailedComparison": "Comparaison Aujourd'hui vs Hier"
+      "showDetailedComparison": "Comparaison Aujourd'hui vs Hier",
+      "appearance": "Apparence"
     },
     "day_name": {
       "long": "Complet (Lundi)",
       "short": "Abrégé (Lun)",
       "narrow": "Minimal (L)"
+    },
+    "appearance": {
+      "premium": "Premium (verre, animations)",
+      "minimal": "Minimal (sobre)"
     }
   }
 }

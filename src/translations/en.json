@@ -154,12 +154,17 @@
       "showTempoColor": "Tempo colours per day",
       "showMonthlyView": "Monthly view (collapsible)",
       "showYearlyView": "Yearly view (collapsible)",
-      "showDetailedComparison": "Today vs yesterday comparison"
+      "showDetailedComparison": "Today vs yesterday comparison",
+      "appearance": "Appearance"
     },
     "day_name": {
       "long": "Full (Monday)",
       "short": "Short (Mon)",
       "narrow": "Minimal (M)"
+    },
+    "appearance": {
+      "premium": "Premium (glass, motion)",
+      "minimal": "Minimal (plain)"
     }
   }
 }

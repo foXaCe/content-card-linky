@@ -1,104 +1,79 @@
-const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,o=Symbol(),a=new WeakMap;let i=class{constructor(e,t,a){if(this._$cssResult$=!0,a!==o)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=e,this.t=t}get styleSheet(){let e=this.o;const o=this.t;if(t&&void 0===e){const t=void 0!==o&&1===o.length;t&&(e=a.get(o)),void 0===e&&((this.o=e=new CSSStyleSheet).replaceSync(this.cssText),t&&a.set(o,e))}return e}toString(){return this.cssText}};const n=t?e=>e:e=>e instanceof CSSStyleSheet?(e=>{let t="";for(const o of e.cssRules)t+=o.cssText;return(e=>new i("string"==typeof e?e:e+"",void 0,o))(t)})(e):e,{is:s,defineProperty:r,getOwnPropertyDescriptor:l,getOwnPropertyNames:c,getOwnPropertySymbols:d,getPrototypeOf:p}=Object,h=globalThis,u=h.trustedTypes,m=u?u.emptyScript:"",y=h.reactiveElementPolyfillSupport,v=(e,t)=>e,f={toAttribute(e,t){switch(t){case Boolean:e=e?m:null;break;case Object:case Array:e=null==e?e:JSON.stringify(e)}return e},fromAttribute(e,t){let o=e;switch(t){case Boolean:o=null!==e;break;case Number:o=null===e?null:Number(e);break;case Object:case Array:try{o=JSON.parse(e)}catch(e){o=null}}return o}},g=(e,t)=>!s(e,t),w={attribute:!0,type:String,converter:f,reflect:!1,useDefault:!1,hasChanged:g};Symbol.metadata??=Symbol("metadata"),h.litPropertyMetadata??=new WeakMap;let _=class extends HTMLElement{static addInitializer(e){this._$Ei(),(this.l??=[]).push(e)}static get observedAttributes(){return this.finalize(),this._$Eh&&[...this._$Eh.keys()]}static createProperty(e,t=w){if(t.state&&(t.attribute=!1),this._$Ei(),this.prototype.hasOwnProperty(e)&&((t=Object.create(t)).wrapped=!0),this.elementProperties.set(e,t),!t.noAccessor){const o=Symbol(),a=this.getPropertyDescriptor(e,o,t);void 0!==a&&r(this.prototype,e,a)}}static getPropertyDescriptor(e,t,o){const{get:a,set:i}=l(this.prototype,e)??{get(){return this[t]},set(e){this[t]=e}};return{get:a,set(t){const n=a?.call(this);i?.call(this,t),this.requestUpdate(e,n,o)},configurable:!0,enumerable:!0}}static getPropertyOptions(e){return this.elementProperties.get(e)??w}static _$Ei(){if(this.hasOwnProperty(v("elementProperties")))return;const e=p(this);e.finalize(),void 0!==e.l&&(this.l=[...e.l]),this.elementProperties=new Map(e.elementProperties)}static finalize(){if(this.hasOwnProperty(v("finalized")))return;if(this.finalized=!0,this._$Ei(),this.hasOwnProperty(v("properties"))){const e=this.properties,t=[...c(e),...d(e)];for(const o of t)this.createProperty(o,e[o])}const e=this[Symbol.metadata];if(null!==e){const t=litPropertyMetadata.get(e);if(void 0!==t)for(const[e,o]of t)this.elementProperties.set(e,o)}this._$Eh=new Map;for(const[e,t]of this.elementProperties){const o=this._$Eu(e,t);void 0!==o&&this._$Eh.set(o,e)}this.elementStyles=this.finalizeStyles(this.styles)}static finalizeStyles(e){const t=[];if(Array.isArray(e)){const o=new Set(e.flat(1/0).reverse());for(const e of o)t.unshift(n(e))}else void 0!==e&&t.push(n(e));return t}static _$Eu(e,t){const o=t.attribute;return!1===o?void 0:"string"==typeof o?o:"string"==typeof e?e.toLowerCase():void 0}constructor(){super(),this._$Ep=void 0,this.isUpdatePending=!1,this.hasUpdated=!1,this._$Em=null,this._$Ev()}_$Ev(){this._$ES=new Promise(e=>this.enableUpdating=e),this._$AL=new Map,this._$E_(),this.requestUpdate(),this.constructor.l?.forEach(e=>e(this))}addController(e){(this._$EO??=new Set).add(e),void 0!==this.renderRoot&&this.isConnected&&e.hostConnected?.()}removeController(e){this._$EO?.delete(e)}_$E_(){const e=new Map,t=this.constructor.elementProperties;for(const o of t.keys())this.hasOwnProperty(o)&&(e.set(o,this[o]),delete this[o]);e.size>0&&(this._$Ep=e)}createRenderRoot(){const o=this.shadowRoot??this.attachShadow(this.constructor.shadowRootOptions);return((o,a)=>{if(t)o.adoptedStyleSheets=a.map(e=>e instanceof CSSStyleSheet?e:e.styleSheet);else for(const t of a){const a=document.createElement("style"),i=e.litNonce;void 0!==i&&a.setAttribute("nonce",i),a.textContent=t.cssText,o.appendChild(a)}})(o,this.constructor.elementStyles),o}connectedCallback(){this.renderRoot??=this.createRenderRoot(),this.enableUpdating(!0),this._$EO?.forEach(e=>e.hostConnected?.())}enableUpdating(e){}disconnectedCallback(){this._$EO?.forEach(e=>e.hostDisconnected?.())}attributeChangedCallback(e,t,o){this._$AK(e,o)}_$ET(e,t){const o=this.constructor.elementProperties.get(e),a=this.constructor._$Eu(e,o);if(void 0!==a&&!0===o.reflect){const i=(void 0!==o.converter?.toAttribute?o.converter:f).toAttribute(t,o.type);this._$Em=e,null==i?this.removeAttribute(a):this.setAttribute(a,i),this._$Em=null}}_$AK(e,t){const o=this.constructor,a=o._$Eh.get(e);if(void 0!==a&&this._$Em!==a){const e=o.getPropertyOptions(a),i="function"==typeof e.converter?{fromAttribute:e.converter}:void 0!==e.converter?.fromAttribute?e.converter:f;this._$Em=a;const n=i.fromAttribute(t,e.type);this[a]=n??this._$Ej?.get(a)??n,this._$Em=null}}requestUpdate(e,t,o,a=!1,i){if(void 0!==e){const n=this.constructor;if(!1===a&&(i=this[e]),o??=n.getPropertyOptions(e),!((o.hasChanged??g)(i,t)||o.useDefault&&o.reflect&&i===this._$Ej?.get(e)&&!this.hasAttribute(n._$Eu(e,o))))return;this.C(e,t,o)}!1===this.isUpdatePending&&(this._$ES=this._$EP())}C(e,t,{useDefault:o,reflect:a,wrapped:i},n){o&&!(this._$Ej??=new Map).has(e)&&(this._$Ej.set(e,n??t??this[e]),!0!==i||void 0!==n)||(this._$AL.has(e)||(this.hasUpdated||o||(t=void 0),this._$AL.set(e,t)),!0===a&&this._$Em!==e&&(this._$Eq??=new Set).add(e))}async _$EP(){this.isUpdatePending=!0;try{await this._$ES}catch(e){Promise.reject(e)}const e=this.scheduleUpdate();return null!=e&&await e,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){if(!this.isUpdatePending)return;if(!this.hasUpdated){if(this.renderRoot??=this.createRenderRoot(),this._$Ep){for(const[e,t]of this._$Ep)this[e]=t;this._$Ep=void 0}const e=this.constructor.elementProperties;if(e.size>0)for(const[t,o]of e){const{wrapped:e}=o,a=this[t];!0!==e||this._$AL.has(t)||void 0===a||this.C(t,void 0,o,a)}}let e=!1;const t=this._$AL;try{e=this.shouldUpdate(t),e?(this.willUpdate(t),this._$EO?.forEach(e=>e.hostUpdate?.()),this.update(t)):this._$EM()}catch(t){throw e=!1,this._$EM(),t}e&&this._$AE(t)}willUpdate(e){}_$AE(e){this._$EO?.forEach(e=>e.hostUpdated?.()),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(e)),this.updated(e)}_$EM(){this._$AL=new Map,this.isUpdatePending=!1}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$ES}shouldUpdate(e){return!0}update(e){this._$Eq&&=this._$Eq.forEach(e=>this._$ET(e,this[e])),this._$EM()}updated(e){}firstUpdated(e){}};_.elementStyles=[],_.shadowRootOptions={mode:"open"},_[v("elementProperties")]=new Map,_[v("finalized")]=new Map,y?.({ReactiveElement:_}),(h.reactiveElementVersions??=[]).push("2.1.2");const b=globalThis,$=e=>e,k=b.trustedTypes,x=k?k.createPolicy("lit-html",{createHTML:e=>e}):void 0,E="$lit$",A=`lit$${Math.random().toFixed(9).slice(2)}$`,D="?"+A,S=`<${D}>`,P=document,C=()=>P.createComment(""),M=e=>null===e||"object"!=typeof e&&"function"!=typeof e,T=Array.isArray,H="[ \t\n\f\r]",N=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,z=/-->/g,W=/>/g,F=RegExp(`>|${H}(?:([^\\s"'>=/]+)(${H}*=${H}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),R=/'/g,L=/"/g,U=/^(?:script|style|textarea|title)$/i,O=(e=>(t,...o)=>({_$litType$:e,strings:t,values:o}))(1),Y=Symbol.for("lit-noChange"),I=Symbol.for("lit-nothing"),j=new WeakMap,J=P.createTreeWalker(P,129);function V(e,t){if(!T(e)||!e.hasOwnProperty("raw"))throw Error("invalid template strings array");return void 0!==x?x.createHTML(t):t}const q=(e,t)=>{const o=e.length-1,a=[];let i,n=2===t?"<svg>":3===t?"<math>":"",s=N;for(let t=0;t<o;t++){const o=e[t];let r,l,c=-1,d=0;for(;d<o.length&&(s.lastIndex=d,l=s.exec(o),null!==l);)d=s.lastIndex,s===N?"!--"===l[1]?s=z:void 0!==l[1]?s=W:void 0!==l[2]?(U.test(l[2])&&(i=RegExp("</"+l[2],"g")),s=F):void 0!==l[3]&&(s=F):s===F?">"===l[0]?(s=i??N,c=-1):void 0===l[1]?c=-2:(c=s.lastIndex-l[2].length,r=l[1],s=void 0===l[3]?F:'"'===l[3]?L:R):s===L||s===R?s=F:s===z||s===W?s=N:(s=F,i=void 0);const p=s===F&&e[t+1].startsWith("/>")?" ":"";n+=s===N?o+S:c>=0?(a.push(r),o.slice(0,c)+E+o.slice(c)+A+p):o+A+(-2===c?t:p)}return[V(e,n+(e[o]||"<?>")+(2===t?"</svg>":3===t?"</math>":"")),a]};class B{constructor({strings:e,_$litType$:t},o){let a;this.parts=[];let i=0,n=0;const s=e.length-1,r=this.parts,[l,c]=q(e,t);if(this.el=B.createElement(l,o),J.currentNode=this.el.content,2===t||3===t){const e=this.el.content.firstChild;e.replaceWith(...e.childNodes)}for(;null!==(a=J.nextNode())&&r.length<s;){if(1===a.nodeType){if(a.hasAttributes())for(const e of a.getAttributeNames())if(e.endsWith(E)){const t=c[n++],o=a.getAttribute(e).split(A),s=/([.?@])?(.*)/.exec(t);r.push({type:1,index:i,name:s[2],strings:o,ctor:"."===s[1]?X:"?"===s[1]?ee:"@"===s[1]?te:Q}),a.removeAttribute(e)}else e.startsWith(A)&&(r.push({type:6,index:i}),a.removeAttribute(e));if(U.test(a.tagName)){const e=a.textContent.split(A),t=e.length-1;if(t>0){a.textContent=k?k.emptyScript:"";for(let o=0;o<t;o++)a.append(e[o],C()),J.nextNode(),r.push({type:2,index:++i});a.append(e[t],C())}}}else if(8===a.nodeType)if(a.data===D)r.push({type:2,index:i});else{let e=-1;for(;-1!==(e=a.data.indexOf(A,e+1));)r.push({type:7,index:i}),e+=A.length-1}i++}}static createElement(e,t){const o=P.createElement("template");return o.innerHTML=e,o}}function G(e,t,o=e,a){if(t===Y)return t;let i=void 0!==a?o._$Co?.[a]:o._$Cl;const n=M(t)?void 0:t._$litDirective$;return i?.constructor!==n&&(i?._$AO?.(!1),void 0===n?i=void 0:(i=new n(e),i._$AT(e,o,a)),void 0!==a?(o._$Co??=[])[a]=i:o._$Cl=i),void 0!==i&&(t=G(e,i._$AS(e,t.values),i,a)),t}class K{constructor(e,t){this._$AV=[],this._$AN=void 0,this._$AD=e,this._$AM=t}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(e){const{el:{content:t},parts:o}=this._$AD,a=(e?.creationScope??P).importNode(t,!0);J.currentNode=a;let i=J.nextNode(),n=0,s=0,r=o[0];for(;void 0!==r;){if(n===r.index){let t;2===r.type?t=new Z(i,i.nextSibling,this,e):1===r.type?t=new r.ctor(i,r.name,r.strings,this,e):6===r.type&&(t=new oe(i,this,e)),this._$AV.push(t),r=o[++s]}n!==r?.index&&(i=J.nextNode(),n++)}return J.currentNode=P,a}p(e){let t=0;for(const o of this._$AV)void 0!==o&&(void 0!==o.strings?(o._$AI(e,o,t),t+=o.strings.length-2):o._$AI(e[t])),t++}}class Z{get _$AU(){return this._$AM?._$AU??this._$Cv}constructor(e,t,o,a){this.type=2,this._$AH=I,this._$AN=void 0,this._$AA=e,this._$AB=t,this._$AM=o,this.options=a,this._$Cv=a?.isConnected??!0}get parentNode(){let e=this._$AA.parentNode;const t=this._$AM;return void 0!==t&&11===e?.nodeType&&(e=t.parentNode),e}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(e,t=this){e=G(this,e,t),M(e)?e===I||null==e||""===e?(this._$AH!==I&&this._$AR(),this._$AH=I):e!==this._$AH&&e!==Y&&this._(e):void 0!==e._$litType$?this.$(e):void 0!==e.nodeType?this.T(e):(e=>T(e)||"function"==typeof e?.[Symbol.iterator])(e)?this.k(e):this._(e)}O(e){return this._$AA.parentNode.insertBefore(e,this._$AB)}T(e){this._$AH!==e&&(this._$AR(),this._$AH=this.O(e))}_(e){this._$AH!==I&&M(this._$AH)?this._$AA.nextSibling.data=e:this.T(P.createTextNode(e)),this._$AH=e}$(e){const{values:t,_$litType$:o}=e,a="number"==typeof o?this._$AC(e):(void 0===o.el&&(o.el=B.createElement(V(o.h,o.h[0]),this.options)),o);if(this._$AH?._$AD===a)this._$AH.p(t);else{const e=new K(a,this),o=e.u(this.options);e.p(t),this.T(o),this._$AH=e}}_$AC(e){let t=j.get(e.strings);return void 0===t&&j.set(e.strings,t=new B(e)),t}k(e){T(this._$AH)||(this._$AH=[],this._$AR());const t=this._$AH;let o,a=0;for(const i of e)a===t.length?t.push(o=new Z(this.O(C()),this.O(C()),this,this.options)):o=t[a],o._$AI(i),a++;a<t.length&&(this._$AR(o&&o._$AB.nextSibling,a),t.length=a)}_$AR(e=this._$AA.nextSibling,t){for(this._$AP?.(!1,!0,t);e!==this._$AB;){const t=$(e).nextSibling;$(e).remove(),e=t}}setConnected(e){void 0===this._$AM&&(this._$Cv=e,this._$AP?.(e))}}class Q{get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}constructor(e,t,o,a,i){this.type=1,this._$AH=I,this._$AN=void 0,this.element=e,this.name=t,this._$AM=a,this.options=i,o.length>2||""!==o[0]||""!==o[1]?(this._$AH=Array(o.length-1).fill(new String),this.strings=o):this._$AH=I}_$AI(e,t=this,o,a){const i=this.strings;let n=!1;if(void 0===i)e=G(this,e,t,0),n=!M(e)||e!==this._$AH&&e!==Y,n&&(this._$AH=e);else{const a=e;let s,r;for(e=i[0],s=0;s<i.length-1;s++)r=G(this,a[o+s],t,s),r===Y&&(r=this._$AH[s]),n||=!M(r)||r!==this._$AH[s],r===I?e=I:e!==I&&(e+=(r??"")+i[s+1]),this._$AH[s]=r}n&&!a&&this.j(e)}j(e){e===I?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,e??"")}}class X extends Q{constructor(){super(...arguments),this.type=3}j(e){this.element[this.name]=e===I?void 0:e}}class ee extends Q{constructor(){super(...arguments),this.type=4}j(e){this.element.toggleAttribute(this.name,!!e&&e!==I)}}class te extends Q{constructor(e,t,o,a,i){super(e,t,o,a,i),this.type=5}_$AI(e,t=this){if((e=G(this,e,t,0)??I)===Y)return;const o=this._$AH,a=e===I&&o!==I||e.capture!==o.capture||e.once!==o.once||e.passive!==o.passive,i=e!==I&&(o===I||a);a&&this.element.removeEventListener(this.name,this,o),i&&this.element.addEventListener(this.name,this,e),this._$AH=e}handleEvent(e){"function"==typeof this._$AH?this._$AH.call(this.options?.host??this.element,e):this._$AH.handleEvent(e)}}class oe{constructor(e,t,o){this.element=e,this.type=6,this._$AN=void 0,this._$AM=t,this.options=o}get _$AU(){return this._$AM._$AU}_$AI(e){G(this,e)}}const ae=b.litHtmlPolyfillSupport;ae?.(B,Z),(b.litHtmlVersions??=[]).push("3.3.2");const ie=globalThis;class ne extends _{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0}createRenderRoot(){const e=super.createRenderRoot();return this.renderOptions.renderBefore??=e.firstChild,e}update(e){const t=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(e),this._$Do=((e,t,o)=>{const a=o?.renderBefore??t;let i=a._$litPart$;if(void 0===i){const e=o?.renderBefore??null;a._$litPart$=i=new Z(t.insertBefore(C(),e),e,void 0,o??{})}return i._$AI(e),i})(t,this.renderRoot,this.renderOptions)}connectedCallback(){super.connectedCallback(),this._$Do?.setConnected(!0)}disconnectedCallback(){super.disconnectedCallback(),this._$Do?.setConnected(!1)}render(){return Y}}ne._$litElement$=!0,ne.finalized=!0,ie.litElementHydrateSupport?.({LitElement:ne});const se=ie.litElementPolyfillSupport;se?.({LitElement:ne}),(ie.litElementVersions??=[]).push("4.2.2");const re={en:{card:{name:"Linky Card",description:"Card for the MyElectricalData integration — modern Linky data display with coloured trends",data_unavailable:"Linky: data unavailable for {entity}",current_week:"Current week",since:"since",previous_year:"vs {year}",previous_month:"vs {month}",current_month:"vs {month}",previous_week:"vs {week}",before_yesterday:"vs {date}",week_noun:"last week",day_before_noun:"day before",in_off_peak:"(off-peak)",in_peak:"(peak)",peak_pct:"% peak",daily_cost:"Daily cost",version_available:"New version available {version}",migrate_med:"Please migrate to MyElectricalData. EnedisGateway is no longer supported.",aria:{yearly_trend:"Yearly trend: {value}%",monthly_trend:"Monthly trend: {value}%",current_month_trend:"Current-month trend: {value}%",weekly_trend:"Weekly trend: {value}%",daily_trend:"Daily trend: {value}%"},tooltip:{year_prev:"Y-1: {value}",year:"Y: {value}",prev_month_prev_year:"Previous month Y-1: {value}",prev_month:"Previous month: {value}",month_prev_year:"Month Y-1: {value}",month:"Month: {value}",last_week:"Last week: {value}",this_week:"Current week: {value}",day_before_yesterday:"Day before yesterday: {value}",yesterday:"Yesterday: {value}"},insights:{monthly_prediction:"Monthly forecast",vs_last_week:"vs last week",vs_last_month:"vs last month",vs_last_year:"vs last year"},history:{data_unavailable:"Data unavailable",data_pending:"Data awaiting upload",tempo_day:"Tempo: {color} — Date: {date}",estimated:"Estimate based on previous days — kWh data unavailable",col_consumption:"Cons.",col_price:"Price",col_price_offpeak:"OP price",col_price_offpeak_mobile:"€ OP",col_price_peak:"P price",col_price_peak_mobile:"€ P",col_offpeak:"OP",col_peak:"P",col_max_power:"MP",col_max_power_time:"MP time"},production:{estimate:"Production estimate based on previous data",pending:"Production data awaiting upload"},comparison:{title:"Today vs yesterday",today:"Today",yesterday:"Yesterday",peak:"Peak: {value}W",evolution:"Trend",difference:"Difference",entity_not_found:"Entity {entity} not found",available_attrs:"Available attributes: {attrs}"},ecowatt:{only_med:"EcoWatt: only available with MyElectricalData",missing_today:"EcoWatt: today (D+0) entity not configured or not found",missing_j12:"EcoWatt: D+1/D+2 entity(ies) not configured or not found",today:"D+0",tomorrow:"D+1",after_tomorrow:"D+2"},tempo:{only_med:"Tempo: only available with MyElectricalData",missing_j01:"Tempo: J0 and/or J1 sensor(s) unavailable or invalid",missing_info:"Tempo: 'info' sensor unavailable or invalid"},temporal:{monthly:"Monthly",yearly:"Yearly",no_data:"No data",months_count:"{count} months",years_count:"{count} years",current_month:"Current month",previous_month:"Previous month",current_month_prev_year:"Current month Y-1",previous_month_prev_year:"Prev. month Y-1"}},editor:{section:{general:"General",linky:"Linky entity",ecowatt:"EcoWatt (RTE)",tempo:"Tempo (EDF)",display:"Display",history:"History & data",price:"Price & costs",peak_offpeak:"Peak / off-peak",max_power:"Max power",insights:"Smart insights & trends",ecowatt_tempo:"EcoWatt & Tempo",temporal:"Temporal views"},field:{entity:"Linky entity (required)",titleName:"Card title",kWhPrice:"kWh price (€)",nbJoursAffichage:"Days to display",showDayName:"Day name format",ewEntity:"EcoWatt today",ewEntityJ1:"EcoWatt D+1",ewEntityJ2:"EcoWatt D+2",tempoEntityInfo:"Tempo information",tempoEntityJ0:"Tempo today",tempoEntityJ1:"Tempo tomorrow",tempoEntity:"Tempo entity (per-day history colours)",detailedComparisonEntity:"Detailed comparison entity",showIcon:"Show icon",showTitle:"Show title",showHeader:"Show header",showError:"Show errors",showInformation:"Show information",showHistory:"Show history",showWeekSummary:"Show week summary",showInTableUnit:"Show units in table",showTitleLign:"Show row titles",showPrice:"Show prices",showDayPrice:"Show daily price",showDayPriceHCHP:"Show off-peak / peak prices",showPeakOffPeak:"Show off-peak / peak ratio",showDayHCHP:"Show off-peak / peak per day",showDayMaxPower:"Show daily max power",showSmartInsights:"Show smart insights",showYearRatio:"Yearly trend",showCurrentMonthRatio:"Current-month trend",showMonthRatio:"Previous-month trend",showWeekRatio:"Weekly trend",showYesterdayRatio:"Daily trend",showEcoWatt:"Show EcoWatt today",showEcoWattJ12:"Show EcoWatt D+1 / D+2",showTempo:"Show Tempo",showTempoColor:"Tempo colours per day",showMonthlyView:"Monthly view (collapsible)",showYearlyView:"Yearly view (collapsible)",showDetailedComparison:"Today vs yesterday comparison"},day_name:{long:"Full (Monday)",short:"Short (Mon)",narrow:"Minimal (M)"}}},fr:{card:{name:"Carte Enedis",description:"Carte pour l'intégration MyElectricalData — affichage moderne des données Linky avec évolutions colorées",data_unavailable:"Linky : données inaccessibles pour {entity}",current_week:"Semaine en cours",since:"depuis",previous_year:"vs {year}",previous_month:"vs {month}",current_month:"vs {month}",previous_week:"vs {week}",before_yesterday:"vs {date}",week_noun:"semaine dernière",day_before_noun:"avant-hier",in_off_peak:"(en HC)",in_peak:"(en HP)",peak_pct:"% HP",daily_cost:"Coût journalier",version_available:"Nouvelle version disponible {version}",migrate_med:"Merci de migrer sur MyElectricalData. EnedisGateway n'est plus supporté.",aria:{yearly_trend:"Évolution annuelle : {value} %",monthly_trend:"Évolution mensuelle : {value} %",current_month_trend:"Évolution du mois courant : {value} %",weekly_trend:"Évolution hebdomadaire : {value} %",daily_trend:"Évolution quotidienne : {value} %"},tooltip:{year_prev:"A-1 : {value}",year:"A : {value}",prev_month_prev_year:"Mois précédent A-1 : {value}",prev_month:"Mois précédent : {value}",month_prev_year:"Mois A-1 : {value}",month:"Mois : {value}",last_week:"Semaine dernière : {value}",this_week:"Semaine courante : {value}",day_before_yesterday:"Avant-hier : {value}",yesterday:"Hier : {value}"},insights:{monthly_prediction:"Prédiction mensuelle",vs_last_week:"vs semaine dernière",vs_last_month:"vs mois dernier",vs_last_year:"vs année dernière"},history:{data_unavailable:"Donnée indisponible",data_pending:"Données en attente de remontée",tempo_day:"Tempo : {color} — Date : {date}",estimated:"Estimation basée sur les jours précédents — données kWh non disponibles",col_consumption:"Conso",col_price:"Prix",col_price_offpeak:"Prix HC",col_price_offpeak_mobile:"€ HC",col_price_peak:"Prix HP",col_price_peak_mobile:"€ HP",col_offpeak:"HC",col_peak:"HP",col_max_power:"MP",col_max_power_time:"MPtime"},production:{estimate:"Estimation production basée sur les données précédentes",pending:"Données de production en attente"},comparison:{title:"Aujourd'hui vs Hier",today:"Aujourd'hui",yesterday:"Hier",peak:"Pic : {value} W",evolution:"Évolution",difference:"Différence",entity_not_found:"Entité {entity} introuvable",available_attrs:"Attributs disponibles : {attrs}"},ecowatt:{only_med:"EcoWatt : uniquement disponible avec MyElectricalData",missing_today:"EcoWatt : entité J+0 non configurée ou introuvable",missing_j12:"EcoWatt : entité(s) J+1/J+2 non configurée(s) ou introuvable(s)",today:"J+0",tomorrow:"J+1",after_tomorrow:"J+2"},tempo:{only_med:"Tempo : uniquement disponible avec MyElectricalData",missing_j01:"Tempo : sensor(s) J0 et/ou J1 indisponible(s) ou incorrect(s)",missing_info:"Tempo : sensor « info » indisponible ou incorrect"},temporal:{monthly:"Mensuel",yearly:"Annuel",no_data:"Aucune donnée",months_count:"{count} mois",years_count:"{count} ans",current_month:"Mois actuel",previous_month:"Mois précédent",current_month_prev_year:"Mois actuel A-1",previous_month_prev_year:"Mois préc. A-1"}},editor:{section:{general:"Configuration générale",linky:"Entité Linky",ecowatt:"EcoWatt (RTE)",tempo:"Tempo (EDF)",display:"Affichage général",history:"Historique & données",price:"Prix & coûts",peak_offpeak:"Heures creuses / pleines",max_power:"Puissance maximale",insights:"Smart Insights & évolutions",ecowatt_tempo:"EcoWatt & Tempo",temporal:"Vues temporelles"},field:{entity:"Entité Linky (requis)",titleName:"Titre de la carte",kWhPrice:"Prix du kWh (€)",nbJoursAffichage:"Nombre de jours à afficher",showDayName:"Format des jours",ewEntity:"EcoWatt aujourd'hui",ewEntityJ1:"EcoWatt J+1",ewEntityJ2:"EcoWatt J+2",tempoEntityInfo:"Tempo informations",tempoEntityJ0:"Tempo aujourd'hui",tempoEntityJ1:"Tempo demain",tempoEntity:"Entité Tempo (couleurs par jour de l'historique)",detailedComparisonEntity:"Entité données détaillées",showIcon:"Afficher l'icône",showTitle:"Afficher le titre",showHeader:"Afficher l'en-tête",showError:"Afficher les erreurs",showInformation:"Afficher les informations",showHistory:"Afficher l'historique",showWeekSummary:"Afficher le résumé hebdo",showInTableUnit:"Afficher les unités",showTitleLign:"Afficher les titres de ligne",showPrice:"Afficher les prix",showDayPrice:"Afficher le prix par jour",showDayPriceHCHP:"Afficher les prix HC/HP",showPeakOffPeak:"Afficher le ratio HC/HP",showDayHCHP:"Afficher les jours HC/HP",showDayMaxPower:"Afficher la puissance max quotidienne",showSmartInsights:"Afficher les insights intelligents",showYearRatio:"Évolution annuelle",showCurrentMonthRatio:"Évolution mois courant",showMonthRatio:"Évolution mois précédent",showWeekRatio:"Évolution hebdomadaire",showYesterdayRatio:"Évolution quotidienne",showEcoWatt:"Afficher EcoWatt du jour",showEcoWattJ12:"Afficher EcoWatt J+1/J+2",showTempo:"Afficher Tempo",showTempoColor:"Couleurs Tempo du jour",showMonthlyView:"Vue mensuelle (repliable)",showYearlyView:"Vue annuelle (repliable)",showDetailedComparison:"Comparaison Aujourd'hui vs Hier"},day_name:{long:"Complet (Lundi)",short:"Abrégé (Lun)",narrow:"Minimal (L)"}}}},le="en";function ce(e,t){return t.split(".").reduce((e,t)=>e&&null!=e[t]?e[t]:void 0,e)}function de(e,t,o={}){const a=function(e){const t=String(e?.locale?.language||e?.language||le).toLowerCase().split("-")[0];return re[t]?t:le}(e),i=ce(re[a],t)??ce(re[le],t)??t;return"string"!=typeof i?t:i.replace(/\{(\w+)\}/g,(e,t)=>null!=o[t]?String(o[t]):`{${t}}`)}const pe=["entity","ewEntity","ewEntityJ1","ewEntityJ2","tempoEntity","tempoEntityInfo","tempoEntityJ0","tempoEntityJ1","detailedComparisonEntity"],he=new Map([["unknown","grey"],["Inconnu","grey"],["BLUE","blue"],["WHITE","white"],["RED","red"]]),ue={showHistory:!0,showHeader:!0,showPeakOffPeak:!0,showIcon:!1,showInTableUnit:!1,showDayPrice:!1,showDayPriceHCHP:!1,showDayMaxPower:!1,showDayHCHP:!1,showDayName:"long",showError:!0,showInformation:!0,showPrice:!0,showTitle:!1,showSmartInsights:!0,showYearRatio:!1,showCurrentMonthRatio:!0,showMonthRatio:!0,showWeekRatio:!1,showYesterdayRatio:!1,showTitleLign:!1,showEcoWatt:!1,showEcoWattJ12:!1,showTempo:!1,showTempoColor:!0,showWeekSummary:!0,showMonthlyView:!0,showYearlyView:!0,showDetailedComparison:!0,detailedComparisonEntity:"sensor.linky_consumption_last5day",tempoEntity:"sensor.rte_tempo_today",titleName:"LINKY",nbJoursAffichage:"7",kWhPrice:void 0},me=((e,...t)=>{const a=1===e.length?e[0]:t.reduce((t,o,a)=>t+(e=>{if(!0===e._$cssResult$)return e.cssText;if("number"==typeof e)return e;throw Error("Value passed to 'css' function must be a 'css' function result: "+e+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(o)+e[a+1],e[0]);return new i(a,e,o)})`
+const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,a=Symbol(),o=new WeakMap;let i=class{constructor(e,t,o){if(this._$cssResult$=!0,o!==a)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=e,this.t=t}get styleSheet(){let e=this.o;const a=this.t;if(t&&void 0===e){const t=void 0!==a&&1===a.length;t&&(e=o.get(a)),void 0===e&&((this.o=e=new CSSStyleSheet).replaceSync(this.cssText),t&&o.set(a,e))}return e}toString(){return this.cssText}};const n=t?e=>e:e=>e instanceof CSSStyleSheet?(e=>{let t="";for(const a of e.cssRules)t+=a.cssText;return(e=>new i("string"==typeof e?e:e+"",void 0,a))(t)})(e):e,{is:s,defineProperty:r,getOwnPropertyDescriptor:l,getOwnPropertyNames:c,getOwnPropertySymbols:p,getPrototypeOf:d}=Object,u=globalThis,h=u.trustedTypes,m=h?h.emptyScript:"",v=u.reactiveElementPolyfillSupport,y=(e,t)=>e,f={toAttribute(e,t){switch(t){case Boolean:e=e?m:null;break;case Object:case Array:e=null==e?e:JSON.stringify(e)}return e},fromAttribute(e,t){let a=e;switch(t){case Boolean:a=null!==e;break;case Number:a=null===e?null:Number(e);break;case Object:case Array:try{a=JSON.parse(e)}catch(e){a=null}}return a}},g=(e,t)=>!s(e,t),w={attribute:!0,type:String,converter:f,reflect:!1,useDefault:!1,hasChanged:g};Symbol.metadata??=Symbol("metadata"),u.litPropertyMetadata??=new WeakMap;let _=class extends HTMLElement{static addInitializer(e){this._$Ei(),(this.l??=[]).push(e)}static get observedAttributes(){return this.finalize(),this._$Eh&&[...this._$Eh.keys()]}static createProperty(e,t=w){if(t.state&&(t.attribute=!1),this._$Ei(),this.prototype.hasOwnProperty(e)&&((t=Object.create(t)).wrapped=!0),this.elementProperties.set(e,t),!t.noAccessor){const a=Symbol(),o=this.getPropertyDescriptor(e,a,t);void 0!==o&&r(this.prototype,e,o)}}static getPropertyDescriptor(e,t,a){const{get:o,set:i}=l(this.prototype,e)??{get(){return this[t]},set(e){this[t]=e}};return{get:o,set(t){const n=o?.call(this);i?.call(this,t),this.requestUpdate(e,n,a)},configurable:!0,enumerable:!0}}static getPropertyOptions(e){return this.elementProperties.get(e)??w}static _$Ei(){if(this.hasOwnProperty(y("elementProperties")))return;const e=d(this);e.finalize(),void 0!==e.l&&(this.l=[...e.l]),this.elementProperties=new Map(e.elementProperties)}static finalize(){if(this.hasOwnProperty(y("finalized")))return;if(this.finalized=!0,this._$Ei(),this.hasOwnProperty(y("properties"))){const e=this.properties,t=[...c(e),...p(e)];for(const a of t)this.createProperty(a,e[a])}const e=this[Symbol.metadata];if(null!==e){const t=litPropertyMetadata.get(e);if(void 0!==t)for(const[e,a]of t)this.elementProperties.set(e,a)}this._$Eh=new Map;for(const[e,t]of this.elementProperties){const a=this._$Eu(e,t);void 0!==a&&this._$Eh.set(a,e)}this.elementStyles=this.finalizeStyles(this.styles)}static finalizeStyles(e){const t=[];if(Array.isArray(e)){const a=new Set(e.flat(1/0).reverse());for(const e of a)t.unshift(n(e))}else void 0!==e&&t.push(n(e));return t}static _$Eu(e,t){const a=t.attribute;return!1===a?void 0:"string"==typeof a?a:"string"==typeof e?e.toLowerCase():void 0}constructor(){super(),this._$Ep=void 0,this.isUpdatePending=!1,this.hasUpdated=!1,this._$Em=null,this._$Ev()}_$Ev(){this._$ES=new Promise(e=>this.enableUpdating=e),this._$AL=new Map,this._$E_(),this.requestUpdate(),this.constructor.l?.forEach(e=>e(this))}addController(e){(this._$EO??=new Set).add(e),void 0!==this.renderRoot&&this.isConnected&&e.hostConnected?.()}removeController(e){this._$EO?.delete(e)}_$E_(){const e=new Map,t=this.constructor.elementProperties;for(const a of t.keys())this.hasOwnProperty(a)&&(e.set(a,this[a]),delete this[a]);e.size>0&&(this._$Ep=e)}createRenderRoot(){const a=this.shadowRoot??this.attachShadow(this.constructor.shadowRootOptions);return((a,o)=>{if(t)a.adoptedStyleSheets=o.map(e=>e instanceof CSSStyleSheet?e:e.styleSheet);else for(const t of o){const o=document.createElement("style"),i=e.litNonce;void 0!==i&&o.setAttribute("nonce",i),o.textContent=t.cssText,a.appendChild(o)}})(a,this.constructor.elementStyles),a}connectedCallback(){this.renderRoot??=this.createRenderRoot(),this.enableUpdating(!0),this._$EO?.forEach(e=>e.hostConnected?.())}enableUpdating(e){}disconnectedCallback(){this._$EO?.forEach(e=>e.hostDisconnected?.())}attributeChangedCallback(e,t,a){this._$AK(e,a)}_$ET(e,t){const a=this.constructor.elementProperties.get(e),o=this.constructor._$Eu(e,a);if(void 0!==o&&!0===a.reflect){const i=(void 0!==a.converter?.toAttribute?a.converter:f).toAttribute(t,a.type);this._$Em=e,null==i?this.removeAttribute(o):this.setAttribute(o,i),this._$Em=null}}_$AK(e,t){const a=this.constructor,o=a._$Eh.get(e);if(void 0!==o&&this._$Em!==o){const e=a.getPropertyOptions(o),i="function"==typeof e.converter?{fromAttribute:e.converter}:void 0!==e.converter?.fromAttribute?e.converter:f;this._$Em=o;const n=i.fromAttribute(t,e.type);this[o]=n??this._$Ej?.get(o)??n,this._$Em=null}}requestUpdate(e,t,a,o=!1,i){if(void 0!==e){const n=this.constructor;if(!1===o&&(i=this[e]),a??=n.getPropertyOptions(e),!((a.hasChanged??g)(i,t)||a.useDefault&&a.reflect&&i===this._$Ej?.get(e)&&!this.hasAttribute(n._$Eu(e,a))))return;this.C(e,t,a)}!1===this.isUpdatePending&&(this._$ES=this._$EP())}C(e,t,{useDefault:a,reflect:o,wrapped:i},n){a&&!(this._$Ej??=new Map).has(e)&&(this._$Ej.set(e,n??t??this[e]),!0!==i||void 0!==n)||(this._$AL.has(e)||(this.hasUpdated||a||(t=void 0),this._$AL.set(e,t)),!0===o&&this._$Em!==e&&(this._$Eq??=new Set).add(e))}async _$EP(){this.isUpdatePending=!0;try{await this._$ES}catch(e){Promise.reject(e)}const e=this.scheduleUpdate();return null!=e&&await e,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){if(!this.isUpdatePending)return;if(!this.hasUpdated){if(this.renderRoot??=this.createRenderRoot(),this._$Ep){for(const[e,t]of this._$Ep)this[e]=t;this._$Ep=void 0}const e=this.constructor.elementProperties;if(e.size>0)for(const[t,a]of e){const{wrapped:e}=a,o=this[t];!0!==e||this._$AL.has(t)||void 0===o||this.C(t,void 0,a,o)}}let e=!1;const t=this._$AL;try{e=this.shouldUpdate(t),e?(this.willUpdate(t),this._$EO?.forEach(e=>e.hostUpdate?.()),this.update(t)):this._$EM()}catch(t){throw e=!1,this._$EM(),t}e&&this._$AE(t)}willUpdate(e){}_$AE(e){this._$EO?.forEach(e=>e.hostUpdated?.()),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(e)),this.updated(e)}_$EM(){this._$AL=new Map,this.isUpdatePending=!1}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$ES}shouldUpdate(e){return!0}update(e){this._$Eq&&=this._$Eq.forEach(e=>this._$ET(e,this[e])),this._$EM()}updated(e){}firstUpdated(e){}};_.elementStyles=[],_.shadowRootOptions={mode:"open"},_[y("elementProperties")]=new Map,_[y("finalized")]=new Map,v?.({ReactiveElement:_}),(u.reactiveElementVersions??=[]).push("2.1.2");const b=globalThis,$=e=>e,k=b.trustedTypes,x=k?k.createPolicy("lit-html",{createHTML:e=>e}):void 0,E="$lit$",A=`lit$${Math.random().toFixed(9).slice(2)}$`,D="?"+A,P=`<${D}>`,S=document,C=()=>S.createComment(""),M=e=>null===e||"object"!=typeof e&&"function"!=typeof e,T=Array.isArray,H="[ \t\n\f\r]",N=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,W=/-->/g,F=/>/g,z=RegExp(`>|${H}(?:([^\\s"'>=/]+)(${H}*=${H}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),R=/'/g,L=/"/g,U=/^(?:script|style|textarea|title)$/i,O=(e=>(t,...a)=>({_$litType$:e,strings:t,values:a}))(1),Y=Symbol.for("lit-noChange"),I=Symbol.for("lit-nothing"),J=new WeakMap,j=S.createTreeWalker(S,129);function V(e,t){if(!T(e)||!e.hasOwnProperty("raw"))throw Error("invalid template strings array");return void 0!==x?x.createHTML(t):t}const q=(e,t)=>{const a=e.length-1,o=[];let i,n=2===t?"<svg>":3===t?"<math>":"",s=N;for(let t=0;t<a;t++){const a=e[t];let r,l,c=-1,p=0;for(;p<a.length&&(s.lastIndex=p,l=s.exec(a),null!==l);)p=s.lastIndex,s===N?"!--"===l[1]?s=W:void 0!==l[1]?s=F:void 0!==l[2]?(U.test(l[2])&&(i=RegExp("</"+l[2],"g")),s=z):void 0!==l[3]&&(s=z):s===z?">"===l[0]?(s=i??N,c=-1):void 0===l[1]?c=-2:(c=s.lastIndex-l[2].length,r=l[1],s=void 0===l[3]?z:'"'===l[3]?L:R):s===L||s===R?s=z:s===W||s===F?s=N:(s=z,i=void 0);const d=s===z&&e[t+1].startsWith("/>")?" ":"";n+=s===N?a+P:c>=0?(o.push(r),a.slice(0,c)+E+a.slice(c)+A+d):a+A+(-2===c?t:d)}return[V(e,n+(e[a]||"<?>")+(2===t?"</svg>":3===t?"</math>":"")),o]};class B{constructor({strings:e,_$litType$:t},a){let o;this.parts=[];let i=0,n=0;const s=e.length-1,r=this.parts,[l,c]=q(e,t);if(this.el=B.createElement(l,a),j.currentNode=this.el.content,2===t||3===t){const e=this.el.content.firstChild;e.replaceWith(...e.childNodes)}for(;null!==(o=j.nextNode())&&r.length<s;){if(1===o.nodeType){if(o.hasAttributes())for(const e of o.getAttributeNames())if(e.endsWith(E)){const t=c[n++],a=o.getAttribute(e).split(A),s=/([.?@])?(.*)/.exec(t);r.push({type:1,index:i,name:s[2],strings:a,ctor:"."===s[1]?Q:"?"===s[1]?ee:"@"===s[1]?te:X}),o.removeAttribute(e)}else e.startsWith(A)&&(r.push({type:6,index:i}),o.removeAttribute(e));if(U.test(o.tagName)){const e=o.textContent.split(A),t=e.length-1;if(t>0){o.textContent=k?k.emptyScript:"";for(let a=0;a<t;a++)o.append(e[a],C()),j.nextNode(),r.push({type:2,index:++i});o.append(e[t],C())}}}else if(8===o.nodeType)if(o.data===D)r.push({type:2,index:i});else{let e=-1;for(;-1!==(e=o.data.indexOf(A,e+1));)r.push({type:7,index:i}),e+=A.length-1}i++}}static createElement(e,t){const a=S.createElement("template");return a.innerHTML=e,a}}function G(e,t,a=e,o){if(t===Y)return t;let i=void 0!==o?a._$Co?.[o]:a._$Cl;const n=M(t)?void 0:t._$litDirective$;return i?.constructor!==n&&(i?._$AO?.(!1),void 0===n?i=void 0:(i=new n(e),i._$AT(e,a,o)),void 0!==o?(a._$Co??=[])[o]=i:a._$Cl=i),void 0!==i&&(t=G(e,i._$AS(e,t.values),i,o)),t}class K{constructor(e,t){this._$AV=[],this._$AN=void 0,this._$AD=e,this._$AM=t}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(e){const{el:{content:t},parts:a}=this._$AD,o=(e?.creationScope??S).importNode(t,!0);j.currentNode=o;let i=j.nextNode(),n=0,s=0,r=a[0];for(;void 0!==r;){if(n===r.index){let t;2===r.type?t=new Z(i,i.nextSibling,this,e):1===r.type?t=new r.ctor(i,r.name,r.strings,this,e):6===r.type&&(t=new ae(i,this,e)),this._$AV.push(t),r=a[++s]}n!==r?.index&&(i=j.nextNode(),n++)}return j.currentNode=S,o}p(e){let t=0;for(const a of this._$AV)void 0!==a&&(void 0!==a.strings?(a._$AI(e,a,t),t+=a.strings.length-2):a._$AI(e[t])),t++}}class Z{get _$AU(){return this._$AM?._$AU??this._$Cv}constructor(e,t,a,o){this.type=2,this._$AH=I,this._$AN=void 0,this._$AA=e,this._$AB=t,this._$AM=a,this.options=o,this._$Cv=o?.isConnected??!0}get parentNode(){let e=this._$AA.parentNode;const t=this._$AM;return void 0!==t&&11===e?.nodeType&&(e=t.parentNode),e}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(e,t=this){e=G(this,e,t),M(e)?e===I||null==e||""===e?(this._$AH!==I&&this._$AR(),this._$AH=I):e!==this._$AH&&e!==Y&&this._(e):void 0!==e._$litType$?this.$(e):void 0!==e.nodeType?this.T(e):(e=>T(e)||"function"==typeof e?.[Symbol.iterator])(e)?this.k(e):this._(e)}O(e){return this._$AA.parentNode.insertBefore(e,this._$AB)}T(e){this._$AH!==e&&(this._$AR(),this._$AH=this.O(e))}_(e){this._$AH!==I&&M(this._$AH)?this._$AA.nextSibling.data=e:this.T(S.createTextNode(e)),this._$AH=e}$(e){const{values:t,_$litType$:a}=e,o="number"==typeof a?this._$AC(e):(void 0===a.el&&(a.el=B.createElement(V(a.h,a.h[0]),this.options)),a);if(this._$AH?._$AD===o)this._$AH.p(t);else{const e=new K(o,this),a=e.u(this.options);e.p(t),this.T(a),this._$AH=e}}_$AC(e){let t=J.get(e.strings);return void 0===t&&J.set(e.strings,t=new B(e)),t}k(e){T(this._$AH)||(this._$AH=[],this._$AR());const t=this._$AH;let a,o=0;for(const i of e)o===t.length?t.push(a=new Z(this.O(C()),this.O(C()),this,this.options)):a=t[o],a._$AI(i),o++;o<t.length&&(this._$AR(a&&a._$AB.nextSibling,o),t.length=o)}_$AR(e=this._$AA.nextSibling,t){for(this._$AP?.(!1,!0,t);e!==this._$AB;){const t=$(e).nextSibling;$(e).remove(),e=t}}setConnected(e){void 0===this._$AM&&(this._$Cv=e,this._$AP?.(e))}}class X{get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}constructor(e,t,a,o,i){this.type=1,this._$AH=I,this._$AN=void 0,this.element=e,this.name=t,this._$AM=o,this.options=i,a.length>2||""!==a[0]||""!==a[1]?(this._$AH=Array(a.length-1).fill(new String),this.strings=a):this._$AH=I}_$AI(e,t=this,a,o){const i=this.strings;let n=!1;if(void 0===i)e=G(this,e,t,0),n=!M(e)||e!==this._$AH&&e!==Y,n&&(this._$AH=e);else{const o=e;let s,r;for(e=i[0],s=0;s<i.length-1;s++)r=G(this,o[a+s],t,s),r===Y&&(r=this._$AH[s]),n||=!M(r)||r!==this._$AH[s],r===I?e=I:e!==I&&(e+=(r??"")+i[s+1]),this._$AH[s]=r}n&&!o&&this.j(e)}j(e){e===I?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,e??"")}}class Q extends X{constructor(){super(...arguments),this.type=3}j(e){this.element[this.name]=e===I?void 0:e}}class ee extends X{constructor(){super(...arguments),this.type=4}j(e){this.element.toggleAttribute(this.name,!!e&&e!==I)}}class te extends X{constructor(e,t,a,o,i){super(e,t,a,o,i),this.type=5}_$AI(e,t=this){if((e=G(this,e,t,0)??I)===Y)return;const a=this._$AH,o=e===I&&a!==I||e.capture!==a.capture||e.once!==a.once||e.passive!==a.passive,i=e!==I&&(a===I||o);o&&this.element.removeEventListener(this.name,this,a),i&&this.element.addEventListener(this.name,this,e),this._$AH=e}handleEvent(e){"function"==typeof this._$AH?this._$AH.call(this.options?.host??this.element,e):this._$AH.handleEvent(e)}}class ae{constructor(e,t,a){this.element=e,this.type=6,this._$AN=void 0,this._$AM=t,this.options=a}get _$AU(){return this._$AM._$AU}_$AI(e){G(this,e)}}const oe=b.litHtmlPolyfillSupport;oe?.(B,Z),(b.litHtmlVersions??=[]).push("3.3.2");const ie=globalThis;class ne extends _{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0}createRenderRoot(){const e=super.createRenderRoot();return this.renderOptions.renderBefore??=e.firstChild,e}update(e){const t=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(e),this._$Do=((e,t,a)=>{const o=a?.renderBefore??t;let i=o._$litPart$;if(void 0===i){const e=a?.renderBefore??null;o._$litPart$=i=new Z(t.insertBefore(C(),e),e,void 0,a??{})}return i._$AI(e),i})(t,this.renderRoot,this.renderOptions)}connectedCallback(){super.connectedCallback(),this._$Do?.setConnected(!0)}disconnectedCallback(){super.disconnectedCallback(),this._$Do?.setConnected(!1)}render(){return Y}}ne._$litElement$=!0,ne.finalized=!0,ie.litElementHydrateSupport?.({LitElement:ne});const se=ie.litElementPolyfillSupport;se?.({LitElement:ne}),(ie.litElementVersions??=[]).push("4.2.2");const re={en:{card:{name:"Linky Card",description:"Card for the MyElectricalData integration — modern Linky data display with coloured trends",data_unavailable:"Linky: data unavailable for {entity}",current_week:"Current week",since:"since",previous_year:"vs {year}",previous_month:"vs {month}",current_month:"vs {month}",previous_week:"vs {week}",before_yesterday:"vs {date}",week_noun:"last week",day_before_noun:"day before",in_off_peak:"(off-peak)",in_peak:"(peak)",peak_pct:"% peak",daily_cost:"Daily cost",version_available:"New version available {version}",migrate_med:"Please migrate to MyElectricalData. EnedisGateway is no longer supported.",aria:{yearly_trend:"Yearly trend: {value}%",monthly_trend:"Monthly trend: {value}%",current_month_trend:"Current-month trend: {value}%",weekly_trend:"Weekly trend: {value}%",daily_trend:"Daily trend: {value}%"},tooltip:{year_prev:"Y-1: {value}",year:"Y: {value}",prev_month_prev_year:"Previous month Y-1: {value}",prev_month:"Previous month: {value}",month_prev_year:"Month Y-1: {value}",month:"Month: {value}",last_week:"Last week: {value}",this_week:"Current week: {value}",day_before_yesterday:"Day before yesterday: {value}",yesterday:"Yesterday: {value}"},insights:{monthly_prediction:"Monthly forecast",vs_last_week:"vs last week",vs_last_month:"vs last month",vs_last_year:"vs last year"},history:{data_unavailable:"Data unavailable",data_pending:"Data awaiting upload",tempo_day:"Tempo: {color} — Date: {date}",estimated:"Estimate based on previous days — kWh data unavailable",col_consumption:"Cons.",col_price:"Price",col_price_offpeak:"OP price",col_price_offpeak_mobile:"€ OP",col_price_peak:"P price",col_price_peak_mobile:"€ P",col_offpeak:"OP",col_peak:"P",col_max_power:"MP",col_max_power_time:"MP time"},production:{estimate:"Production estimate based on previous data",pending:"Production data awaiting upload"},comparison:{title:"Today vs yesterday",today:"Today",yesterday:"Yesterday",peak:"Peak: {value}W",evolution:"Trend",difference:"Difference",entity_not_found:"Entity {entity} not found",available_attrs:"Available attributes: {attrs}"},ecowatt:{only_med:"EcoWatt: only available with MyElectricalData",missing_today:"EcoWatt: today (D+0) entity not configured or not found",missing_j12:"EcoWatt: D+1/D+2 entity(ies) not configured or not found",today:"D+0",tomorrow:"D+1",after_tomorrow:"D+2"},tempo:{only_med:"Tempo: only available with MyElectricalData",missing_j01:"Tempo: J0 and/or J1 sensor(s) unavailable or invalid",missing_info:"Tempo: 'info' sensor unavailable or invalid"},temporal:{monthly:"Monthly",yearly:"Yearly",no_data:"No data",months_count:"{count} months",years_count:"{count} years",current_month:"Current month",previous_month:"Previous month",current_month_prev_year:"Current month Y-1",previous_month_prev_year:"Prev. month Y-1"}},editor:{section:{general:"General",linky:"Linky entity",ecowatt:"EcoWatt (RTE)",tempo:"Tempo (EDF)",display:"Display",history:"History & data",price:"Price & costs",peak_offpeak:"Peak / off-peak",max_power:"Max power",insights:"Smart insights & trends",ecowatt_tempo:"EcoWatt & Tempo",temporal:"Temporal views"},field:{entity:"Linky entity (required)",titleName:"Card title",kWhPrice:"kWh price (€)",nbJoursAffichage:"Days to display",showDayName:"Day name format",ewEntity:"EcoWatt today",ewEntityJ1:"EcoWatt D+1",ewEntityJ2:"EcoWatt D+2",tempoEntityInfo:"Tempo information",tempoEntityJ0:"Tempo today",tempoEntityJ1:"Tempo tomorrow",tempoEntity:"Tempo entity (per-day history colours)",detailedComparisonEntity:"Detailed comparison entity",showIcon:"Show icon",showTitle:"Show title",showHeader:"Show header",showError:"Show errors",showInformation:"Show information",showHistory:"Show history",showWeekSummary:"Show week summary",showInTableUnit:"Show units in table",showTitleLign:"Show row titles",showPrice:"Show prices",showDayPrice:"Show daily price",showDayPriceHCHP:"Show off-peak / peak prices",showPeakOffPeak:"Show off-peak / peak ratio",showDayHCHP:"Show off-peak / peak per day",showDayMaxPower:"Show daily max power",showSmartInsights:"Show smart insights",showYearRatio:"Yearly trend",showCurrentMonthRatio:"Current-month trend",showMonthRatio:"Previous-month trend",showWeekRatio:"Weekly trend",showYesterdayRatio:"Daily trend",showEcoWatt:"Show EcoWatt today",showEcoWattJ12:"Show EcoWatt D+1 / D+2",showTempo:"Show Tempo",showTempoColor:"Tempo colours per day",showMonthlyView:"Monthly view (collapsible)",showYearlyView:"Yearly view (collapsible)",showDetailedComparison:"Today vs yesterday comparison",appearance:"Appearance"},day_name:{long:"Full (Monday)",short:"Short (Mon)",narrow:"Minimal (M)"},appearance:{premium:"Premium (glass, motion)",minimal:"Minimal (plain)"}}},fr:{card:{name:"Carte Enedis",description:"Carte pour l'intégration MyElectricalData — affichage moderne des données Linky avec évolutions colorées",data_unavailable:"Linky : données inaccessibles pour {entity}",current_week:"Semaine en cours",since:"depuis",previous_year:"vs {year}",previous_month:"vs {month}",current_month:"vs {month}",previous_week:"vs {week}",before_yesterday:"vs {date}",week_noun:"semaine dernière",day_before_noun:"avant-hier",in_off_peak:"(en HC)",in_peak:"(en HP)",peak_pct:"% HP",daily_cost:"Coût journalier",version_available:"Nouvelle version disponible {version}",migrate_med:"Merci de migrer sur MyElectricalData. EnedisGateway n'est plus supporté.",aria:{yearly_trend:"Évolution annuelle : {value} %",monthly_trend:"Évolution mensuelle : {value} %",current_month_trend:"Évolution du mois courant : {value} %",weekly_trend:"Évolution hebdomadaire : {value} %",daily_trend:"Évolution quotidienne : {value} %"},tooltip:{year_prev:"A-1 : {value}",year:"A : {value}",prev_month_prev_year:"Mois précédent A-1 : {value}",prev_month:"Mois précédent : {value}",month_prev_year:"Mois A-1 : {value}",month:"Mois : {value}",last_week:"Semaine dernière : {value}",this_week:"Semaine courante : {value}",day_before_yesterday:"Avant-hier : {value}",yesterday:"Hier : {value}"},insights:{monthly_prediction:"Prédiction mensuelle",vs_last_week:"vs semaine dernière",vs_last_month:"vs mois dernier",vs_last_year:"vs année dernière"},history:{data_unavailable:"Donnée indisponible",data_pending:"Données en attente de remontée",tempo_day:"Tempo : {color} — Date : {date}",estimated:"Estimation basée sur les jours précédents — données kWh non disponibles",col_consumption:"Conso",col_price:"Prix",col_price_offpeak:"Prix HC",col_price_offpeak_mobile:"€ HC",col_price_peak:"Prix HP",col_price_peak_mobile:"€ HP",col_offpeak:"HC",col_peak:"HP",col_max_power:"MP",col_max_power_time:"MPtime"},production:{estimate:"Estimation production basée sur les données précédentes",pending:"Données de production en attente"},comparison:{title:"Aujourd'hui vs Hier",today:"Aujourd'hui",yesterday:"Hier",peak:"Pic : {value} W",evolution:"Évolution",difference:"Différence",entity_not_found:"Entité {entity} introuvable",available_attrs:"Attributs disponibles : {attrs}"},ecowatt:{only_med:"EcoWatt : uniquement disponible avec MyElectricalData",missing_today:"EcoWatt : entité J+0 non configurée ou introuvable",missing_j12:"EcoWatt : entité(s) J+1/J+2 non configurée(s) ou introuvable(s)",today:"J+0",tomorrow:"J+1",after_tomorrow:"J+2"},tempo:{only_med:"Tempo : uniquement disponible avec MyElectricalData",missing_j01:"Tempo : sensor(s) J0 et/ou J1 indisponible(s) ou incorrect(s)",missing_info:"Tempo : sensor « info » indisponible ou incorrect"},temporal:{monthly:"Mensuel",yearly:"Annuel",no_data:"Aucune donnée",months_count:"{count} mois",years_count:"{count} ans",current_month:"Mois actuel",previous_month:"Mois précédent",current_month_prev_year:"Mois actuel A-1",previous_month_prev_year:"Mois préc. A-1"}},editor:{section:{general:"Configuration générale",linky:"Entité Linky",ecowatt:"EcoWatt (RTE)",tempo:"Tempo (EDF)",display:"Affichage général",history:"Historique & données",price:"Prix & coûts",peak_offpeak:"Heures creuses / pleines",max_power:"Puissance maximale",insights:"Smart Insights & évolutions",ecowatt_tempo:"EcoWatt & Tempo",temporal:"Vues temporelles"},field:{entity:"Entité Linky (requis)",titleName:"Titre de la carte",kWhPrice:"Prix du kWh (€)",nbJoursAffichage:"Nombre de jours à afficher",showDayName:"Format des jours",ewEntity:"EcoWatt aujourd'hui",ewEntityJ1:"EcoWatt J+1",ewEntityJ2:"EcoWatt J+2",tempoEntityInfo:"Tempo informations",tempoEntityJ0:"Tempo aujourd'hui",tempoEntityJ1:"Tempo demain",tempoEntity:"Entité Tempo (couleurs par jour de l'historique)",detailedComparisonEntity:"Entité données détaillées",showIcon:"Afficher l'icône",showTitle:"Afficher le titre",showHeader:"Afficher l'en-tête",showError:"Afficher les erreurs",showInformation:"Afficher les informations",showHistory:"Afficher l'historique",showWeekSummary:"Afficher le résumé hebdo",showInTableUnit:"Afficher les unités",showTitleLign:"Afficher les titres de ligne",showPrice:"Afficher les prix",showDayPrice:"Afficher le prix par jour",showDayPriceHCHP:"Afficher les prix HC/HP",showPeakOffPeak:"Afficher le ratio HC/HP",showDayHCHP:"Afficher les jours HC/HP",showDayMaxPower:"Afficher la puissance max quotidienne",showSmartInsights:"Afficher les insights intelligents",showYearRatio:"Évolution annuelle",showCurrentMonthRatio:"Évolution mois courant",showMonthRatio:"Évolution mois précédent",showWeekRatio:"Évolution hebdomadaire",showYesterdayRatio:"Évolution quotidienne",showEcoWatt:"Afficher EcoWatt du jour",showEcoWattJ12:"Afficher EcoWatt J+1/J+2",showTempo:"Afficher Tempo",showTempoColor:"Couleurs Tempo du jour",showMonthlyView:"Vue mensuelle (repliable)",showYearlyView:"Vue annuelle (repliable)",showDetailedComparison:"Comparaison Aujourd'hui vs Hier",appearance:"Apparence"},day_name:{long:"Complet (Lundi)",short:"Abrégé (Lun)",narrow:"Minimal (L)"},appearance:{premium:"Premium (verre, animations)",minimal:"Minimal (sobre)"}}}},le="en";function ce(e,t){return t.split(".").reduce((e,t)=>e&&null!=e[t]?e[t]:void 0,e)}function pe(e,t,a={}){const o=function(e){const t=String(e?.locale?.language||e?.language||le).toLowerCase().split("-")[0];return re[t]?t:le}(e),i=ce(re[o],t)??ce(re[le],t)??t;return"string"!=typeof i?t:i.replace(/\{(\w+)\}/g,(e,t)=>null!=a[t]?String(a[t]):`{${t}}`)}const de=["entity","ewEntity","ewEntityJ1","ewEntityJ2","tempoEntity","tempoEntityInfo","tempoEntityJ0","tempoEntityJ1","detailedComparisonEntity"],ue=new Map([["unknown","grey"],["Inconnu","grey"],["BLUE","blue"],["WHITE","white"],["RED","red"]]),he={showHistory:!0,showHeader:!0,showPeakOffPeak:!0,showIcon:!1,showInTableUnit:!1,showDayPrice:!1,showDayPriceHCHP:!1,showDayMaxPower:!1,showDayHCHP:!1,showDayName:"long",showError:!0,showInformation:!0,showPrice:!0,showTitle:!1,showSmartInsights:!0,showYearRatio:!1,showCurrentMonthRatio:!0,showMonthRatio:!0,showWeekRatio:!1,showYesterdayRatio:!1,showTitleLign:!1,showEcoWatt:!1,showEcoWattJ12:!1,showTempo:!1,showTempoColor:!0,showWeekSummary:!0,showMonthlyView:!0,showYearlyView:!0,showDetailedComparison:!0,detailedComparisonEntity:"sensor.linky_consumption_last5day",tempoEntity:"sensor.rte_tempo_today",titleName:"LINKY",nbJoursAffichage:"7",kWhPrice:void 0},me=((e,...t)=>{const o=1===e.length?e[0]:t.reduce((t,a,o)=>t+(e=>{if(!0===e._$cssResult$)return e.cssText;if("number"==typeof e)return e;throw Error("Value passed to 'css' function must be a 'css' function result: "+e+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(a)+e[o+1],e[0]);return new i(o,e,a)})`
+  :host {
+    display: block;
+    container-type: inline-size;
+
+    /* Spacing — geometric scale */
+    --p-space-1: 4px;
+    --p-space-2: 8px;
+    --p-space-3: 12px;
+    --p-space-4: 16px;
+    --p-space-5: 20px;
+    --p-space-6: 24px;
+    --p-space-8: 32px;
+
+    /* Radius — Apple-rounded */
+    --p-radius-xs: 8px;
+    --p-radius-sm: 10px;
+    --p-radius-md: 14px;
+    --p-radius-lg: 18px;
+    --p-radius-xl: 24px;
+    --p-radius-full: 9999px;
+
+    /* Typography — system stack (no web fonts) */
+    --p-font:
+      -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, "Helvetica Neue", sans-serif;
+    --p-letter-tight: -0.022em;
+    --p-letter-normal: -0.011em;
+
+    /* Colours — all derived from the active HA theme */
+    --p-fg-1: var(--primary-text-color, #1c1c1e);
+    --p-fg-2: var(--secondary-text-color, #6b6b70);
+    --p-fg-3: var(--disabled-text-color, #9b9ba1);
+    --p-accent: var(--primary-color, #1976d2);
+    --p-surface: var(--ha-card-background, var(--card-background-color, #fff));
+    --p-surface-1: color-mix(in oklab, var(--p-surface) 96%, var(--p-fg-1));
+    --p-surface-2: color-mix(in oklab, var(--p-surface) 92%, var(--p-fg-1));
+    --p-divider: color-mix(in oklab, var(--p-fg-1) 12%, transparent);
+    --p-success: var(--success-color, var(--green-color, #2e9e5b));
+    --p-error: var(--error-color, var(--red-color, #e5484d));
+    --p-warning: var(--warning-color, #f5a623);
+    --p-accent-wash: color-mix(in oklab, var(--p-accent) 12%, var(--p-surface));
+    --p-accent-wash-2: color-mix(in oklab, var(--p-accent) 5%, var(--p-surface));
+
+    /* Multi-layer shadows (theme-adaptive tint) */
+    --p-elev-1:
+      0 1px 2px color-mix(in oklab, var(--p-fg-1) 6%, transparent),
+      0 1px 3px color-mix(in oklab, var(--p-fg-1) 5%, transparent);
+    --p-elev-2:
+      0 2px 6px color-mix(in oklab, var(--p-fg-1) 8%, transparent),
+      0 8px 24px color-mix(in oklab, var(--p-fg-1) 7%, transparent);
+    --p-elev-pressed: inset 0 1px 2px color-mix(in oklab, var(--p-fg-1) 10%, transparent);
+
+    /* Motion — spring physics */
+    --p-motion-fast: 150ms cubic-bezier(0.32, 0.72, 0, 1);
+    --p-motion-normal: 240ms cubic-bezier(0.32, 0.72, 0, 1);
+    --p-motion-spring: 480ms cubic-bezier(0.22, 1.2, 0.36, 1);
+
+    /* Liquid Glass */
+    --p-blur-glass: saturate(160%) blur(18px);
+    --p-glass-border: 1px solid color-mix(in oklab, var(--p-fg-1) 10%, transparent);
+  }
+
+  ha-card {
+    --ha-card-border-radius: var(--p-radius-xl);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
   .card {
     margin: auto;
-    padding: 1.5em 1em 1em 1em;
+    padding: var(--p-space-5) var(--p-space-4) var(--p-space-4);
     position: relative;
     cursor: pointer;
-    background: var(--ha-card-background, var(--card-background-color, var(--primary-background-color)));
-    border-radius: var(--ha-card-border-radius, 12px);
-    box-shadow: var(--ha-card-box-shadow, 0 4px 8px 0 rgba(0, 0, 0, 0.1));
-    transition: all 0.3s ease;
-  }
-
-  .card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--ha-card-box-shadow, 0 8px 16px 0 rgba(0, 0, 0, 0.15));
-  }
-
-  /* Desktop - masquer les titres mobiles */
-  .titre-mobile {
-    display: none;
-  }
-  .titre-desktop {
-    display: inline;
-  }
-
-  @media (max-width: 768px) {
-    .card {
-      padding: 2em 1em 1em 1em;
-    }
-    .main-title {
-      font-size: 1.8em;
-    }
-    .conso-hp,
-    .conso-hc {
-      font-size: 1.8em;
-    }
-    /* Titres colonnes plus petits sur tablette */
-    .day {
-      font-size: 0.9em;
-    }
-    /* Afficher titres mobiles sur tablette */
-    .titre-mobile {
-      display: inline;
-    }
-    .titre-desktop {
-      display: none;
-    }
-    /* Réduire la taille des textes de pourcentage */
-    .year,
-    .previous-month,
-    .current-month {
-      font-size: 0.7em !important;
-    }
-    .variations-linky {
-      font-size: 0.9em;
-    }
-    .percentage-value {
-      font-size: 1em;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .card {
-      padding: 2.2em 0.8em 1em 0.8em;
-    }
-    .main-title {
-      font-size: 1.6em;
-    }
-    .conso-hp,
-    .conso-hc {
-      font-size: 1.6em;
-    }
-    /* Titres colonnes encore plus petits sur mobile */
-    .day {
-      font-size: 0.8em;
-      line-height: 1.6;
-    }
-    /* S'assurer que les titres mobiles sont affichés */
-    .titre-mobile {
-      display: inline;
-    }
-    .titre-desktop {
-      display: none;
-    }
-    /* Ajuster les textes de pourcentage sur mobile */
-    .year,
-    .previous-month,
-    .current-month {
-      font-size: 0.75em !important;
-      white-space: nowrap;
-    }
-    .variations-linky {
-      font-size: 0.8em;
-    }
-    .percentage-value {
-      font-size: 0.9em;
-    }
-    /* Forcer le nowrap pour éviter les retours à la ligne */
-    .tooltip {
-      white-space: nowrap;
-    }
+    background: transparent;
+    color: var(--p-fg-1);
+    font-family: var(--p-font);
   }
 
   ha-card ul {
@@ -107,41 +82,54 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     margin: 0;
   }
 
+  /* ── Title ───────────────────────────────────────────────────────── */
   .main-title {
     margin: auto;
     text-align: center;
-    font-weight: 200;
-    font-size: 2em;
-    justify-content: space-between;
+    font-weight: 600;
+    font-size: 1.6em;
+    letter-spacing: var(--p-letter-tight);
+    color: var(--p-fg-1);
   }
+
+  /* ── Hero (consumption header) — subtle accent wash + glass edge ──── */
   .main-info {
     display: flex;
     overflow: visible;
     align-items: center;
     justify-content: space-between;
-    min-height: 75px;
-    padding: 1em;
-    background: linear-gradient(135deg, var(--primary-color, #1976d2), var(--accent-color, #03dac6));
-    border-radius: 12px;
-    margin-bottom: 1em;
-    color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    gap: var(--p-space-4);
+    min-height: 72px;
+    padding: var(--p-space-5);
+    background: linear-gradient(135deg, var(--p-accent-wash), var(--p-accent-wash-2));
+    border: var(--p-glass-border);
+    border-radius: var(--p-radius-lg);
+    margin-bottom: var(--p-space-4);
+    color: var(--p-fg-1);
+    box-shadow: var(--p-elev-1);
+  }
+
+  .icon-block {
+    display: flex;
+    align-items: center;
   }
 
   .ha-icon {
     margin-right: 5px;
-    color: var(--state-icon-color);
+    color: var(--p-accent);
   }
 
   .cout {
-    font-weight: 300;
-    font-size: clamp(2.5em, 5vw, 3.5em);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    font-size: clamp(2.2em, 5vw, 3.2em);
+    letter-spacing: var(--p-letter-tight);
+    font-variant-numeric: tabular-nums;
+    color: var(--p-fg-1);
   }
 
   .cout.estimated {
-    color: #ff6b6b !important;
-    font-style: italic !important;
+    color: var(--p-warning);
+    font-style: italic;
     position: relative;
   }
 
@@ -161,24 +149,33 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     top: 0.2em;
   }
 
+  .cout.pending {
+    color: var(--p-warning);
+    font-style: italic;
+  }
+
   .cout-unit {
-    font-weight: 300;
-    font-size: 1.2em;
+    font-weight: 400;
+    font-size: 1.1em;
     display: inline-block;
     white-space: nowrap;
+    color: var(--p-fg-2);
   }
 
   .conso-hp,
   .conso-hc {
-    font-weight: 200;
-    font-size: 2em;
+    font-weight: 600;
+    font-size: 1.9em;
+    letter-spacing: var(--p-letter-tight);
+    font-variant-numeric: tabular-nums;
   }
 
   .conso-unit-hc,
   .conso-unit-hp {
-    font-weight: 100;
+    font-weight: 400;
     font-size: 1em;
     white-space: nowrap;
+    color: var(--p-fg-2);
   }
 
   .more-unit {
@@ -186,32 +183,36 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     font-size: 0.8em;
   }
 
+  /* ── Variation tiles ─────────────────────────────────────────────── */
   .variations {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 0.5em;
+    gap: var(--p-space-2);
     overflow: hidden;
-    margin-bottom: 1em;
+    margin-bottom: var(--p-space-4);
   }
 
   .variations-linky {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-weight: 300;
+    font-weight: 500;
     margin: 0;
     overflow: hidden;
     text-align: center;
-    background: var(--ha-card-background, var(--card-background-color, white));
-    border-radius: 8px;
-    padding: 0.5em;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
+    background: var(--p-surface-1);
+    border: 1px solid var(--p-divider);
+    border-radius: var(--p-radius-md);
+    padding: var(--p-space-2);
+    box-shadow: var(--p-elev-1);
+    transition:
+      transform var(--p-motion-normal),
+      box-shadow var(--p-motion-normal);
   }
 
   .variations-linky:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    box-shadow: var(--p-elev-2);
   }
 
   .percentage-line {
@@ -223,63 +224,67 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
   }
 
   .percentage-line ha-icon {
-    transition: transform 0.3s ease;
+    transition: transform var(--p-motion-fast);
   }
 
   .variations-linky:hover .percentage-line ha-icon {
-    transform: scale(1.2);
+    transform: scale(1.15);
   }
 
   .percentage-value {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 1.1em;
+    font-variant-numeric: tabular-nums;
   }
 
   .variations-linky .percentage-value.percentage-positive {
-    color: var(--error-color, var(--red-color, #e74c3c));
+    color: var(--p-error);
   }
 
   .variations-linky .percentage-value.percentage-negative {
-    color: var(--success-color, var(--green-color, #27ae60));
+    color: var(--p-success);
   }
 
   .variations-linky .percentage-value.percentage-neutral {
-    color: var(--primary-text-color, var(--text-primary-color, #212121));
+    color: var(--p-fg-1);
   }
 
   .unit {
     font-size: 0.8em;
+    color: var(--p-fg-2);
   }
 
+  /* ── Weekly history table ────────────────────────────────────────── */
   .week-history {
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
-    background: var(--ha-card-background, var(--card-background-color, white));
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 0.5em;
+    background: var(--p-surface-1);
+    border: 1px solid var(--p-divider);
+    border-radius: var(--p-radius-lg);
+    box-shadow: var(--p-elev-1);
+    margin-top: var(--p-space-2);
     scroll-behavior: smooth;
   }
 
   .day {
     flex: auto;
     text-align: center;
-    border-right: 0.1em solid var(--divider-color);
+    border-right: 1px solid var(--p-divider);
     line-height: 2;
     box-sizing: border-box;
-    transition: all 0.2s ease;
-    padding: 0.5em 0.2em;
+    transition:
+      background var(--p-motion-fast),
+      color var(--p-motion-fast);
+    padding: var(--p-space-2);
   }
 
   .day:hover {
-    background: var(--primary-color, #1976d2);
-    color: white;
-    transform: scale(1.02);
+    background: var(--p-accent-wash);
   }
 
   .dayname {
-    font-weight: bold;
+    font-weight: 600;
     text-transform: capitalize;
   }
 
@@ -288,14 +293,14 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
   }
 
   .cons-val {
-    font-weight: 500;
+    font-weight: 600;
     white-space: nowrap;
-    transition: all 0.2s ease;
+    font-variant-numeric: tabular-nums;
   }
 
   .cons-val.estimated {
-    color: #ff6b6b !important;
-    font-style: italic !important;
+    color: var(--p-warning);
+    font-style: italic;
     position: relative;
   }
 
@@ -314,7 +319,8 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
   }
 
   .cons-val.pending {
-    animation: pulse 2s infinite;
+    color: var(--p-warning);
+    animation: pulse 1.8s cubic-bezier(0.32, 0.72, 0, 1) infinite;
   }
 
   @keyframes pulse {
@@ -322,42 +328,39 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       opacity: 1;
     }
     50% {
-      opacity: 0.6;
+      opacity: 0.55;
     }
     100% {
       opacity: 1;
     }
   }
 
-  .year {
-    font-size: 0.8em;
-    font-style: italic;
-    margin-left: 5px;
-  }
-  .previous-month {
-    font-size: 0.8em;
-    font-style: italic;
-    margin-left: 5px;
-  }
+  .year,
+  .previous-month,
   .current-month {
     font-size: 0.8em;
     font-style: italic;
     margin-left: 5px;
+    color: var(--p-fg-2);
   }
+
   .linky-icon.bigger {
     width: 6em;
     height: 5em;
     display: inline-block;
   }
+
   .error {
     font-size: 0.8em;
     font-weight: bold;
     margin-left: 5px;
   }
+
+  /* ── Tooltips ────────────────────────────────────────────────────── */
   .tooltip .tooltiptext {
     visibility: hidden;
-    background: var(--ha-card-background, var(--card-background-color, var(--primary-background-color)));
-    box-shadow: var(--ha-card-box-shadow, 0px 2px 1px -1px rgba(0, 0, 0, 0.2));
+    background: var(--p-surface);
+    box-shadow: var(--p-elev-2);
     cursor: default;
     font-size: 14px;
     opacity: 1;
@@ -367,11 +370,12 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     flex-direction: column;
     overflow: hidden;
     z-index: 12;
-    transition: 0.15s ease all;
-    padding: 5px;
-    border: 1px solid var(--divider-color, var(--outline-color, #e0e0e0));
-    border-radius: 3px;
+    transition: opacity var(--p-motion-fast);
+    padding: var(--p-space-2);
+    border: 1px solid var(--p-divider);
+    border-radius: var(--p-radius-sm);
   }
+
   .tooltip .tooltiptext::after {
     content: "";
     position: absolute;
@@ -380,24 +384,25 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: var(--divider-color, var(--outline-color, #555)) transparent transparent transparent;
+    border-color: var(--p-divider) transparent transparent transparent;
   }
+
   .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
   }
 
+  /* ── EcoWatt forecast bars (semantic colours) ────────────────────── */
   .flow-row {
     display: flex;
     flex-flow: row wrap;
   }
-  /* One Hour Forecast */
   .oneHour {
     height: 1em;
   }
   .oneHour > li {
-    background-color: var(--state-icon-color);
-    border-right: 1px solid var(--lovelace-background, var(--primary-background-color));
+    background-color: var(--p-fg-3);
+    border-right: 1px solid var(--p-surface);
   }
   .oneHour > li:first-child {
     border-top-left-radius: 5px;
@@ -408,7 +413,6 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     border-bottom-right-radius: 5px;
     border: 0;
   }
-  /* One Hour Labels */
   .ecowatt-00,
   .ecowatt-01,
   .ecowatt-02,
@@ -416,9 +420,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
   .ecowatt-04,
   .ecowatt-05,
   .ecowatt-06,
-  .ecowatt-07 {
-    flex: 2 1 0;
-  }
+  .ecowatt-07,
   .ecowatt-08,
   .ecowatt-09,
   .ecowatt-10,
@@ -426,9 +428,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
   .ecowatt-12,
   .ecowatt-13,
   .ecowatt-14,
-  .ecowatt-15 {
-    flex: 2 1 0;
-  }
+  .ecowatt-15,
   .ecowatt-16,
   .ecowatt-17,
   .ecowatt-18,
@@ -447,98 +447,44 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     flex: 1 1 0;
     text-align: left;
   }
-  /* One Hour Header */
   .oneHourHeader {
     justify-content: space-between;
   }
   .oneHourHeader li:last-child {
     text-align: right;
   }
-  .tempo-days {
-    width: 100%;
-    border-spacing: 2px;
-  }
-  .tempo-color {
-    width: 100%;
-    border-spacing: 2px;
-  }
+
+  /* ── Tempo (semantic EDF blue / white / red) ─────────────────────── */
+  .tempo-days,
+  .tempo-color,
   .tempoborder-color {
     width: 100%;
-    border-spacing: 2px;
+    border-spacing: 4px;
+  }
+  .tempo-blue,
+  .tempo-white,
+  .tempo-red,
+  .tempo-grey {
+    text-align: center;
+    text-transform: capitalize;
+    border-radius: var(--p-radius-sm);
+    font-variant-numeric: tabular-nums;
   }
   .tempo-blue {
-    color: white;
-    text-align: center;
-    background: var(--accent-color, var(--primary-color, #009dfa));
-    border: 2px solid var(--divider-color);
-    box-shadow: var(--ha-card-box-shadow, none);
-    text-transform: capitalize;
-  }
-  .tempoday-blue {
-    color: white !important;
-    background: var(--accent-color, var(--primary-color, #009dfa)) !important;
-    font-weight: bold;
-    text-align: center;
-    box-shadow: var(--ha-card-box-shadow, none);
-    text-transform: capitalize;
-    border-radius: 4px;
-    padding: 2px 4px;
-    margin: 1px;
+    color: #fff;
+    background: #2274d6;
   }
   .tempo-white {
-    color: var(--text-primary-color, var(--primary-text-color, #002654));
-    text-align: center;
-    background: white;
-    border: 2px solid var(--divider-color);
-    box-shadow: var(--ha-card-box-shadow, none);
-    text-transform: capitalize;
-  }
-  .tempoday-white {
-    color: #002654 !important;
-    background: white !important;
-    border: 1px solid #ccc !important;
-    font-weight: bold;
-    text-align: center;
-    text-transform: capitalize;
-    border-radius: 4px;
-    padding: 2px 4px;
-    margin: 1px;
-  }
-  .tempoday-grey {
-    color: white !important;
-    background: grey !important;
-    font-weight: bold;
-    text-align: center;
-    text-transform: capitalize;
-    border-radius: 4px;
-    padding: 2px 4px;
-    margin: 1px;
+    color: #1a2a4a;
+    background: #f4f6fb;
+    border: 1px solid var(--p-divider);
   }
   .tempo-red {
-    color: white;
-    text-align: center;
-    background: var(--error-color, var(--red-color, #ff2700));
-    border: 2px solid var(--divider-color);
-    box-shadow: var(--ha-card-box-shadow, none);
-    text-transform: capitalize;
-  }
-  .tempoday-red {
-    color: white !important;
-    background: var(--error-color, var(--red-color, #ff2700)) !important;
-    font-weight: bold;
-    text-align: center;
-    box-shadow: var(--ha-card-box-shadow, none);
-    text-transform: capitalize;
-    border-radius: 4px;
-    padding: 2px 4px;
-    margin: 1px;
+    color: #fff;
+    background: #e5342b;
   }
   .tempo-grey {
-    color: var(--text-primary-color, var(--primary-text-color, #002654));
-    text-align: center;
-    background: grey;
-    border: 2px solid var(--divider-color);
-    box-shadow: var(--ha-card-box-shadow, none);
+    color: #1a2a4a;
     background-image: linear-gradient(
       45deg,
       #d6d6d6 25%,
@@ -550,45 +496,88 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       #dedede 100%
     );
     background-size: 28.28px 28.28px;
-    text-transform: capitalize;
   }
 
-  /* Week Summary Card */
+  /* Wrapper for per-day tempo chips */
+  .tempo-day-wrapper {
+    display: inline-block;
+    width: 100%;
+  }
+  .tempo-day-wrapper .tempoday-blue,
+  .tempo-day-wrapper .tempoday-white,
+  .tempo-day-wrapper .tempoday-red,
+  .tempo-day-wrapper .tempoday-grey {
+    all: unset;
+    display: inline-block;
+    text-align: center;
+    font-weight: 600;
+    text-transform: capitalize;
+    border-radius: var(--p-radius-xs);
+    padding: 2px 6px;
+    margin: 1px;
+    box-sizing: border-box;
+  }
+  .tempo-day-wrapper .tempoday-blue {
+    color: #fff;
+    background: #2274d6;
+  }
+  .tempo-day-wrapper .tempoday-white {
+    color: #1a2a4a;
+    background: #f4f6fb;
+    border: 1px solid var(--p-divider);
+  }
+  .tempo-day-wrapper .tempoday-red {
+    color: #fff;
+    background: #e5342b;
+  }
+  .tempo-day-wrapper .tempoday-grey {
+    color: #fff;
+    background: #7d7d83;
+  }
+
+  /* ── Week summary hero — glass + seasonal accent ─────────────────── */
   .week-summary-card {
-    background: linear-gradient(135deg, var(--primary-color, #1976d2) 0%, var(--accent-color, #03dac6) 100%);
-    border-radius: 12px;
-    padding: 1em;
-    margin-bottom: 1em;
-    color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
+    position: relative;
+    background: linear-gradient(135deg, var(--p-accent-wash), var(--p-accent-wash-2));
+    border: var(--p-glass-border);
+    border-radius: var(--p-radius-lg);
+    padding: var(--p-space-4);
+    margin-bottom: var(--p-space-4);
+    color: var(--p-fg-1);
+    box-shadow: var(--p-elev-1);
+    backdrop-filter: var(--p-blur-glass);
+    -webkit-backdrop-filter: var(--p-blur-glass);
+    transition:
+      transform var(--p-motion-normal),
+      box-shadow var(--p-motion-normal);
   }
 
   .week-summary-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--p-elev-2);
   }
 
   .week-summary-header {
     display: flex;
     align-items: center;
-    gap: 0.5em;
-    margin-bottom: 0.5em;
+    gap: var(--p-space-2);
+    margin-bottom: var(--p-space-2);
   }
 
   .week-summary-icon {
     font-size: 1.2em;
-    opacity: 0.9;
+    color: var(--p-accent);
   }
 
   .week-summary-title {
-    font-weight: 500;
-    font-size: 1.1em;
+    font-weight: 600;
+    font-size: 1.05em;
+    letter-spacing: var(--p-letter-normal);
   }
 
   .week-summary-period {
-    font-size: 0.9em;
-    opacity: 0.8;
+    font-size: 0.85em;
+    color: var(--p-fg-2);
     margin-left: auto;
   }
 
@@ -596,68 +585,76 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1em;
+    gap: var(--p-space-4);
   }
 
   .week-summary-main {
     display: flex;
     align-items: baseline;
-    gap: 0.3em;
+    gap: var(--p-space-1);
   }
 
   .week-summary-value {
-    font-size: 2.5em;
-    font-weight: 300;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 2.4em;
+    font-weight: 600;
+    letter-spacing: var(--p-letter-tight);
+    font-variant-numeric: tabular-nums;
   }
 
   .week-summary-unit {
-    font-size: 1.2em;
-    opacity: 0.9;
+    font-size: 1.1em;
+    color: var(--p-fg-2);
   }
 
   .week-summary-cost {
     display: flex;
     align-items: baseline;
-    gap: 0.2em;
+    gap: var(--p-space-1);
     text-align: center;
   }
 
   .week-summary-cost-value {
-    font-size: 1.8em;
-    font-weight: 500;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-size: 1.7em;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
 
   .week-summary-cost-unit {
-    font-size: 1.2em;
-    opacity: 0.9;
+    font-size: 1.1em;
+    color: var(--p-fg-2);
     white-space: nowrap;
   }
 
-  /* Smart Insights */
+  /* ── Smart insights ──────────────────────────────────────────────── */
   .smart-insights {
-    margin-top: 1em;
+    margin-top: var(--p-space-4);
   }
 
   .insight-row {
     display: flex;
-    gap: 1.5em;
+    gap: var(--p-space-6);
     flex-wrap: wrap;
   }
 
   .insight-item {
     display: flex;
     align-items: center;
-    gap: 0.5em;
+    gap: var(--p-space-2);
     flex: 1;
     min-width: 140px;
   }
 
   .insight-icon {
     font-size: 1.1em;
-    opacity: 0.9;
+    color: var(--p-accent);
+  }
+
+  .insight-icon.trend-good {
+    color: var(--p-success);
+  }
+  .insight-icon.trend-bad {
+    color: var(--p-error);
   }
 
   .insight-content {
@@ -667,290 +664,122 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
 
   .insight-label {
     font-size: 0.7em;
-    opacity: 0.8;
+    color: var(--p-fg-2);
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
 
   .insight-value {
     font-size: 0.9em;
-    font-weight: 500;
+    font-weight: 600;
     margin-top: 2px;
+    font-variant-numeric: tabular-nums;
   }
 
-  /* Responsive improvements */
-  @media (max-width: 768px) {
-    .variations {
-      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-      gap: 0.3em;
-    }
-
-    .week-summary-value {
-      font-size: 2em;
-    }
-
-    .week-summary-cost-value {
-      font-size: 1.5em;
-    }
-
-    .week-summary-header {
-      flex-wrap: wrap;
-    }
-
-    .week-summary-period {
-      margin-left: 0;
-      order: 3;
-      flex: 100%;
-    }
-
-    .week-summary-content {
-      gap: 0.5em;
-    }
+  .insight-value.trend-good {
+    color: var(--p-success);
+  }
+  .insight-value.trend-bad {
+    color: var(--p-error);
   }
 
-  @media (max-width: 480px) {
-    .variations {
-      grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-      gap: 0.2em;
-    }
-
-    .week-summary-card {
-      padding: 0.8em;
-    }
-
-    .week-summary-value {
-      font-size: 1.8em;
-    }
-
-    .week-summary-cost-value {
-      font-size: 1.3em;
-    }
-
-    .week-summary-content {
-      flex-direction: row !important;
-      justify-content: space-between !important;
-      align-items: center !important;
-      gap: 0.5em;
-    }
-
-    .week-summary-cost {
-      margin-top: 0.2em;
-    }
-  }
-
-  /* Dark mode improvements */
-  @media (prefers-color-scheme: dark) {
-    .week-summary-card {
-      background: linear-gradient(135deg, var(--primary-color, #2196f3) 0%, var(--accent-color, #00bcd4) 100%);
-    }
-
-    .variations-linky {
-      background: var(--ha-card-background, var(--card-background-color, #1e1e1e));
-      border: 1px solid var(--divider-color, #333);
-    }
-
-    .week-history {
-      background: var(--ha-card-background, var(--card-background-color, #1e1e1e));
-      border: 1px solid var(--divider-color, #333);
-    }
-
-    .day:hover {
-      background: var(--primary-color, #2196f3);
-    }
-  }
-
-  /* Container queries for better responsive design */
-  @container (max-width: 400px) {
-    .variations {
-      grid-template-columns: 1fr;
-      gap: 0.2em;
-    }
-
-    .week-summary-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.2em;
-    }
-
-    .week-summary-period {
-      margin-left: 0;
-    }
-  }
-
-  /* Enhanced animations */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .week-summary-card,
-  .variations-linky,
-  .week-history {
-    animation: fadeInUp 0.3s ease-out;
-  }
-
-  .variations-linky:nth-child(2) {
-    animation-delay: 0.1s;
-  }
-  .variations-linky:nth-child(3) {
-    animation-delay: 0.2s;
-  }
-  .variations-linky:nth-child(4) {
-    animation-delay: 0.3s;
-  }
-  .variations-linky:nth-child(5) {
-    animation-delay: 0.4s;
-  }
-
-  /* Focus states for accessibility */
-  .variations-linky:focus,
-  .day:focus {
-    outline: 2px solid var(--accent-color, #03dac6);
-    outline-offset: 2px;
-  }
-
-  /* Wrapper for tempo day styling */
-  .tempo-day-wrapper {
-    display: inline-block;
-    width: 100%;
-  }
-
-  /* Force tempo colors to override any conflicting styles */
-  .tempo-day-wrapper .tempoday-blue,
-  .tempo-day-wrapper .tempoday-white,
-  .tempo-day-wrapper .tempoday-red,
-  .tempo-day-wrapper .tempoday-grey {
-    all: unset;
-    display: inline-block !important;
-    text-align: center !important;
-    font-weight: bold !important;
-    text-transform: capitalize !important;
-    border-radius: 4px !important;
-    padding: 2px 4px !important;
-    margin: 1px !important;
-    box-sizing: border-box !important;
-  }
-
-  .tempo-day-wrapper .tempoday-blue {
-    color: white !important;
-    background: #009dfa !important;
-  }
-
-  .tempo-day-wrapper .tempoday-white {
-    color: #002654 !important;
-    background: white !important;
-    border: 1px solid #ccc !important;
-  }
-
-  .tempo-day-wrapper .tempoday-red {
-    color: white !important;
-    background: #ff2700 !important;
-  }
-
-  .tempo-day-wrapper .tempoday-grey {
-    color: white !important;
-    background: #666 !important;
-  }
-
-  /* Collapsible sections styles */
+  /* ── Collapsible sections ────────────────────────────────────────── */
   .collapsible-section {
-    margin-top: 1em;
-    border-radius: 12px;
-    background: var(--ha-card-background, var(--card-background-color, white));
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: var(--p-space-4);
+    border-radius: var(--p-radius-lg);
+    background: var(--p-surface-1);
+    border: 1px solid var(--p-divider);
+    box-shadow: var(--p-elev-1);
     overflow: hidden;
   }
 
   .collapsible-header {
-    padding: 0.6em 1em;
+    padding: var(--p-space-3) var(--p-space-4);
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.5em;
-    background: var(--primary-color, #1976d2);
-    color: white;
-    transition: background-color 0.2s ease;
+    gap: var(--p-space-2);
+    background: var(--p-accent-wash);
+    color: var(--p-fg-1);
+    transition: background var(--p-motion-fast);
     user-select: none;
-    min-height: auto;
   }
 
   .collapsible-header:hover {
-    background: var(--primary-color-light, #2196f3);
+    background: color-mix(in oklab, var(--p-accent) 18%, var(--p-surface));
   }
 
   .collapsible-header ha-icon {
-    transition: transform 0.3s ease;
+    transition: transform var(--p-motion-normal);
+    color: var(--p-accent);
   }
 
   .section-title {
-    font-weight: bold;
+    font-weight: 600;
     font-size: 1em;
     flex-grow: 1;
+    letter-spacing: var(--p-letter-normal);
   }
 
   .section-summary {
     font-size: 0.8em;
-    opacity: 0.9;
+    color: var(--p-fg-2);
+    font-variant-numeric: tabular-nums;
   }
 
   .collapsible-content {
     overflow: hidden;
     transition:
-      max-height 0.3s ease-out,
-      padding 0.3s ease-out;
+      max-height var(--p-motion-normal),
+      padding var(--p-motion-normal);
   }
 
   .collapsible-content.collapsed {
     max-height: 0;
-    padding: 0 1em;
+    padding: 0 var(--p-space-4);
   }
 
   .collapsible-content.expanded {
     max-height: 1000px;
-    padding: 1em;
+    padding: var(--p-space-4);
   }
 
   .month-history,
   .year-history {
     display: grid;
-    gap: 0.5em;
+    gap: var(--p-space-2);
   }
 
   .month-item,
   .year-item {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 1em;
-    padding: 0.5em;
-    background: var(--secondary-background-color, #f5f5f5);
-    border-radius: 8px;
+    gap: var(--p-space-4);
+    padding: var(--p-space-2);
+    background: var(--p-surface-2);
+    border-radius: var(--p-radius-sm);
     align-items: center;
   }
 
   .month-name,
   .year-name {
-    font-weight: bold;
-    color: var(--primary-text-color, #333);
+    font-weight: 600;
+    color: var(--p-fg-1);
   }
 
   .month-value,
   .year-value {
     text-align: center;
     font-size: 1.1em;
-    color: var(--accent-color, #03dac6);
+    color: var(--p-fg-1);
+    font-variant-numeric: tabular-nums;
   }
 
   .month-cost,
   .year-cost {
     text-align: right;
-    font-weight: bold;
-    color: var(--primary-color, #1976d2);
+    font-weight: 600;
+    color: var(--p-accent);
   }
 
   .month-evolution,
@@ -960,73 +789,33 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
   }
 
   .evolution-percent {
-    font-weight: bold;
-    padding: 0.2em 0.4em;
-    border-radius: 4px;
+    font-weight: 600;
+    padding: 0.2em 0.5em;
+    border-radius: var(--p-radius-xs);
     font-size: 0.85em;
+    font-variant-numeric: tabular-nums;
   }
 
   .evolution-percent.positive {
-    color: #d32f2f;
-    background-color: rgba(211, 47, 47, 0.1);
+    color: var(--p-error);
+    background-color: color-mix(in oklab, var(--p-error) 12%, transparent);
   }
 
   .evolution-percent.negative {
-    color: #388e3c;
-    background-color: rgba(56, 142, 60, 0.1);
+    color: var(--p-success);
+    background-color: color-mix(in oklab, var(--p-success) 12%, transparent);
   }
 
-  @media (max-width: 768px) {
-    .month-item,
-    .year-item {
-      grid-template-columns: 1fr;
-      text-align: center;
-      gap: 0.3em;
-    }
-
-    .month-value,
-    .year-value,
-    .month-cost,
-    .year-cost {
-      text-align: center;
-    }
-
-    .collapsible-header {
-      padding: 0.5em 0.8em;
-      font-size: 0.9em;
-    }
-
-    .section-title {
-      font-size: 0.9em;
-    }
-
-    .section-summary {
-      font-size: 0.75em;
-    }
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .collapsible-section {
-      background: var(--ha-card-background, var(--card-background-color, #1e1e1e));
-      border: 1px solid var(--divider-color, #333);
-    }
-
-    .month-item,
-    .year-item {
-      background: var(--secondary-background-color, #2e2e2e);
-    }
-  }
-
-  /* Detailed comparison styles */
+  /* ── Detailed comparison ─────────────────────────────────────────── */
   .detailed-comparison {
-    padding: 1em 0;
+    padding: var(--p-space-4) 0;
   }
 
   .comparison-charts {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1em;
-    margin-bottom: 1em;
+    gap: var(--p-space-4);
+    margin-bottom: var(--p-space-4);
   }
 
   .chart-day {
@@ -1034,17 +823,18 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
   }
 
   .chart-day h4 {
-    margin: 0 0 0.5em 0;
+    margin: 0 0 var(--p-space-2) 0;
     font-size: 0.9em;
-    color: var(--primary-text-color, #333);
+    color: var(--p-fg-2);
+    font-weight: 600;
   }
 
   .mini-chart {
     height: 60px;
-    margin-bottom: 0.5em;
-    background: var(--secondary-background-color, #f5f5f5);
-    border-radius: 8px;
-    padding: 0.5em;
+    margin-bottom: var(--p-space-2);
+    background: var(--p-surface-2);
+    border-radius: var(--p-radius-sm);
+    padding: var(--p-space-2);
   }
 
   .consumption-chart {
@@ -1057,32 +847,33 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     flex-direction: column;
     gap: 0.2em;
     font-size: 0.8em;
+    font-variant-numeric: tabular-nums;
   }
 
   .day-stats .total {
-    font-weight: bold;
-    color: var(--primary-color, #1976d2);
+    font-weight: 600;
+    color: var(--p-fg-1);
   }
 
   .day-stats .peak {
-    color: var(--accent-color, #03dac6);
+    color: var(--p-fg-2);
   }
 
   .comparison-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1em;
-    padding-top: 1em;
-    border-top: 1px solid var(--divider-color, #ddd);
+    gap: var(--p-space-4);
+    padding-top: var(--p-space-4);
+    border-top: 1px solid var(--p-divider);
   }
 
   .stat-item {
     display: flex;
     align-items: center;
-    gap: 0.5em;
-    padding: 0.5em;
-    background: var(--secondary-background-color, #f5f5f5);
-    border-radius: 8px;
+    gap: var(--p-space-2);
+    padding: var(--p-space-2);
+    background: var(--p-surface-2);
+    border-radius: var(--p-radius-sm);
   }
 
   .stat-item ha-icon {
@@ -1093,80 +884,204 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
   .stat-item .label {
     flex-grow: 1;
     font-size: 0.9em;
-    color: var(--secondary-text-color, #666);
+    color: var(--p-fg-2);
   }
 
   .stat-item .value {
-    font-weight: bold;
+    font-weight: 600;
     font-size: 1em;
+    font-variant-numeric: tabular-nums;
   }
 
   .stat-item.evolution.increase {
-    border-left: 4px solid #f44336;
+    border-left: 3px solid var(--p-error);
   }
-
   .stat-item.evolution.increase .value {
-    color: #f44336;
+    color: var(--p-error);
   }
-
   .stat-item.evolution.decrease {
-    border-left: 4px solid #4caf50;
+    border-left: 3px solid var(--p-success);
   }
-
   .stat-item.evolution.decrease .value {
-    color: #4caf50;
+    color: var(--p-success);
   }
-
   .stat-item.evolution.stable {
-    border-left: 4px solid #9e9e9e;
+    border-left: 3px solid var(--p-fg-3);
   }
-
   .stat-item.evolution.stable .value {
-    color: #9e9e9e;
+    color: var(--p-fg-2);
   }
 
-  @media (max-width: 768px) {
-    .comparison-charts {
-      grid-template-columns: 1fr;
-      gap: 0.5em;
-    }
+  /* ── Messages ────────────────────────────────────────────────────── */
+  .error-msg,
+  .information-msg {
+    display: flex;
+    align-items: center;
+    gap: var(--p-space-2);
+    margin-top: var(--p-space-3);
+    padding: var(--p-space-2) var(--p-space-3);
+    border-radius: var(--p-radius-sm);
+    background: color-mix(in oklab, var(--p-error) 8%, transparent);
+    color: var(--p-error);
+    font-size: 0.9em;
+  }
 
+  #states .name {
+    display: flex;
+    align-items: center;
+    gap: var(--p-space-2);
+    color: var(--p-fg-2);
+  }
+
+  /* ── Skeleton (loading) ──────────────────────────────────────────── */
+  .skeleton {
+    background: linear-gradient(
+      100deg,
+      color-mix(in oklab, var(--p-fg-1) 6%, transparent) 30%,
+      color-mix(in oklab, var(--p-fg-1) 12%, transparent) 50%,
+      color-mix(in oklab, var(--p-fg-1) 6%, transparent) 70%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.4s linear infinite;
+    border-radius: var(--p-radius-sm);
+  }
+  @keyframes shimmer {
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  /* ── Focus states (accessibility) ────────────────────────────────── */
+  .variations-linky:focus-visible,
+  .day:focus-visible,
+  .collapsible-header:focus-visible {
+    outline: 2px solid var(--p-accent);
+    outline-offset: 3px;
+    border-radius: var(--p-radius-sm);
+  }
+
+  /* ── Responsive (container queries — the card knows its own width) ── */
+  .titre-mobile {
+    display: none;
+  }
+  .titre-desktop {
+    display: inline;
+  }
+
+  @container (max-width: 480px) {
+    .titre-mobile {
+      display: inline;
+    }
+    .titre-desktop {
+      display: none;
+    }
+    .main-title {
+      font-size: 1.4em;
+    }
+    .conso-hp,
+    .conso-hc {
+      font-size: 1.6em;
+    }
+    .day {
+      font-size: 0.85em;
+    }
+    .year,
+    .previous-month,
+    .current-month {
+      font-size: 0.72em;
+      white-space: nowrap;
+    }
+    .variations {
+      grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
+      gap: var(--p-space-1);
+    }
+    .variations-linky {
+      font-size: 0.85em;
+    }
+    .week-summary-value {
+      font-size: 1.9em;
+    }
+    .week-summary-cost-value {
+      font-size: 1.4em;
+    }
+    .comparison-charts,
     .comparison-stats {
       grid-template-columns: 1fr;
-      gap: 0.5em;
+      gap: var(--p-space-2);
+    }
+    .month-item,
+    .year-item {
+      grid-template-columns: 1fr;
+      text-align: center;
+      gap: 0.3em;
+    }
+    .month-value,
+    .year-value,
+    .month-cost,
+    .year-cost {
+      text-align: center;
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .mini-chart {
-      background: var(--secondary-background-color, #2e2e2e);
+  @container (min-width: 481px) and (max-width: 768px) {
+    .day {
+      font-size: 0.9em;
     }
-
-    .stat-item {
-      background: var(--secondary-background-color, #2e2e2e);
+    .variations {
+      grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
     }
   }
-`;function ye(e,t=1){const o=Number.parseFloat(e);return isNaN(o)?"–":o.toFixed(t)}function ve(e){return e?.locale?.language||"fr-FR"}function fe(e){const t=Number(e);return isNaN(t)?0:Math.round(t)}function ge(e){const t=e.getDay();return 0===t?6:t-1}function we(e,t,o){if(!e||!o)return 0;const a=o.toString().split(","),i=parseFloat(a[t-1]?.replace(",","."));if(isNaN(i)||i<=0)return 0;const n=[];for(let t=0;t<Math.min(e.length,a.length,7);t++){const o=parseFloat(e[t]),i=parseFloat(a[t]?.replace(",","."));!isNaN(o)&&!isNaN(i)&&o>0&&i>0&&-1!==o&&-1!==i&&n.push(o/i)}if(0===n.length)return 0;return i*(n.reduce((e,t)=>e+t,0)/n.length)}function _e(e,t){const o=[],a=e?.attributes?.forecast;if(!a)return o;for(const[e,i]of Object.entries(a)){if(void 0===e)continue;const a=e.replace("h","").replace("min","").trim();o.push([a,t.get(i),i])}return o}function be(e){return e.showIcon?O` <div class="icon-block">
+
+  /* ── Appearance: minimal (opt-out of glass + animation) ──────────── */
+  :host([data-appearance="minimal"]) .week-summary-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--p-surface-1);
+  }
+  :host([data-appearance="minimal"]) .main-info {
+    background: var(--p-surface-1);
+  }
+  :host([data-appearance="minimal"]) .cons-val.pending,
+  :host([data-appearance="minimal"]) .skeleton {
+    animation: none;
+  }
+
+  /* ── Reduced motion ──────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    :host {
+      --p-motion-fast: 1ms;
+      --p-motion-normal: 1ms;
+      --p-motion-spring: 1ms;
+    }
+    .cons-val.pending,
+    .skeleton {
+      animation: none;
+    }
+    * {
+      scroll-behavior: auto !important;
+    }
+  }
+`;function ve(e,t=1){const a=Number.parseFloat(e);return isNaN(a)?"–":a.toFixed(t)}function ye(e){return e?.locale?.language||"fr-FR"}function fe(e){const t=Number(e);return isNaN(t)?0:Math.round(t)}function ge(e){const t=e.getDay();return 0===t?6:t-1}function we(e,t,a){if(!e||!a)return 0;const o=a.toString().split(","),i=parseFloat(o[t-1]?.replace(",","."));if(isNaN(i)||i<=0)return 0;const n=[];for(let t=0;t<Math.min(e.length,o.length,7);t++){const a=parseFloat(e[t]),i=parseFloat(o[t]?.replace(",","."));!isNaN(a)&&!isNaN(i)&&a>0&&i>0&&-1!==a&&-1!==i&&n.push(a/i)}if(0===n.length)return 0;return i*(n.reduce((e,t)=>e+t,0)/n.length)}function _e(e,t){const a=[],o=e?.attributes?.forecast;if(!o)return a;for(const[e,i]of Object.entries(o)){if(void 0===e)continue;const o=e.replace("h","").replace("min","").trim();a.push([o,t.get(i),i])}return a}function be(e){return e.showIcon?O` <div class="icon-block">
       <span
         class="linky-icon bigger"
         style="background: none, url('/local/community/content-card-linky/icons/linky.svg') no-repeat; background-size: contain;"
       ></span>
-    </div>`:O``}function $e(e,t,o){return t.showPrice?O` <div class="cout-block">
-      <span class="cout" title="${de(e,"card.daily_cost")}">${ye(o.daily_cost,2)}</span
+    </div>`:O``}function $e(e,t,a){return t.showPrice?O` <div class="cout-block">
+      <span class="cout" title="${pe(e,"card.daily_cost")}">${ve(a.daily_cost,2)}</span
       ><span class="cout-unit"> €</span>
-    </div>`:O``}function ke(e){const t=new Date;return t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ve(e),{year:"numeric"})}function xe(e){const t=new Date;return t.setMonth(t.getMonth()-1),t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ve(e),{month:"long",year:"numeric"})}function Ee(e){const t=new Date;return t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ve(e),{month:"long",year:"numeric"})}function Ae(e,t,o,a=new Date){if(!t.showWeekSummary&&void 0!==t.showWeekSummary)return O``;const{daily:i,unit_of_measurement:n,dailyweek_cost:s}=o,r=function(e,t,o=new Date){if(!e)return 0;const a=ge(o);let i=0;for(let o=Math.min(a,e.length-1);o>=1;o--){const a=parseFloat(e[o]);if(!isNaN(a)&&-1!==a&&0!==a){i+=a;continue}if(!t)continue;const n=t.toString().split(","),s=parseFloat(n[o]?.replace(",","."));if(isNaN(s)||s<=0)continue;const r=[];for(let t=0;t<Math.min(e.length,n.length,7);t++){if(t===o)continue;const a=parseFloat(e[t]),i=parseFloat(n[t]?.replace(",","."));!isNaN(a)&&!isNaN(i)&&a>0&&i>0&&-1!==a&&-1!==i&&r.push(a/i)}if(0===r.length)continue;const l=r.reduce((e,t)=>e+t,0)/r.length,c=s*l;c>0&&(i+=c)}return i}(i,s,a),l=function(e,t=new Date){if(!e)return 0;const o=ge(t),a=e.toString().split(",");let i=0;for(let e=Math.min(o,a.length-1);e>=1;e--){const t=parseFloat(a[e].replace(",","."));isNaN(t)||-1===t||(i+=t)}return i}(s,a),c=new Date(a);c.setDate(a.getDate()-(0===a.getDay()?6:a.getDay()-1));const d=function(e,t=50){const o=e/t;return o<=.7?"linear-gradient(135deg, #4caf50 0%, #8bc34a 100%)":o<=1?"linear-gradient(135deg, #2196f3 0%, #03dac6 100%)":o<=1.3?"linear-gradient(135deg, #ff9800 0%, #ffc107 100%)":"linear-gradient(135deg, #f44336 0%, #e91e63 100%)"}(r,i.slice(0,7).reduce((e,t)=>e+parseFloat(t||0),0)/7*5),p=function(e=new Date){const t=e.getMonth();return t>=2&&t<=4?{primary:"#66bb6a",accent:"#81c784",icon:"mdi:flower"}:t>=5&&t<=7?{primary:"#42a5f5",accent:"#29b6f6",icon:"mdi:white-balance-sunny"}:t>=8&&t<=10?{primary:"#ff7043",accent:"#ffab40",icon:"mdi:leaf"}:{primary:"#5c6bc0",accent:"#7986cb",icon:"mdi:snowflake"}}(a);return O`
-    <div class="week-summary-card" style="background: ${d}">
+    </div>`:O``}function ke(e){const t=new Date;return t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ye(e),{year:"numeric"})}function xe(e){const t=new Date;return t.setMonth(t.getMonth()-1),t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ye(e),{month:"long",year:"numeric"})}function Ee(e){const t=new Date;return t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ye(e),{month:"long",year:"numeric"})}function Ae(e,t,a,o=new Date){if(!t.showWeekSummary&&void 0!==t.showWeekSummary)return O``;const{daily:i,unit_of_measurement:n,dailyweek_cost:s}=a,r=function(e,t,a=new Date){if(!e)return 0;const o=ge(a);let i=0;for(let a=Math.min(o,e.length-1);a>=1;a--){const o=parseFloat(e[a]);if(!isNaN(o)&&-1!==o&&0!==o){i+=o;continue}if(!t)continue;const n=t.toString().split(","),s=parseFloat(n[a]?.replace(",","."));if(isNaN(s)||s<=0)continue;const r=[];for(let t=0;t<Math.min(e.length,n.length,7);t++){if(t===a)continue;const o=parseFloat(e[t]),i=parseFloat(n[t]?.replace(",","."));!isNaN(o)&&!isNaN(i)&&o>0&&i>0&&-1!==o&&-1!==i&&r.push(o/i)}if(0===r.length)continue;const l=r.reduce((e,t)=>e+t,0)/r.length,c=s*l;c>0&&(i+=c)}return i}(i,s,o),l=function(e,t=new Date){if(!e)return 0;const a=ge(t),o=e.toString().split(",");let i=0;for(let e=Math.min(a,o.length-1);e>=1;e--){const t=parseFloat(o[e].replace(",","."));isNaN(t)||-1===t||(i+=t)}return i}(s,o),c=new Date(o);c.setDate(o.getDate()-(0===o.getDay()?6:o.getDay()-1));const p=function(e=new Date){const t=e.getMonth();return t>=2&&t<=4?{primary:"#66bb6a",accent:"#81c784",icon:"mdi:flower"}:t>=5&&t<=7?{primary:"#42a5f5",accent:"#29b6f6",icon:"mdi:white-balance-sunny"}:t>=8&&t<=10?{primary:"#ff7043",accent:"#ffab40",icon:"mdi:leaf"}:{primary:"#5c6bc0",accent:"#7986cb",icon:"mdi:snowflake"}}(o);return O`
+    <div class="week-summary-card">
       <div class="week-summary-header">
         <ha-icon icon="${p.icon}" class="week-summary-icon"></ha-icon>
-        <span class="week-summary-title">${de(e,"card.current_week")}</span>
+        <span class="week-summary-title">${pe(e,"card.current_week")}</span>
         <span class="week-summary-period"
-          >${de(e,"card.since")}
-          ${c.toLocaleDateString(ve(e),{day:"numeric",month:"short"})}</span
+          >${pe(e,"card.since")}
+          ${c.toLocaleDateString(ye(e),{day:"numeric",month:"short"})}</span
         >
       </div>
       <div class="week-summary-content">
         <div class="week-summary-main">
-          <span class="week-summary-value">${ye(r,1)}</span>
+          <span class="week-summary-value">${ve(r,1)}</span>
           <span class="week-summary-unit">${n}</span>
         </div>
         ${l>0?O`
@@ -1178,81 +1093,81 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       </div>
     </div>
   `}function De(e){return O`
-    <br /><span class="cons-val" title="${de(e,"card.history.data_unavailable")}"
+    <br /><span class="cons-val" title="${pe(e,"card.history.data_unavailable")}"
       ><ha-icon id="icon" icon="mdi:alert-outline"></ha-icon
     ></span>
-  `}function Se(e){return O`
-    <br /><span class="cons-val pending" title="${de(e,"card.history.data_pending")}"
-      ><ha-icon id="icon" icon="mdi:clock-outline" style="color: #ff9800;"></ha-icon
+  `}function Pe(e){return O`
+    <br /><span class="cons-val pending" title="${pe(e,"card.history.data_pending")}"
+      ><ha-icon id="icon" icon="mdi:clock-outline"></ha-icon
     ></span>
-  `}function Pe(e,t,o,a,i,n=new Date){if(o&&"undefined"!==o.toString()){const e=o.toString().split(",")[a-1];if(e&&"-1"!==e)return e.toLowerCase()}const s=function(e,t){const o=["sensor.rte_tempo_today","sensor.edf_tempo_today","sensor.tempo_today","sensor.rte_tempo_tomorrow","sensor.edf_tempo_tomorrow","sensor.tempo_tomorrow"],a={};for(const t of o)if(e.states[t]){const o=e.states[t];o.state&&he.has(o.state)&&(t.includes("today")?a.today=t:t.includes("tomorrow")&&(a.tomorrow=t))}if(t.tempoEntity&&e.states[t.tempoEntity]){const o=e.states[t.tempoEntity];o.state&&he.has(o.state)&&(a.today=t.tempoEntity)}return a}(e,t);if(i&&Object.keys(s).length>0){const t=new Date(i),o=new Date(n),a=new Date(n);if(a.setDate(o.getDate()+1),t.toDateString()===o.toDateString()&&s.today){const t=e.states[s.today];if(t&&t.state&&he.has(t.state))return he.get(t.state)}if(t.toDateString()===a.toDateString()&&s.tomorrow){const t=e.states[s.tomorrow];if(t&&t.state&&he.has(t.state))return he.get(t.state)}}return"grey"}function Ce(e,t,o,a){if(t.showDayPriceHCHP){const t=o.toString().split(",")[a-1];return"-1"===t?De(e):O` <br /><span class="cons-val">${ye(t,2)} €</span> `}}function Me(e,t,o,a,i){if(t.showDayHCHP){const n=o.toString().split(",")[a-1];return"-1"===n?De(e):O`
+  `}function Se(e,t,a,o,i,n=new Date){if(a&&"undefined"!==a.toString()){const e=a.toString().split(",")[o-1];if(e&&"-1"!==e)return e.toLowerCase()}const s=function(e,t){const a=["sensor.rte_tempo_today","sensor.edf_tempo_today","sensor.tempo_today","sensor.rte_tempo_tomorrow","sensor.edf_tempo_tomorrow","sensor.tempo_tomorrow"],o={};for(const t of a)if(e.states[t]){const a=e.states[t];a.state&&ue.has(a.state)&&(t.includes("today")?o.today=t:t.includes("tomorrow")&&(o.tomorrow=t))}if(t.tempoEntity&&e.states[t.tempoEntity]){const a=e.states[t.tempoEntity];a.state&&ue.has(a.state)&&(o.today=t.tempoEntity)}return o}(e,t);if(i&&Object.keys(s).length>0){const t=new Date(i),a=new Date(n),o=new Date(n);if(o.setDate(a.getDate()+1),t.toDateString()===a.toDateString()&&s.today){const t=e.states[s.today];if(t&&t.state&&ue.has(t.state))return ue.get(t.state)}if(t.toDateString()===o.toDateString()&&s.tomorrow){const t=e.states[s.tomorrow];if(t&&t.state&&ue.has(t.state))return ue.get(t.state)}}return"grey"}function Ce(e,t,a,o){if(t.showDayPriceHCHP){const t=a.toString().split(",")[o-1];return"-1"===t?De(e):O` <br /><span class="cons-val">${ve(t,2)} €</span> `}}function Me(e,t,a,o,i){if(t.showDayHCHP){const n=a.toString().split(",")[o-1];return"-1"===n?De(e):O`
       <br /><span class="cons-val"
-        >${ye(n,2)} ${t.showInTableUnit?O` ${i}`:O``}</span
+        >${ve(n,2)} ${t.showInTableUnit?O` ${i}`:O``}</span
       >
-    `}}function Te(e,t,o){return!0===e?O`<span class="titre-desktop">${t}</span><span class="titre-mobile">${o}</span><br /> `:O``}function He(e,t,o,a,i,n){const{unit_of_measurement:s}=i;return O`
+    `}}function Te(e,t,a){return!0===e?O`<span class="titre-desktop">${t}</span><span class="titre-mobile">${a}</span><br /> `:O``}function He(e,t,a,o,i,n){const{unit_of_measurement:s}=i;return O`
     <div class="day">
-      ${function(e,t,o,a,i,n){const s=o.toString().split(",")[i-1];let r="grey";return t.showTempoColor&&(r=Pe(e,t,a,i,s,n)),O`
+      ${function(e,t,a,o,i,n){const s=a.toString().split(",")[i-1];let r="grey";return t.showTempoColor&&(r=Se(e,t,o,i,s,n)),O`
     <span class="tempo-day-wrapper">
       <span
         class="tempoday-${r}"
         style="display: inline-block;"
-        title="${de(e,"card.history.tempo_day",{color:r,date:s})}"
-        >${new Date(s).toLocaleDateString(ve(e),{weekday:t.showDayName})}</span
+        title="${pe(e,"card.history.tempo_day",{color:r,date:s})}"
+        >${new Date(s).toLocaleDateString(ye(e),{weekday:t.showDayName})}</span
       >
     </span>
-  `}(e,t,i.dailyweek,i.dailyweek_Tempo,a,n)}
-      ${function(e,t,o,a,i,n){if(-1===o||0===o||"0"===o||null==o){if(!n)return Se(e);{const o=n.toString().split(",")[a-1];if(o&&"-1"!==o&&parseFloat(o.replace(",","."))>0){const o=we(e.states[t.entity].attributes.daily,a,n);if(o>0)return O`
-            <br /><span class="cons-val estimated" title="${de(e,"card.history.estimated")}"
-              >${ye(o)} ${t.showInTableUnit?O` ${i}`:O``}</span
+  `}(e,t,i.dailyweek,i.dailyweek_Tempo,o,n)}
+      ${function(e,t,a,o,i,n){if(-1===a||0===a||"0"===a||null==a){if(!n)return Pe(e);{const a=n.toString().split(",")[o-1];if(a&&"-1"!==a&&parseFloat(a.replace(",","."))>0){const a=we(e.states[t.entity].attributes.daily,o,n);if(a>0)return O`
+            <br /><span class="cons-val estimated" title="${pe(e,"card.history.estimated")}"
+              >${ve(a)} ${t.showInTableUnit?O` ${i}`:O``}</span
             >
-          `}else if(!o||"-1"===o)return Se(e)}return De(e)}return O`
+          `}else if(!a||"-1"===a)return Pe(e)}return De(e)}return O`
     <br /><span class="cons-val"
-      >${ye(o)} ${t.showInTableUnit?O` ${i}`:O``}</span
+      >${ve(a)} ${t.showInTableUnit?O` ${i}`:O``}</span
     >
-  `}(e,t,o,a,s,i.dailyweek_cost)}
-      ${function(e,t,o,a){if(t.showDayPrice){const t=o.toString().split(",")[a-1];return"-1"===t?De(e):O` <br /><span class="cons-val">${ye(t,2)} €</span> `}if(t.kWhPrice)return O` <br /><span class="cons-val">${ye(o*t.kWhPrice,2)} €</span> `}(e,t,i.dailyweek_cost,a)}
-      ${Ce(e,t,i.dailyweek_costHC,a)}
-      ${Ce(e,t,i.dailyweek_costHP,a)}
-      ${Me(e,t,i.dailyweek_HC,a,s)}
-      ${Me(e,t,i.dailyweek_HP,a,s)}
-      ${function(e,t,o,a,i,n){if(t.showDayMaxPower){const t=o.toString().split(",")[a-1],s=i.toString().split(",")[a-1];if("-1"===t)return De(e);const r=new Date(n.toString().split(",")[a-1]).toLocaleTimeString(ve(e),{hour:"2-digit",minute:"2-digit"});return"true"===s?O`
-        <br /><span class="cons-val" style="color:red">${ye(t,2)}</span> <br /><span
+  `}(e,t,a,o,s,i.dailyweek_cost)}
+      ${function(e,t,a,o){if(t.showDayPrice){const t=a.toString().split(",")[o-1];return"-1"===t?De(e):O` <br /><span class="cons-val">${ve(t,2)} €</span> `}if(t.kWhPrice)return O` <br /><span class="cons-val">${ve(a*t.kWhPrice,2)} €</span> `}(e,t,i.dailyweek_cost,o)}
+      ${Ce(e,t,i.dailyweek_costHC,o)}
+      ${Ce(e,t,i.dailyweek_costHP,o)}
+      ${Me(e,t,i.dailyweek_HC,o,s)}
+      ${Me(e,t,i.dailyweek_HP,o,s)}
+      ${function(e,t,a,o,i,n){if(t.showDayMaxPower){const t=a.toString().split(",")[o-1],s=i.toString().split(",")[o-1];if("-1"===t)return De(e);const r=new Date(n.toString().split(",")[o-1]).toLocaleTimeString(ye(e),{hour:"2-digit",minute:"2-digit"});return"true"===s?O`
+        <br /><span class="cons-val" style="color: var(--error-color, red)">${ve(t,2)}</span> <br /><span
           class="cons-val"
-          style="color:red"
+          style="color: var(--error-color, red)"
           >${r}</span
         >
       `:O`
-      <br /><span class="cons-val">${ye(t,2)}</span> <br /><span class="cons-val">${r}</span>
-    `}}(e,t,i.dailyweek_MP,a,i.dailyweek_MP_over,i.dailyweek_MP_time)}
+      <br /><span class="cons-val">${ve(t,2)}</span> <br /><span class="cons-val">${r}</span>
+    `}}(e,t,i.dailyweek_MP,o,i.dailyweek_MP_over,i.dailyweek_MP_time)}
     </div>
-  `}function Ne(e,t,o,a=new Date){if(!0!==t.showHistory)return;const{daily:i,dailyweek:n}=o;if(void 0===n)return;let s=n.toString().split(",").length;return t.nbJoursAffichage<=s&&(s=t.nbJoursAffichage),O`
-    ${Ae(e,t,o,a)}
+  `}function Ne(e,t,a,o=new Date){if(!0!==t.showHistory)return;const{daily:i,dailyweek:n}=a;if(void 0===n)return;let s=n.toString().split(",").length;return Number(t.nbJoursAffichage)<=s&&(s=Number(t.nbJoursAffichage)),O`
+    ${Ae(e,t,a,o)}
     <div class="week-history">
-      ${function(e,t){if(!0===t.showTitleLign){const o=t=>de(e,`card.history.${t}`);return O`
+      ${function(e,t){if(!0===t.showTitleLign){const a=t=>pe(e,`card.history.${t}`);return O`
       <div class="day">
-        ${Te(!0,"","")} ${Te(!0,o("col_consumption"),o("col_consumption"))}
-        ${Te(t.showDayPrice,o("col_price"),o("col_price"))}
-        ${Te(t.showDayPriceHCHP,o("col_price_offpeak"),o("col_price_offpeak_mobile"))}
-        ${Te(t.showDayPriceHCHP,o("col_price_peak"),o("col_price_peak_mobile"))}
-        ${Te(t.showDayHCHP,o("col_offpeak"),o("col_offpeak"))}
-        ${Te(t.showDayHCHP,o("col_peak"),o("col_peak"))}
-        ${Te(t.showDayMaxPower,o("col_max_power"),o("col_max_power"))}
-        ${Te(t.showDayMaxPowerTime,o("col_max_power_time"),o("col_max_power_time"))}
+        ${Te(!0,"","")} ${Te(!0,a("col_consumption"),a("col_consumption"))}
+        ${Te(t.showDayPrice,a("col_price"),a("col_price"))}
+        ${Te(t.showDayPriceHCHP,a("col_price_offpeak"),a("col_price_offpeak_mobile"))}
+        ${Te(t.showDayPriceHCHP,a("col_price_peak"),a("col_price_peak_mobile"))}
+        ${Te(t.showDayHCHP,a("col_offpeak"),a("col_offpeak"))}
+        ${Te(t.showDayHCHP,a("col_peak"),a("col_peak"))}
+        ${Te(t.showDayMaxPower,a("col_max_power"),a("col_max_power"))}
+        ${Te(t.showDayMaxPowerTime,a("col_max_power_time"),a("col_max_power_time"))}
       </div>
     `}}(e,t)}
-      ${i.slice(-s).map((n,r)=>{const l=i.length-s+r+1;return He(e,t,n,l,o,a)}).reverse()}
+      ${i.slice(-s).map((n,r)=>{const l=i.length-s+r+1;return He(e,t,n,l,a,o)}).reverse()}
     </div>
-  `}function ze(e){return t=>{"Enter"!==t.key&&" "!==t.key||e(t)}}function We(e,t){if(!0===e.showError&&""!==t)return O`
+  `}function We(e){return t=>{"Enter"!==t.key&&" "!==t.key||(t.preventDefault?.(),e(t))}}function Fe(e,t){if(!0===e.showError&&""!==t)return O`
         <div class="error-msg" style="color: var(--error-color, red)">
           <ha-icon id="icon" icon="mdi:alert-outline"></ha-icon>
           ${t}
         </div>
-      `}const Fe=new Map([["Pas de valeur","green"],[1,"green"],[2,"yellow"],[3,"red"]]);function Re(e,t){return O`
+      `}const ze=new Map([["Pas de valeur","green"],[1,"green"],[2,"yellow"],[3,"red"]]);function Re(e,t){return O`
     <tr style="line-height:80%">
       <td style="width:5%">${e}</td>
       <td style="width:95%">
         <ul class="flow-row oneHour">
-          ${_e(t,Fe).map(e=>O`<li
+          ${_e(t,ze).map(e=>O`<li
                 class="ecowatt-${e[0]}"
                 style="background: ${e[1]}"
                 title="${e[1]} - ${e[0]}"
@@ -1260,80 +1175,80 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         </ul>
       </td>
     </tr>
-  `}const Le=new Map([["unknown","grey"],["Inconnu","grey"],["BLUE","blue"],["WHITE","white"],["RED","red"]]);function Ue(e){const t=new Date(e.attributes.date),o=e.state;return[t,Le.get(o),o]}function Oe(e,t,o){if(!e||e.length<=1||0===t)return O`<svg viewBox="0 0 100 50" class="consumption-chart"></svg>`;const a=e.map((o,a)=>`${a/(e.length-1)*100},${100-o.consumption/t*100}`).join(" ");return O`
+  `}const Le=new Map([["unknown","grey"],["Inconnu","grey"],["BLUE","blue"],["WHITE","white"],["RED","red"]]);function Ue(e){const t=new Date(e.attributes.date),a=e.state;return[t,Le.get(a),a]}function Oe(e,t,a){if(!e||e.length<=1||0===t)return O`<svg viewBox="0 0 100 50" class="consumption-chart"></svg>`;const o=e.map((a,o)=>`${o/(e.length-1)*100},${100-a.consumption/t*100}`).join(" ");return O`
     <svg viewBox="0 0 100 50" class="consumption-chart">
-      <polyline points="${a}" fill="none" stroke="${o}" stroke-width="2" />
+      <polyline points="${o}" fill="none" stroke="${a}" stroke-width="2" />
     </svg>
-  `}function Ye(e,t,o,a,i){if(!t.showDetailedComparison)return O``;if(!t.detailedComparisonEntity)return O``;const n=e.states[t.detailedComparisonEntity];if(!n)return O`
+  `}function Ye(e,t,a,o,i){if(!t.showDetailedComparison)return O``;if(!t.detailedComparisonEntity)return O``;const n=e.states[t.detailedComparisonEntity];if(!n)return O`
       <div class="collapsible-section">
         <div class="collapsible-header">
-          <span class="section-title">${de(e,"card.comparison.title")}</span>
+          <span class="section-title">${pe(e,"card.comparison.title")}</span>
           <span class="section-summary"
-            >${de(e,"card.comparison.entity_not_found",{entity:t.detailedComparisonEntity})}</span
+            >${pe(e,"card.comparison.entity_not_found",{entity:t.detailedComparisonEntity})}</span
           >
         </div>
       </div>
-    `;const s=n.attributes;let r;if(Array.isArray(s.time)&&Array.isArray(s.consumption))r=function(e,t,o=new Date){const a=new Date(o.getFullYear(),o.getMonth(),o.getDate()),i=new Date(a.getTime()-864e5),n=[],s=[];if(!Array.isArray(e)||!Array.isArray(t))return{today:n,yesterday:s,todayTotal:0,yesterdayTotal:0,evolution:0};for(let o=0;o<e.length;o++){const r=e[o];if(null==r)continue;const l="string"==typeof r?r.replace(" ","T"):r,c=new Date(l);if(isNaN(c.getTime()))continue;const d=parseFloat(t[o]);if(isNaN(d))continue;const p=new Date(c.getFullYear(),c.getMonth(),c.getDate());p.getTime()===a.getTime()?n.push({time:c,consumption:d}):p.getTime()===i.getTime()&&s.push({time:c,consumption:d})}const r=n.reduce((e,t)=>e+t.consumption,0)/1e3,l=s.reduce((e,t)=>e+t.consumption,0)/1e3;return{today:n,yesterday:s,todayTotal:r,yesterdayTotal:l,evolution:r>0&&0!==l?(r-l)/l*100:0}}(s.time,s.consumption);else{if(!s.Daily||!s.Dailyweek){const t=Object.keys(s).join(", ");return O`
+    `;const s=n.attributes;let r;if(Array.isArray(s.time)&&Array.isArray(s.consumption))r=function(e,t,a=new Date){const o=new Date(a.getFullYear(),a.getMonth(),a.getDate()),i=new Date(o.getTime()-864e5),n=[],s=[];if(!Array.isArray(e)||!Array.isArray(t))return{today:n,yesterday:s,todayTotal:0,yesterdayTotal:0,evolution:0};for(let a=0;a<e.length;a++){const r=e[a];if(null==r)continue;const l="string"==typeof r?r.replace(" ","T"):r,c=new Date(l);if(isNaN(c.getTime()))continue;const p=parseFloat(t[a]);if(isNaN(p))continue;const d=new Date(c.getFullYear(),c.getMonth(),c.getDate());d.getTime()===o.getTime()?n.push({time:c,consumption:p}):d.getTime()===i.getTime()&&s.push({time:c,consumption:p})}const r=n.reduce((e,t)=>e+t.consumption,0)/1e3,l=s.reduce((e,t)=>e+t.consumption,0)/1e3;return{today:n,yesterday:s,todayTotal:r,yesterdayTotal:l,evolution:r>0&&0!==l?(r-l)/l*100:0}}(s.time,s.consumption);else{if(!s.Daily||!s.Dailyweek){const t=Object.keys(s).join(", ");return O`
       <div class="collapsible-section">
         <div class="collapsible-header">
-          <span class="section-title">${de(e,"card.comparison.title")}</span>
+          <span class="section-title">${pe(e,"card.comparison.title")}</span>
           <span class="section-summary"
-            >${de(e,"card.comparison.available_attrs",{attrs:t})}</span
+            >${pe(e,"card.comparison.available_attrs",{attrs:t})}</span
           >
         </div>
       </div>
-    `}r=function({Daily:e,Dailyweek:t},o=new Date){const a=e.split(",").map(e=>parseFloat(e.trim().replace(",","."))),i=t.split(",").map(e=>{const[t,a]=e.trim().split("/");return new Date(o.getFullYear(),parseInt(a,10)-1,parseInt(t,10))}),n=new Date(o.getFullYear(),o.getMonth(),o.getDate()),s=new Date(n.getTime()-864e5),r=[],l=[];i.forEach((e,t)=>{const o=a[t]||0,i=new Date(e.getFullYear(),e.getMonth(),e.getDate());i.getTime()===n.getTime()?r.push({time:e,consumption:o}):i.getTime()===s.getTime()&&l.push({time:e,consumption:o})});const c=r.reduce((e,t)=>e+t.consumption,0)/1e3,d=l.reduce((e,t)=>e+t.consumption,0)/1e3;return{today:r,yesterday:l,todayTotal:c,yesterdayTotal:d,evolution:c>0&&0!==d?(c-d)/d*100:0}}({Daily:s.Daily,Dailyweek:s.Dailyweek})}return O`
+    `}r=function({Daily:e,Dailyweek:t},a=new Date){const o=e.split(",").map(e=>parseFloat(e.trim().replace(",","."))),i=t.split(",").map(e=>{const[t,o]=e.trim().split("/");return new Date(a.getFullYear(),parseInt(o,10)-1,parseInt(t,10))}),n=new Date(a.getFullYear(),a.getMonth(),a.getDate()),s=new Date(n.getTime()-864e5),r=[],l=[];i.forEach((e,t)=>{const a=o[t]||0,i=new Date(e.getFullYear(),e.getMonth(),e.getDate());i.getTime()===n.getTime()?r.push({time:e,consumption:a}):i.getTime()===s.getTime()&&l.push({time:e,consumption:a})});const c=r.reduce((e,t)=>e+t.consumption,0)/1e3,p=l.reduce((e,t)=>e+t.consumption,0)/1e3;return{today:r,yesterday:l,todayTotal:c,yesterdayTotal:p,evolution:c>0&&0!==p?(c-p)/p*100:0}}({Daily:s.Daily,Dailyweek:s.Dailyweek})}return O`
     <div class="collapsible-section">
       <div
         class="collapsible-header"
         role="button"
         tabindex="0"
-        aria-expanded="${a}"
+        aria-expanded="${o}"
         @click="${i}"
-        @keydown="${ze(i)}"
+        @keydown="${We(i)}"
       >
-        <ha-icon icon="${a?"mdi:chevron-up":"mdi:chevron-down"}"></ha-icon>
-        <span class="section-title">${de(e,"card.comparison.title")}</span>
+        <ha-icon icon="${o?"mdi:chevron-up":"mdi:chevron-down"}"></ha-icon>
+        <span class="section-title">${pe(e,"card.comparison.title")}</span>
         <span class="section-summary">
           ${r.todayTotal.toFixed(1)} vs ${r.yesterdayTotal.toFixed(1)} kWh
         </span>
       </div>
-      <div class="collapsible-content ${a?"expanded":"collapsed"}">
+      <div class="collapsible-content ${o?"expanded":"collapsed"}">
         <div class="detailed-comparison">
-          ${function(e,t,o){const a=Math.max(...t.today.map(e=>e.consumption),...t.yesterday.map(e=>e.consumption));return O`
+          ${function(e,t,a){const o=Math.max(...t.today.map(e=>e.consumption),...t.yesterday.map(e=>e.consumption));return O`
     <div class="comparison-charts">
       <div class="chart-day">
-        <h4>${de(e,"card.comparison.today")}</h4>
-        <div class="mini-chart">${Oe(t.today,a,"#2196f3")}</div>
+        <h4>${pe(e,"card.comparison.today")}</h4>
+        <div class="mini-chart">${Oe(t.today,o,"#2196f3")}</div>
         <div class="day-stats">
-          <span class="total">${t.todayTotal.toFixed(1)} ${o}</span>
+          <span class="total">${t.todayTotal.toFixed(1)} ${a}</span>
           <span class="peak"
-            >${de(e,"card.comparison.peak",{value:Math.max(...t.today.map(e=>e.consumption))})}</span
+            >${pe(e,"card.comparison.peak",{value:Math.max(...t.today.map(e=>e.consumption))})}</span
           >
         </div>
       </div>
       <div class="chart-day">
-        <h4>${de(e,"card.comparison.yesterday")}</h4>
-        <div class="mini-chart">${Oe(t.yesterday,a,"#666")}</div>
+        <h4>${pe(e,"card.comparison.yesterday")}</h4>
+        <div class="mini-chart">${Oe(t.yesterday,o,"#666")}</div>
         <div class="day-stats">
-          <span class="total">${t.yesterdayTotal.toFixed(1)} ${o}</span>
+          <span class="total">${t.yesterdayTotal.toFixed(1)} ${a}</span>
           <span class="peak"
-            >${de(e,"card.comparison.peak",{value:Math.max(...t.yesterday.map(e=>e.consumption))})}</span
+            >${pe(e,"card.comparison.peak",{value:Math.max(...t.yesterday.map(e=>e.consumption))})}</span
           >
         </div>
       </div>
     </div>
-  `}(e,r,o.unit_of_measurement)}
-          ${function(e,t){const o=t.evolution;return O`
+  `}(e,r,a.unit_of_measurement)}
+          ${function(e,t){const a=t.evolution;return O`
     <div class="comparison-stats">
-      <div class="stat-item evolution ${o>0?"increase":o<0?"decrease":"stable"}">
-        <ha-icon icon="${o>0?"mdi:trending-up":o<0?"mdi:trending-down":"mdi:trending-neutral"}"></ha-icon>
-        <span class="label">${de(e,"card.comparison.evolution")}</span>
-        <span class="value">${Math.abs(o).toFixed(1)}%</span>
+      <div class="stat-item evolution ${a>0?"increase":a<0?"decrease":"stable"}">
+        <ha-icon icon="${a>0?"mdi:trending-up":a<0?"mdi:trending-down":"mdi:trending-neutral"}"></ha-icon>
+        <span class="label">${pe(e,"card.comparison.evolution")}</span>
+        <span class="value">${Math.abs(a).toFixed(1)}%</span>
       </div>
       <div class="stat-item difference">
         <ha-icon icon="mdi:calculator"></ha-icon>
-        <span class="label">${de(e,"card.comparison.difference")}</span>
+        <span class="label">${pe(e,"card.comparison.difference")}</span>
         <span class="value">${Math.abs(t.todayTotal-t.yesterdayTotal).toFixed(2)} kWh</span>
       </div>
     </div>
@@ -1341,7 +1256,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         </div>
       </div>
     </div>
-  `}const Ie="1.8.0";window.customCards=window.customCards||[],window.customCards.push({type:"content-card-linky",name:"Carte Enedis",description:"Carte pour l'intégration MyElectricalData - Affichage moderne des données Linky avec évolutions colorées",preview:!0,documentationURL:"https://github.com/MyElectricalData/content-card-linky",version:Ie}),console.info(`%c content-card-linky %c v${Ie} `,"color: white; background: #4caf50; font-weight: 700;","color: white; background: #1976d2; font-weight: 700;");customElements.define("content-card-linky",class extends ne{static get properties(){return{config:{attribute:!1},hass:{attribute:!1},_monthlyExpanded:{state:!0},_yearlyExpanded:{state:!0},_detailedExpanded:{state:!0}}}constructor(){super(),this._monthlyExpanded=!1,this._yearlyExpanded=!1,this._detailedExpanded=!1}static async getConfigElement(){return await import("./content-card-linky-editor.js"),document.createElement("content-card-linky-editor")}static async getStubConfig(e){let t="sensor.linky_consumption";if(e&&e.states){const o=Object.keys(e.states).find(t=>{if(!t.startsWith("sensor."))return!1;const o=e.states[t].attributes||{};return/linky/i.test(t)||"consommation"===o.typeCompteur||void 0!==o.daily&&void 0!==o.dailyweek});o&&(t=o)}return{type:"custom:content-card-linky",entity:t,titleName:"LINKY",nbJoursAffichage:"7",showIcon:!0,showHistory:!0,showPrice:!0,showDayPrice:!0,showCurrentMonthRatio:!0,showWeekRatio:!0,showDayName:"long",showDayMaxPower:!0,showTitleLign:!0,showEcoWatt:!0,showTempo:!1,showMonthlyView:!0,showYearlyView:!0,showDetailedComparison:!0,detailedComparisonEntity:"sensor.linky_consumption_last5day"}}render(){if(!this.config||!this.hass)return O``;const e=this.hass.states[this.config.entity];if(!e)return O`
+  `}const Ie="1.8.0";function Je(e){if(!e||!e.entity)throw new Error("You need to define an entity");if(void 0!==e.kWhPrice&&null!==e.kWhPrice&&isNaN(Number(e.kWhPrice)))throw new Error("kWhPrice should be a number")}window.customCards=window.customCards||[],window.customCards.push({type:"content-card-linky",name:"Carte Enedis",description:"Carte pour l'intégration MyElectricalData - Affichage moderne des données Linky avec évolutions colorées",preview:!0,documentationURL:"https://github.com/foXaCe/content-card-linky",version:Ie,getEntitySuggestion:(e,t)=>{const a=e.states[t];if(!a)return null;const o=a.attributes||{};return/linky/i.test(t)||"consommation"===o.typeCompteur||void 0!==o.daily&&void 0!==o.dailyweek?{config:{type:"custom:content-card-linky",entity:t}}:null}}),console.info(`%c content-card-linky %c v${Ie} `,"color: white; background: #4caf50; font-weight: 700;","color: white; background: #1976d2; font-weight: 700;");class je extends ne{static get properties(){return{config:{attribute:!1},hass:{attribute:!1},_monthlyExpanded:{state:!0},_yearlyExpanded:{state:!0},_detailedExpanded:{state:!0}}}constructor(){super(),this._monthlyExpanded=!1,this._yearlyExpanded=!1,this._detailedExpanded=!1}static async getConfigElement(){return await import("./content-card-linky-editor.js"),document.createElement("content-card-linky-editor")}static async getStubConfig(e){let t="sensor.linky_consumption";if(e&&e.states){const a=Object.keys(e.states).find(t=>{if(!t.startsWith("sensor."))return!1;const a=e.states[t].attributes||{};return/linky/i.test(t)||"consommation"===a.typeCompteur||void 0!==a.daily&&void 0!==a.dailyweek});a&&(t=a)}return{type:"custom:content-card-linky",entity:t,titleName:"LINKY",nbJoursAffichage:"7",showIcon:!0,showHistory:!0,showPrice:!0,showDayPrice:!0,showCurrentMonthRatio:!0,showWeekRatio:!0,showDayName:"long",showDayMaxPower:!0,showTitleLign:!0,showEcoWatt:!0,showTempo:!1,showMonthlyView:!0,showYearlyView:!0,showDetailedComparison:!0,detailedComparisonEntity:"sensor.linky_consumption_last5day"}}render(){if(!this.config||!this.hass)return O``;const e=this.config,t=this.hass;this.dataset.appearance=e.appearance??"premium";const a=t.states[e.entity];if(!a)return O`
         <ha-card>
           <div class="card">
             <div id="states">
@@ -1354,102 +1269,97 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
                   style="color: var(--state-icon-unavailable-color)"
                 ></ha-icon>
                 <span style="margin-right:2em"
-                  >${de(this.hass,"card.data_unavailable",{entity:this.config.entity})}</span
+                  >${pe(t,"card.data_unavailable",{entity:e.entity})}</span
                 >
               </div>
             </div>
           </div>
         </ha-card>
-      `;const t=e.attributes,o=t.typeCompteur;return"consommation"!==o&&o?"production"===o?O` <ha-card>
+      `;const o=a.attributes,i=o.typeCompteur;return"consommation"!==i&&i?"production"===i?O` <ha-card>
         <div class="card">
           <div class="main-info">
-            ${this.config.showIcon?O` <div class="icon-block">
+            ${e.showIcon?O` <div class="icon-block">
                   <span
                     class="linky-icon bigger"
                     style="background: none, url('/local/community/content-card-linky/icons/linky.svg') no-repeat; background-size: contain;"
                   ></span>
                 </div>`:O``}
-            <div class="cout-block">${function(e,t,o){const a=parseFloat(t);if(isNaN(a)||-1===a||0===a||"0"===t||null==t){if(!o.dailyweek_cost||!o.daily)return O`
+            <div class="cout-block">${function(e,t,a){const o=parseFloat(t);if(isNaN(o)||-1===o||0===o||"0"===t||null==t){if(!a.dailyweek_cost||!a.daily)return O`
         <span
           class="cout pending"
-          title="${de(e,"card.production.pending")}"
+          title="${pe(e,"card.production.pending")}"
           style="color: #ff9800; font-style: italic;"
         >
           <ha-icon icon="mdi:clock-outline"></ha-icon>
         </span>
-        <span class="cout-unit">${o.unit_of_measurement}</span>
-      `;{const t=o.dailyweek_cost.toString().split(","),a=parseFloat(t[0]?.replace(",","."));if(!isNaN(a)&&a>0){const t=we(o.daily,1,o.dailyweek_cost);if(t>0)return O`
-            <span class="cout estimated" title="${de(e,"card.production.estimate")}"
-              >${ye(t)}</span
+        <span class="cout-unit">${a.unit_of_measurement}</span>
+      `;{const t=a.dailyweek_cost.toString().split(","),o=parseFloat(t[0]?.replace(",","."));if(!isNaN(o)&&o>0){const t=we(a.daily,1,a.dailyweek_cost);if(t>0)return O`
+            <span class="cout estimated" title="${pe(e,"card.production.estimate")}"
+              >${ve(t)}</span
             >
-            <span class="cout-unit">${o.unit_of_measurement}</span>
-          `}else if(0===a||isNaN(a)||!t[0]||"-1"===t[0])return O`
-          <span
-            class="cout pending"
-            title="${de(e,"card.production.pending")}"
-            style="color: #ff9800; font-style: italic;"
-          >
+            <span class="cout-unit">${a.unit_of_measurement}</span>
+          `}else if(0===o||isNaN(o)||!t[0]||"-1"===t[0])return O`
+          <span class="cout pending" title="${pe(e,"card.production.pending")}">
             <ha-icon icon="mdi:clock-outline"></ha-icon>
           </span>
-          <span class="cout-unit">${o.unit_of_measurement}</span>
+          <span class="cout-unit">${a.unit_of_measurement}</span>
         `}}return O`
-    <span class="cout">${ye(t)}</span>
-    <span class="cout-unit">${o.unit_of_measurement}</span>
-  `}(this.hass,e.state,t)}</div>
+    <span class="cout">${ve(t)}</span>
+    <span class="cout-unit">${a.unit_of_measurement}</span>
+  `}(t,a.state,o)}</div>
           </div>
-          ${We(this.config,t.errorLastCall)}
+          ${Fe(e,o.errorLastCall)}
         </div>
-      </ha-card>`:void 0:O` <ha-card id="card" @click="${()=>this._showDetails(this.config.entity)}">
+      </ha-card>`:void 0:O` <ha-card id="card" @click="${()=>this._showDetails(e.entity)}">
         ${function(e){if(!0===e.showTitle)return O` <div class="card">
       <div class="main-title">
         <span>${e.titleName}</span>
       </div>
-    </div>`}(this.config)}
+    </div>`}(e)}
         <div class="card">
-          ${function(e,t,o,a){if(!0===t.showHeader)return t.showPeakOffPeak?O` <div class="main-info">
+          ${function(e,t,a,o){if(!0===t.showHeader)return t.showPeakOffPeak?O` <div class="main-info">
         ${be(t)}
         <div class="hp-hc-block">
-          <span class="conso-hc">${ye(o.yesterday_HC)}</span
+          <span class="conso-hc">${ve(a.yesterday_HC)}</span
           ><span class="conso-unit-hc">
-            ${o.unit_of_measurement}
-            <span class="more-unit">${de(e,"card.in_off_peak")}</span></span
+            ${a.unit_of_measurement}
+            <span class="more-unit">${pe(e,"card.in_off_peak")}</span></span
           ><br />
-          <span class="conso-hp">${ye(o.yesterday_HP)}</span
+          <span class="conso-hp">${ve(a.yesterday_HP)}</span
           ><span class="conso-unit-hp">
-            ${o.unit_of_measurement}
-            <span class="more-unit">${de(e,"card.in_peak")}</span></span
+            ${a.unit_of_measurement}
+            <span class="more-unit">${pe(e,"card.in_peak")}</span></span
           >
         </div>
-        ${$e(e,t,o)}
+        ${$e(e,t,a)}
       </div>`:O` <div class="main-info">
       ${be(t)}
       <div class="cout-block">
-        <span class="cout">${ye(a.state)}</span>
-        <span class="cout-unit">${o.unit_of_measurement}</span>
+        <span class="cout">${ve(o.state)}</span>
+        <span class="cout-unit">${a.unit_of_measurement}</span>
       </div>
-      ${$e(e,t,o)}
-    </div>`}(this.hass,this.config,t,e)}
-          ${function(e,t,o){return O` <div class="variations">
+      ${$e(e,t,a)}
+    </div>`}(t,e,o,a)} ${function(e,t,a){return O` <div class="variations">
     ${t.showYearRatio?O` <span class="variations-linky">
           <div class="percentage-line">
             <span class="ha-icon">
               <ha-icon
                 icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${o.yearly_evolution<0?"45":0===o.yearly_evolution?"0":"-45"}deg)"
+                style="display: inline-block; transform: rotate(${a.yearly_evolution<0?"45":0===a.yearly_evolution?"0":"-45"}deg)"
               >
               </ha-icon>
             </span>
             <span
-              class="percentage-value ${o.yearly_evolution>0?"percentage-positive":o.yearly_evolution<0?"percentage-negative":"percentage-neutral"}"
-              aria-label="${de(e,"card.aria.yearly_trend",{value:fe(o.yearly_evolution)})}"
+              class="percentage-value ${a.yearly_evolution>0?"percentage-positive":a.yearly_evolution<0?"percentage-negative":"percentage-neutral"}"
+              aria-label="${pe(e,"card.aria.yearly_trend",{value:fe(a.yearly_evolution)})}"
               role="text"
-              >${fe(o.yearly_evolution)}<span class="unit"> %</span></span
+              >${fe(a.yearly_evolution)}<span class="unit"> %</span></span
             >
           </div>
           <div class="tooltip">
-            <span class="year">${de(e,"card.previous_year",{year:ke(e)})}</span>
+            <span class="year">${pe(e,"card.previous_year",{year:ke(e)})}</span>
             <span class="tooltiptext"
-              >${de(e,"card.tooltip.year_prev",{value:o.current_year_last_year})}<br />${de(e,"card.tooltip.year",{value:o.current_year})}</span
+              >${pe(e,"card.tooltip.year_prev",{value:a.current_year_last_year})}<br />${pe(e,"card.tooltip.year",{value:a.current_year})}</span
             >
           </div>
         </span>`:O``}
@@ -1458,21 +1368,21 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
             <span class="ha-icon">
               <ha-icon
                 icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${o.monthly_evolution<0?"45":0===o.monthly_evolution?"0":"-45"}deg)"
+                style="display: inline-block; transform: rotate(${a.monthly_evolution<0?"45":0===a.monthly_evolution?"0":"-45"}deg)"
               >
               </ha-icon>
             </span>
             <span
-              class="percentage-value ${o.monthly_evolution>0?"percentage-positive":o.monthly_evolution<0?"percentage-negative":"percentage-neutral"}"
-              aria-label="${de(e,"card.aria.monthly_trend",{value:fe(o.monthly_evolution)})}"
+              class="percentage-value ${a.monthly_evolution>0?"percentage-positive":a.monthly_evolution<0?"percentage-negative":"percentage-neutral"}"
+              aria-label="${pe(e,"card.aria.monthly_trend",{value:fe(a.monthly_evolution)})}"
               role="text"
-              >${fe(o.monthly_evolution)}<span class="unit"> %</span></span
+              >${fe(a.monthly_evolution)}<span class="unit"> %</span></span
             >
           </div>
           <div class="tooltip">
-            <span class="previous-month">${de(e,"card.previous_month",{month:xe(e)})}</span>
+            <span class="previous-month">${pe(e,"card.previous_month",{month:xe(e)})}</span>
             <span class="tooltiptext"
-              >${de(e,"card.tooltip.prev_month_prev_year",{value:o.last_month_last_year})}<br />${de(e,"card.tooltip.prev_month",{value:o.last_month})}</span
+              >${pe(e,"card.tooltip.prev_month_prev_year",{value:a.last_month_last_year})}<br />${pe(e,"card.tooltip.prev_month",{value:a.last_month})}</span
             >
           </div>
         </span>`:O``}
@@ -1481,21 +1391,21 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
             <span class="ha-icon">
               <ha-icon
                 icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${o.current_month_evolution<0?"45":0===o.current_month_evolution?"0":"-45"}deg)"
+                style="display: inline-block; transform: rotate(${a.current_month_evolution<0?"45":0===a.current_month_evolution?"0":"-45"}deg)"
               >
               </ha-icon>
             </span>
             <span
-              class="percentage-value ${o.current_month_evolution>0?"percentage-positive":o.current_month_evolution<0?"percentage-negative":"percentage-neutral"}"
-              aria-label="${de(e,"card.aria.current_month_trend",{value:fe(o.current_month_evolution)})}"
+              class="percentage-value ${a.current_month_evolution>0?"percentage-positive":a.current_month_evolution<0?"percentage-negative":"percentage-neutral"}"
+              aria-label="${pe(e,"card.aria.current_month_trend",{value:fe(a.current_month_evolution)})}"
               role="text"
-              >${fe(o.current_month_evolution)}<span class="unit"> %</span></span
+              >${fe(a.current_month_evolution)}<span class="unit"> %</span></span
             >
           </div>
           <div class="tooltip">
-            <span class="current-month">${de(e,"card.current_month",{month:Ee(e)})}</span>
+            <span class="current-month">${pe(e,"card.current_month",{month:Ee(e)})}</span>
             <span class="tooltiptext"
-              >${de(e,"card.tooltip.month_prev_year",{value:o.current_month_last_year})}<br />${de(e,"card.tooltip.month",{value:o.current_month})}</span
+              >${pe(e,"card.tooltip.month_prev_year",{value:a.current_month_last_year})}<br />${pe(e,"card.tooltip.month",{value:a.current_month})}</span
             >
           </div>
         </span>`:O``}
@@ -1504,23 +1414,23 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
             <span class="ha-icon">
               <ha-icon
                 icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${o.current_week_evolution<0?"45":0===o.current_week_evolution?"0":"-45"}deg)"
+                style="display: inline-block; transform: rotate(${a.current_week_evolution<0?"45":0===a.current_week_evolution?"0":"-45"}deg)"
               >
               </ha-icon>
             </span>
             <span
-              class="percentage-value ${o.current_week_evolution>0?"percentage-positive":o.current_week_evolution<0?"percentage-negative":"percentage-neutral"}"
-              aria-label="${de(e,"card.aria.weekly_trend",{value:fe(o.current_week_evolution)})}"
+              class="percentage-value ${a.current_week_evolution>0?"percentage-positive":a.current_week_evolution<0?"percentage-negative":"percentage-neutral"}"
+              aria-label="${pe(e,"card.aria.weekly_trend",{value:fe(a.current_week_evolution)})}"
               role="text"
-              >${fe(o.current_week_evolution)}<span class="unit"> %</span></span
+              >${fe(a.current_week_evolution)}<span class="unit"> %</span></span
             >
           </div>
           <div class="tooltip">
             <span class="previous-month"
-              >${de(e,"card.previous_week",{week:de(e,"card.week_noun")})}</span
+              >${pe(e,"card.previous_week",{week:pe(e,"card.week_noun")})}</span
             >
             <span class="tooltiptext"
-              >${de(e,"card.tooltip.last_week",{value:o.last_week})}<br />${de(e,"card.tooltip.this_week",{value:o.current_week})}</span
+              >${pe(e,"card.tooltip.last_week",{value:a.last_week})}<br />${pe(e,"card.tooltip.this_week",{value:a.current_week})}</span
             >
           </div>
         </span>`:O``}
@@ -1529,23 +1439,23 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
             <span class="ha-icon">
               <ha-icon
                 icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${o.yesterday_evolution<0?"45":0===o.yesterday_evolution?"0":"-45"}deg)"
+                style="display: inline-block; transform: rotate(${a.yesterday_evolution<0?"45":0===a.yesterday_evolution?"0":"-45"}deg)"
               >
               </ha-icon>
             </span>
             <span
-              class="percentage-value ${o.yesterday_evolution>0?"percentage-positive":o.yesterday_evolution<0?"percentage-negative":"percentage-neutral"}"
-              aria-label="${de(e,"card.aria.daily_trend",{value:fe(o.yesterday_evolution)})}"
+              class="percentage-value ${a.yesterday_evolution>0?"percentage-positive":a.yesterday_evolution<0?"percentage-negative":"percentage-neutral"}"
+              aria-label="${pe(e,"card.aria.daily_trend",{value:fe(a.yesterday_evolution)})}"
               role="text"
-              >${fe(o.yesterday_evolution)}<span class="unit"> %</span></span
+              >${fe(a.yesterday_evolution)}<span class="unit"> %</span></span
             >
           </div>
           <div class="tooltip">
             <span class="previous-month"
-              >${de(e,"card.before_yesterday",{date:de(e,"card.day_before_noun")})}</span
+              >${pe(e,"card.before_yesterday",{date:pe(e,"card.day_before_noun")})}</span
             >
             <span class="tooltiptext"
-              >${de(e,"card.tooltip.day_before_yesterday",{value:o.day_2})}<br />${de(e,"card.tooltip.yesterday",{value:o.yesterday})}</span
+              >${pe(e,"card.tooltip.day_before_yesterday",{value:a.day_2})}<br />${pe(e,"card.tooltip.yesterday",{value:a.yesterday})}</span
             >
           </div>
         </span>`:O``}
@@ -1553,77 +1463,71 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
           <span class="ha-icon">
             <ha-icon icon="mdi:flash"></ha-icon>
           </span>
-          ${fe(o.peak_offpeak_percent)}<span class="unit"> ${de(e,"card.peak_pct")}</span>
+          ${fe(a.peak_offpeak_percent)}<span class="unit"> ${pe(e,"card.peak_pct")}</span>
         </span>`:O``}
-  </div>`}(this.hass,this.config,t)}
-          ${!1!==this.config.showSmartInsights?function(e,t,o,a){const i=e.states[t.entity],n=i?i.attributes:{},s=o&&Array.isArray(o)?o.reduce((e,t)=>e+parseFloat(t||0),0):0,r=a&&Array.isArray(a)?a.reduce((e,t)=>e+parseFloat(t||0),0):0,l=parseFloat((n.current_month||0).toString().replace(",",".")),c=l>0?l/(new Date).getDate()*new Date((new Date).getFullYear(),(new Date).getMonth()+1,0).getDate():s>0?s/7*30:0,d=r>0?r/7*30:0,p=parseFloat((n.current_week_evolution||0).toString().replace(",",".")),h=parseFloat((n.monthly_evolution||0).toString().replace(",",".")),u=parseFloat((n.yearly_evolution||0).toString().replace(",",".")),m=p<0,y=h<0,v=u<0,f=m?"mdi:trending-down":"mdi:trending-up",g=m?"#4caf50":"#f44336",w=y?"mdi:trending-down":"mdi:trending-up",_=y?"#4caf50":"#f44336",b=v?"mdi:trending-down":"mdi:trending-up",$=v?"#4caf50":"#f44336";return O`
+  </div>`}(t,e,o)}
+          ${!1!==e.showSmartInsights?function(e,t,a,o){const i=e.states[t.entity],n=i?i.attributes:{},s=a&&Array.isArray(a)?a.reduce((e,t)=>e+parseFloat(t||0),0):0,r=o&&Array.isArray(o)?o.reduce((e,t)=>e+parseFloat(t||0),0):0,l=parseFloat((n.current_month||0).toString().replace(",",".")),c=l>0?l/(new Date).getDate()*new Date((new Date).getFullYear(),(new Date).getMonth()+1,0).getDate():s>0?s/7*30:0,p=r>0?r/7*30:0,d=parseFloat((n.current_week_evolution||0).toString().replace(",",".")),u=parseFloat((n.monthly_evolution||0).toString().replace(",",".")),h=parseFloat((n.yearly_evolution||0).toString().replace(",",".")),m=d<0,v=u<0,y=h<0,f=m?"mdi:trending-down":"mdi:trending-up",g=m?"trend-good":"trend-bad",w=v?"mdi:trending-down":"mdi:trending-up",_=v?"trend-good":"trend-bad",b=y?"mdi:trending-down":"mdi:trending-up",$=y?"trend-good":"trend-bad";return O`
     <div class="smart-insights">
       <div class="insight-row">
         <div class="insight-item">
           <ha-icon icon="mdi:calendar-month" class="insight-icon"></ha-icon>
           <div class="insight-content">
-            <div class="insight-label">${de(e,"card.insights.monthly_prediction")}</div>
-            <div class="insight-value">${c.toFixed(0)} kWh • ${d.toFixed(0)}€</div>
+            <div class="insight-label">${pe(e,"card.insights.monthly_prediction")}</div>
+            <div class="insight-value">${c.toFixed(0)} kWh • ${p.toFixed(0)}€</div>
           </div>
         </div>
 
         <div class="insight-item">
-          <ha-icon icon="${f}" class="insight-icon" style="color: ${g}"></ha-icon>
+          <ha-icon icon="${f}" class="insight-icon ${g}"></ha-icon>
           <div class="insight-content">
-            <div class="insight-label">${de(e,"card.insights.vs_last_week")}</div>
-            <div class="insight-value" style="color: ${g}">
-              ${p>0?"+":""}${p}%
-            </div>
+            <div class="insight-label">${pe(e,"card.insights.vs_last_week")}</div>
+            <div class="insight-value ${g}">${d>0?"+":""}${d}%</div>
           </div>
         </div>
       </div>
 
       <div class="insight-row">
         <div class="insight-item">
-          <ha-icon icon="${w}" class="insight-icon" style="color: ${_}"></ha-icon>
+          <ha-icon icon="${w}" class="insight-icon ${_}"></ha-icon>
           <div class="insight-content">
-            <div class="insight-label">${de(e,"card.insights.vs_last_month")}</div>
-            <div class="insight-value" style="color: ${_}">
-              ${h>0?"+":""}${h}%
-            </div>
+            <div class="insight-label">${pe(e,"card.insights.vs_last_month")}</div>
+            <div class="insight-value ${_}">${u>0?"+":""}${u}%</div>
           </div>
         </div>
 
         <div class="insight-item">
-          <ha-icon icon="${b}" class="insight-icon" style="color: ${$}"></ha-icon>
+          <ha-icon icon="${b}" class="insight-icon ${$}"></ha-icon>
           <div class="insight-content">
-            <div class="insight-label">${de(e,"card.insights.vs_last_year")}</div>
-            <div class="insight-value" style="color: ${$}">
-              ${u>0?"+":""}${u}%
-            </div>
+            <div class="insight-label">${pe(e,"card.insights.vs_last_year")}</div>
+            <div class="insight-value ${$}">${h>0?"+":""}${h}%</div>
           </div>
         </div>
       </div>
     </div>
-  `}(this.hass,this.config,t.dailyweek,t.dailyweek_cost):O``}
-          ${Ne(this.hass,this.config,t)}
-          ${function(e,t,o,a,i){if(!t.showMonthlyView)return O``;const n=o.current_month||"N/A",s=o.last_month||"N/A",r=o.current_month_last_year||"N/A",l=o.last_month_last_year||"N/A",c=[{name:de(e,"card.temporal.current_month"),value:n,year:(new Date).getFullYear(),evolution:"N/A"!==r&&"N/A"!==n?((parseFloat(n)-parseFloat(r))/parseFloat(r)*100).toFixed(1):null},{name:de(e,"card.temporal.previous_month"),value:s,year:(new Date).getFullYear(),evolution:"N/A"!==l&&"N/A"!==s?((parseFloat(s)-parseFloat(l))/parseFloat(l)*100).toFixed(1):null},{name:de(e,"card.temporal.current_month_prev_year"),value:r,year:(new Date).getFullYear()-1,evolution:null},{name:de(e,"card.temporal.previous_month_prev_year"),value:l,year:(new Date).getFullYear()-1,evolution:null}].filter(e=>"N/A"!==e.value);return O`
+  `}(t,e,o.dailyweek,o.dailyweek_cost):O``}
+          ${Ne(t,e,o)}
+          ${function(e,t,a,o,i){if(!t.showMonthlyView)return O``;const n=a.current_month||"N/A",s=a.last_month||"N/A",r=a.current_month_last_year||"N/A",l=a.last_month_last_year||"N/A",c=[{name:pe(e,"card.temporal.current_month"),value:n,year:(new Date).getFullYear(),evolution:"N/A"!==r&&"N/A"!==n?((parseFloat(n)-parseFloat(r))/parseFloat(r)*100).toFixed(1):null},{name:pe(e,"card.temporal.previous_month"),value:s,year:(new Date).getFullYear(),evolution:"N/A"!==l&&"N/A"!==s?((parseFloat(s)-parseFloat(l))/parseFloat(l)*100).toFixed(1):null},{name:pe(e,"card.temporal.current_month_prev_year"),value:r,year:(new Date).getFullYear()-1,evolution:null},{name:pe(e,"card.temporal.previous_month_prev_year"),value:l,year:(new Date).getFullYear()-1,evolution:null}].filter(e=>"N/A"!==e.value);return O`
     <div class="collapsible-section">
       <div
         class="collapsible-header"
         role="button"
         tabindex="0"
-        aria-expanded="${a}"
+        aria-expanded="${o}"
         @click="${i}"
-        @keydown="${ze(i)}"
+        @keydown="${We(i)}"
       >
-        <ha-icon icon="${a?"mdi:chevron-up":"mdi:chevron-down"}"></ha-icon>
-        <span class="section-title">${de(e,"card.temporal.monthly")}</span>
+        <ha-icon icon="${o?"mdi:chevron-up":"mdi:chevron-down"}"></ha-icon>
+        <span class="section-title">${pe(e,"card.temporal.monthly")}</span>
         <span class="section-summary">
-          ${c.length>0?de(e,"card.temporal.months_count",{count:c.length}):de(e,"card.temporal.no_data")}
+          ${c.length>0?pe(e,"card.temporal.months_count",{count:c.length}):pe(e,"card.temporal.no_data")}
         </span>
       </div>
-      <div class="collapsible-content ${a?"expanded":"collapsed"}">
+      <div class="collapsible-content ${o?"expanded":"collapsed"}">
         <div class="month-history">
           ${c.map(e=>O`
               <div class="month-item">
                 <div class="month-name">${e.name} (${e.year})</div>
-                <div class="month-value">${ye(e.value)} ${o.unit_of_measurement}</div>
+                <div class="month-value">${ve(e.value)} ${a.unit_of_measurement}</div>
                 <div class="month-evolution">
                   ${null!==e.evolution?O`
                         <span class="evolution-percent ${parseFloat(e.evolution)>=0?"positive":"negative"}">
@@ -1636,29 +1540,29 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         </div>
       </div>
     </div>
-  `}(this.hass,this.config,t,this._monthlyExpanded,e=>this.toggleMonthlyView(e))}
-          ${function(e,t,o,a,i){if(!t.showYearlyView)return O``;const n=o.current_year||"N/A",s=o.current_year_last_year||"N/A",r=[{name:(new Date).getFullYear(),value:n,evolution:"N/A"!==s&&"N/A"!==n?((parseFloat(n)-parseFloat(s))/parseFloat(s)*100).toFixed(1):null},{name:(new Date).getFullYear()-1,value:s,evolution:null}].filter(e=>"N/A"!==e.value);return O`
+  `}(t,e,o,this._monthlyExpanded,e=>this.toggleMonthlyView(e))}
+          ${function(e,t,a,o,i){if(!t.showYearlyView)return O``;const n=a.current_year||"N/A",s=a.current_year_last_year||"N/A",r=[{name:(new Date).getFullYear(),value:n,evolution:"N/A"!==s&&"N/A"!==n?((parseFloat(n)-parseFloat(s))/parseFloat(s)*100).toFixed(1):null},{name:(new Date).getFullYear()-1,value:s,evolution:null}].filter(e=>"N/A"!==e.value);return O`
     <div class="collapsible-section">
       <div
         class="collapsible-header"
         role="button"
         tabindex="0"
-        aria-expanded="${a}"
+        aria-expanded="${o}"
         @click="${i}"
-        @keydown="${ze(i)}"
+        @keydown="${We(i)}"
       >
-        <ha-icon icon="${a?"mdi:chevron-up":"mdi:chevron-down"}"></ha-icon>
-        <span class="section-title">${de(e,"card.temporal.yearly")}</span>
+        <ha-icon icon="${o?"mdi:chevron-up":"mdi:chevron-down"}"></ha-icon>
+        <span class="section-title">${pe(e,"card.temporal.yearly")}</span>
         <span class="section-summary">
-          ${r.length>0?de(e,"card.temporal.years_count",{count:r.length}):de(e,"card.temporal.no_data")}
+          ${r.length>0?pe(e,"card.temporal.years_count",{count:r.length}):pe(e,"card.temporal.no_data")}
         </span>
       </div>
-      <div class="collapsible-content ${a?"expanded":"collapsed"}">
+      <div class="collapsible-content ${o?"expanded":"collapsed"}">
         <div class="year-history">
           ${r.map(e=>O`
               <div class="year-item">
                 <div class="year-name">${e.name}</div>
-                <div class="year-value">${ye(e.value)} ${o.unit_of_measurement}</div>
+                <div class="year-value">${ve(e.value)} ${a.unit_of_measurement}</div>
                 <div class="year-evolution">
                   ${null!==e.evolution?O`
                         <span class="evolution-percent ${parseFloat(e.evolution)>=0?"positive":"negative"}">
@@ -1671,25 +1575,25 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         </div>
       </div>
     </div>
-  `}(this.hass,this.config,t,this._yearlyExpanded,e=>this.toggleYearlyView(e))}
-          ${Ye(this.hass,this.config,t,this._detailedExpanded,e=>this.toggleDetailedComparison(e))}
-          ${function(e,t,o){if(void 0===o.serviceEnedis)return O``;if("myElectricalData"!==o.serviceEnedis)return O`${de(e,"card.ecowatt.only_med")}`;const a=t.ewEntity?e.states[t.ewEntity]:void 0,i=t.ewEntityJ1?e.states[t.ewEntityJ1]:void 0,n=t.ewEntityJ2?e.states[t.ewEntityJ2]:void 0;return t.showEcoWatt&&!a?O`<div class="error-msg">${de(e,"card.ecowatt.missing_today")}</div>`:!t.showEcoWattJ12||i&&n?O`
+  `}(t,e,o,this._yearlyExpanded,e=>this.toggleYearlyView(e))}
+          ${Ye(t,e,o,this._detailedExpanded,e=>this.toggleDetailedComparison(e))}
+          ${function(e,t,a){if(void 0===a.serviceEnedis)return O``;if("myElectricalData"!==a.serviceEnedis)return O`${pe(e,"card.ecowatt.only_med")}`;const o=t.ewEntity?e.states[t.ewEntity]:void 0,i=t.ewEntityJ1?e.states[t.ewEntityJ1]:void 0,n=t.ewEntityJ2?e.states[t.ewEntityJ2]:void 0;return t.showEcoWatt&&!o?O`<div class="error-msg">${pe(e,"card.ecowatt.missing_today")}</div>`:!t.showEcoWattJ12||i&&n?O`
     <table style="width:100%">
-      ${t.showEcoWatt?Re(de(e,"card.ecowatt.today"),a):O``}
+      ${t.showEcoWatt?Re(pe(e,"card.ecowatt.today"),o):O``}
       ${t.showEcoWattJ12?O`
-            ${Re(de(e,"card.ecowatt.tomorrow"),i)}
-            ${Re(de(e,"card.ecowatt.after_tomorrow"),n)}
+            ${Re(pe(e,"card.ecowatt.tomorrow"),i)}
+            ${Re(pe(e,"card.ecowatt.after_tomorrow"),n)}
             <tr style="line-height:80%">
               <td style="width:5%"></td>
               <td style="width:95%">
                 <ul class="flow-row oneHourLabel">
-                  ${_e(n,Fe).map(e=>O`<li title="${e[0]}">${e[0]%2==1?e[0]:""}</li>`)}
+                  ${_e(n,ze).map(e=>O`<li title="${e[0]}">${e[0]%2==1?e[0]:""}</li>`)}
                 </ul>
               </td>
             </tr>
           `:O``}
     </table>
-  `:O`<div class="error-msg">${de(e,"card.ecowatt.missing_j12")}</div>`}(this.hass,this.config,t)} ${function(e,t,o){if(void 0===o.serviceEnedis)return O``;if("myElectricalData"!==o.serviceEnedis)return O`${de(e,"card.tempo.only_med")}`;if(!1===t.showTempo)return O``;const a=e.states[t.tempoEntityInfo],i=e.states[t.tempoEntityJ0],n=e.states[t.tempoEntityJ1];if(!(i&&i.state&&n&&n.state))return O`${de(e,"card.tempo.missing_j01")}`;if(!a||!a.state)return O`${de(e,"card.tempo.missing_info")}`;const[s,r]=Ue(i),[l,c]=Ue(n),[d,p,h]=[(u=a).attributes.days_red,u.attributes.days_white,u.attributes.days_blue];var u;const m=t=>new Date(t).toLocaleDateString(ve(e),{weekday:"long",day:"numeric"});return O`
+  `:O`<div class="error-msg">${pe(e,"card.ecowatt.missing_j12")}</div>`}(t,e,o)} ${function(e,t,a){if(void 0===a.serviceEnedis)return O``;if("myElectricalData"!==a.serviceEnedis)return O`${pe(e,"card.tempo.only_med")}`;if(!1===t.showTempo)return O``;const o=e.states[t.tempoEntityInfo],i=e.states[t.tempoEntityJ0],n=e.states[t.tempoEntityJ1];if(!(i&&i.state&&n&&n.state))return O`${pe(e,"card.tempo.missing_j01")}`;if(!o||!o.state)return O`${pe(e,"card.tempo.missing_info")}`;const[s,r]=Ue(i),[l,c]=Ue(n),[p,d,u]=[(h=o).attributes.days_red,h.attributes.days_white,h.attributes.days_blue];var h;const m=t=>new Date(t).toLocaleDateString(ye(e),{weekday:"long",day:"numeric"});return O`
     <table class="tempo-color">
       <tr>
         <td class="tempo-${r}" style="width:50%">${m(s)}</td>
@@ -1698,24 +1602,24 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     </table>
     <table class="tempo-days">
       <tr>
-        <td class="tempo-blue" style="width:33.33%">${h}</td>
-        <td class="tempo-white" style="width:33.33%">${p}</td>
-        <td class="tempo-red" style="width:33.33%">${d}</td>
+        <td class="tempo-blue" style="width:33.33%">${u}</td>
+        <td class="tempo-white" style="width:33.33%">${d}</td>
+        <td class="tempo-red" style="width:33.33%">${p}</td>
       </tr>
     </table>
-  `}(this.hass,this.config,t)}
-          ${We(this.config,t.errorLastCall)}
-          ${a=this.hass,i=t.versionUpdateAvailable,n=t.versionGit,!0===i?O`
+  `}(t,e,o)}
+          ${Fe(e,o.errorLastCall)}
+          ${function(e,t,a){return!0===t?O`
       <div class="information-msg" style="color: var(--error-color, red)">
         <ha-icon id="icon" icon="mdi:alert-outline"></ha-icon>
-        ${de(a,"card.version_available",{version:n})}
+        ${pe(e,"card.version_available",{version:a})}
       </div>
-    `:O``}
-          ${function(e,t,o){return!1===t.showInformation||void 0===o.serviceEnedis?O``:"myElectricalData"!==o.serviceEnedis?O`
+    `:O``}(t,o.versionUpdateAvailable,o.versionGit)}
+          ${function(e,t,a){return!1===t.showInformation||void 0===a.serviceEnedis?O``:"myElectricalData"!==a.serviceEnedis?O`
       <div class="information-msg" style="color: var(--error-color, red)">
         <ha-icon id="icon" icon="mdi:alert-outline"></ha-icon>
-        ${de(e,"card.migrate_med")}
+        ${pe(e,"card.migrate_med")}
       </div>
-    `:void 0}(this.hass,this.config,t)}
+    `:void 0}(t,e,o)}
         </div>
-      </ha-card>`;var a,i,n}_showDetails(e){return((e,t,o={},a={})=>{const i=new Event(t,{bubbles:a.bubbles??!0,cancelable:Boolean(a.cancelable),composed:a.composed??!0});return i.detail=o,e.dispatchEvent(i),i})(this,"hass-more-info",{entityId:e})}setConfig(e){if(!e.entity)throw new Error("You need to define an entity");if(e.kWhPrice&&isNaN(e.kWhPrice))throw new Error("kWhPrice should be a number");this.config={...ue,...e}}shouldUpdate(e){return function(e,t){if(t.has("config"))return!0;const o=t.get("hass");if(!o)return!0;const a=e.config||{};for(const t of pe){const i=a[t];if(i&&o.states[i]!==e.hass.states[i])return!0}return!1}(this,e)}updated(e){super.updated(e);const t=this.shadowRoot.querySelector(".week-history");t&&(t.scrollLeft=t.scrollWidth-t.clientWidth)}getCardSize(){const e=this.config||{};let t=2;return e.showHistory&&(t+=2),!1!==e.showSmartInsights&&(t+=1),e.showMonthlyView&&(t+=1),e.showYearlyView&&(t+=1),e.showDetailedComparison&&(t+=1),(e.showEcoWatt||e.showEcoWattJ12)&&(t+=1),e.showTempo&&(t+=1),t}getGridOptions(){const e=this.getCardSize();return{columns:12,rows:Math.max(3,Math.min(e,12)),min_columns:6,min_rows:3}}getLayoutOptions(){const e=this.getCardSize();return{grid_columns:4,grid_rows:Math.max(3,Math.min(e,12)),grid_min_columns:2,grid_min_rows:3}}toggleMonthlyView(e){e.stopPropagation(),e.preventDefault(),this._monthlyExpanded=!this._monthlyExpanded}toggleYearlyView(e){e.stopPropagation(),e.preventDefault(),this._yearlyExpanded=!this._yearlyExpanded}toggleDetailedComparison(e){e.stopPropagation(),e.preventDefault(),this._detailedExpanded=!this._detailedExpanded}static get styles(){return me}});
+      </ha-card>`}_showDetails(e){return((e,t,a={},o={})=>{const i=new CustomEvent(t,{bubbles:o.bubbles??!0,cancelable:Boolean(o.cancelable),composed:o.composed??!0,detail:a});return e.dispatchEvent(i),i})(this,"hass-more-info",{entityId:e})}setConfig(e){Je(e),this.config={...he,...e}}shouldUpdate(e){return function(e,t){if(t.has("config"))return!0;const a=t.get("hass");if(!a)return!0;const o=e.config||{},i=e.hass;for(const e of de){const t=o[e];if("string"==typeof t&&a.states[t]!==i?.states[t])return!0}return!1}(this,e)}updated(e){super.updated(e);const t=this.shadowRoot?.querySelector(".week-history");t&&(t.scrollLeft=t.scrollWidth-t.clientWidth)}getCardSize(){const e=this.config||{};let t=2;return e.showHistory&&(t+=2),!1!==e.showSmartInsights&&(t+=1),e.showMonthlyView&&(t+=1),e.showYearlyView&&(t+=1),e.showDetailedComparison&&(t+=1),(e.showEcoWatt||e.showEcoWattJ12)&&(t+=1),e.showTempo&&(t+=1),t}getGridOptions(){const e=this.getCardSize();return{columns:12,rows:Math.max(3,Math.min(e,12)),min_columns:6,min_rows:3}}getLayoutOptions(){const e=this.getCardSize();return{grid_columns:4,grid_rows:Math.max(3,Math.min(e,12)),grid_min_columns:2,grid_min_rows:3}}toggleMonthlyView(e){e.stopPropagation(),e.preventDefault(),this._monthlyExpanded=!this._monthlyExpanded}toggleYearlyView(e){e.stopPropagation(),e.preventDefault(),this._yearlyExpanded=!this._yearlyExpanded}toggleDetailedComparison(e){e.stopPropagation(),e.preventDefault(),this._detailedExpanded=!this._detailedExpanded}static get styles(){return me}}customElements.define("content-card-linky",je);export{je as ContentCardLinky,Je as assertConfig};

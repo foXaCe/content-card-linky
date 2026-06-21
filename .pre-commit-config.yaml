@@ -1,3 +1,10 @@
+# The eslint/prettier hooks below run as local Node hooks (needing the project
+# toolchain). They are fragile to provision in the pre-commit.ci sandbox and are
+# already enforced by the GitHub CI (`npm run lint` / `npm run format:check`), so
+# we skip them in the cloud runner while keeping them for local `prek`/pre-commit.
+ci:
+  skip: [eslint, prettier]
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -14,15 +21,16 @@ repos:
         name: eslint
         entry: eslint
         language: node
-        files: ^src/.*\.js$
-        types: [javascript]
+        files: ^(src|test)/.*\.ts$
         additional_dependencies:
           - eslint@10.5.0
+          - typescript@5.9.3
+          - typescript-eslint@8.46.0
 
       - id: prettier
         name: prettier
         entry: prettier --check
         language: node
-        files: ^src/.*\.(js|json)$
+        files: ^(src|test)/.*\.(ts|json)$
         additional_dependencies:
           - prettier@3.8.4

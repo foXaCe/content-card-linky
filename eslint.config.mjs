@@ -1,55 +1,31 @@
-export default [
+import tseslint from "typescript-eslint";
+
+export default tseslint.config(
   {
-    files: ["src/**/*.js", "test/**/*.js"],
+    ignores: ["dist/", "coverage/", "node_modules/"],
+  },
+  {
+    files: ["src/**/*.ts", "test/**/*.ts"],
     languageOptions: {
+      parser: tseslint.parser,
       ecmaVersion: 2022,
       sourceType: "module",
-      globals: {
-        window: "readonly",
-        document: "readonly",
-        customElements: "readonly",
-        customCards: "writable",
-        HTMLElement: "readonly",
-        Event: "readonly",
-        CustomEvent: "readonly",
-        KeyboardEvent: "readonly",
-        Map: "readonly",
-        Set: "readonly",
-        Promise: "readonly",
-        console: "readonly",
-        setTimeout: "readonly",
-        clearTimeout: "readonly",
-        setInterval: "readonly",
-        clearInterval: "readonly",
-        requestAnimationFrame: "readonly",
-        cancelAnimationFrame: "readonly",
-        fetch: "readonly",
-        URL: "readonly",
-        URLSearchParams: "readonly",
-        AbortController: "readonly",
-        MutationObserver: "readonly",
-        ResizeObserver: "readonly",
-        IntersectionObserver: "readonly",
-        localStorage: "readonly",
-        sessionStorage: "readonly",
-        navigator: "readonly",
-        location: "readonly",
-        history: "readonly",
-        performance: "readonly",
-        getComputedStyle: "readonly",
-        atob: "readonly",
-        btoa: "readonly",
-        __CARD_VERSION__: "readonly",
-      },
+    },
+    plugins: {
+      "@typescript-eslint": tseslint.plugin,
     },
     rules: {
-      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-      "no-undef": "error",
+      // TypeScript's own checker covers undefined identifiers and ambient
+      // globals (DOM lib, globals.d.ts), so the core rule is redundant here.
+      "no-undef": "off",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
+      // The Linky attribute bag is intentionally `any`; banning it adds noise.
+      "@typescript-eslint/no-explicit-any": "off",
       "no-console": "warn",
       "no-debugger": "error",
       "no-duplicate-case": "error",
       "no-empty": "warn",
-      "no-extra-semi": "error",
       "no-unreachable": "error",
       eqeqeq: ["warn", "smart"],
       "no-eval": "error",
@@ -60,4 +36,4 @@ export default [
       "prefer-const": "warn",
     },
   },
-];
+);

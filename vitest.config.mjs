@@ -8,13 +8,14 @@ export default defineConfig({
     __CARD_VERSION__: JSON.stringify(pkg.version),
   },
   test: {
-    include: ["test/**/*.test.js"],
+    include: ["test/**/*.test.ts"],
     environmentMatchGlobs: [["test/render/**", "happy-dom"]],
     coverage: {
       provider: "v8",
-      include: ["src/**/*.js"],
-      // styles.js is a single CSS template literal (no logic to exercise).
-      exclude: ["src/styles.js"],
+      include: ["src/**/*.ts"],
+      // styles.ts is a single CSS template literal (no logic to exercise);
+      // types.ts / globals.d.ts are type-only (erased at runtime).
+      exclude: ["src/styles.ts", "src/types.ts", "src/globals.d.ts"],
       reporter: ["text", "text-summary", "html", "json-summary", "lcov"],
       // Actuals: ~98% stmts / ~94% branch / ~99% func / ~99% lines.
       // Date-dependent renderers (week-summary, history tempo) accept an
