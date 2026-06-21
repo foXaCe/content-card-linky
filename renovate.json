@@ -1,0 +1,75 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "forkProcessing": "enabled",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":semanticCommitTypeAll(chore)",
+    "group:allNonMajor",
+    ":dependencyDashboard",
+    ":enableVulnerabilityAlertsWithLabel('security')",
+    ":maintainLockFilesWeekly",
+    ":timezone(Europe/Paris)",
+    "schedule:nonOfficeHours"
+  ],
+  "labels": ["dependencies"],
+  "reviewers": ["foXaCe"],
+  "assignees": ["foXaCe"],
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 4,
+  "rangeStrategy": "bump",
+  "minimumReleaseAge": "3 days",
+  "internalChecksFilter": "strict",
+  "dependencyDashboardTitle": "📦 Renovate Dependency Dashboard",
+  "configMigration": true,
+  "pre-commit": {
+    "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on monday"],
+    "automerge": true
+  },
+  "vulnerabilityAlerts": {
+    "labels": ["security", "dependencies"],
+    "schedule": ["at any time"],
+    "prCreation": "immediate"
+  },
+  "packageRules": [
+    {
+      "description": "Automerge non-major dev dependencies once CI is green",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "platformAutomerge": true,
+      "labels": ["dependencies", "javascript", "auto-merge"]
+    },
+    {
+      "description": "GitHub Actions updates",
+      "matchManagers": ["github-actions"],
+      "labels": ["dependencies", "github-actions"],
+      "automerge": true,
+      "platformAutomerge": true
+    },
+    {
+      "description": "pre-commit hook updates",
+      "matchManagers": ["pre-commit"],
+      "labels": ["dependencies", "pre-commit"]
+    },
+    {
+      "description": "lit is the only runtime dependency — review majors manually",
+      "matchDepNames": ["lit"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["dependencies", "javascript", "needs-review"],
+      "automerge": false
+    },
+    {
+      "description": "Major updates always need manual review",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "major", "needs-review"],
+      "minimumReleaseAge": "7 days"
+    }
+  ],
+  "ignorePaths": ["**/node_modules/**", "**/dist/**"]
+}
