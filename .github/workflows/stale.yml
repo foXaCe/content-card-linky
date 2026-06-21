@@ -3,15 +3,21 @@ name: Stale
 on:
   schedule:
     - cron: "0 6 * * *"
+  workflow_dispatch:
 
 permissions:
   issues: write
   pull-requests: write
 
+concurrency:
+  group: stale
+  cancel-in-progress: false
+
 jobs:
   stale:
     name: Close stale issues and PRs
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/stale@v10
         with:
