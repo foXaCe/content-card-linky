@@ -343,6 +343,9 @@ export function renderHistory(
   if (dailyweek === undefined) {
     return undefined;
   }
+  if (!Array.isArray(daily)) {
+    return undefined;
+  }
 
   let nbJours = dailyweek.toString().split(",").length;
   if (Number(config.nbJoursAffichage) <= nbJours) {

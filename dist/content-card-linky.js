@@ -1140,7 +1140,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       <br /><span class="cons-val">${ve(t,2)}</span> <br /><span class="cons-val">${r}</span>
     `}}(e,t,i.dailyweek_MP,o,i.dailyweek_MP_over,i.dailyweek_MP_time)}
     </div>
-  `}function Fe(e,t,a,o=new Date){if(!0!==t.showHistory)return;const{daily:i,dailyweek:n}=a;if(void 0===n)return;let s=n.toString().split(",").length;return Number(t.nbJoursAffichage)<=s&&(s=Number(t.nbJoursAffichage)),O`
+  `}function Fe(e,t,a,o=new Date){if(!0!==t.showHistory)return;const{daily:i,dailyweek:n}=a;if(void 0===n)return;if(!Array.isArray(i))return;let s=n.toString().split(",").length;return Number(t.nbJoursAffichage)<=s&&(s=Number(t.nbJoursAffichage)),O`
     ${Pe(e,t,a,o)}
     <div class="week-history">
       ${function(e,t){if(!0===t.showTitleLign){const a=t=>pe(e,`card.history.${t}`);return O`
@@ -1157,7 +1157,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     `}}(e,t)}
       ${i.slice(-s).map((n,r)=>{const l=i.length-s+r+1;return We(e,t,n,l,a,o)}).reverse()}
     </div>
-  `}function ze(e){return t=>{"Enter"!==t.key&&" "!==t.key||(t.preventDefault?.(),e(t))}}function Re(e,t){if(!0===e.showError&&""!==t)return O`
+  `}function ze(e){return t=>{"Enter"!==t.key&&" "!==t.key||(t.preventDefault?.(),e(t))}}function Re(e,t){if(!0===e.showError&&t)return O`
         <div class="error-msg" style="color: var(--error-color, red)">
           <ha-icon id="icon" icon="mdi:alert-outline"></ha-icon>
           ${t}
@@ -1310,7 +1310,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
           </div>
           ${Re(e,o.errorLastCall)}
         </div>
-      </ha-card>`:void 0:O` <ha-card id="card" @click="${()=>this._showDetails(e.entity)}">
+      </ha-card>`:O``:O` <ha-card id="card" @click="${()=>this._showDetails(e.entity)}">
         ${function(e){if(!0===e.showTitle)return O` <div class="card">
       <div class="main-title">
         <span>${e.titleName}</span>

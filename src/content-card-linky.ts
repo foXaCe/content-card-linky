@@ -225,7 +225,7 @@ export class ContentCardLinky extends LitElement {
         </div>
       </ha-card>`;
     }
-    return undefined;
+    return html``;
   }
 
   _showDetails(myEntity: string) {

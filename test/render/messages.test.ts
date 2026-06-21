@@ -21,6 +21,11 @@ describe("renderError", () => {
     const el = renderTpl(renderError({ showError: false }, "boom"));
     expect(el.textContent.trim()).toBe("");
   });
+
+  it("renders nothing when the message is undefined", () => {
+    const el = renderTpl(renderError({ showError: true }, undefined));
+    expect(el.textContent.trim()).toBe("");
+  });
 });
 
 describe("renderInformation", () => {

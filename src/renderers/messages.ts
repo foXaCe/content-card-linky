@@ -6,9 +6,9 @@ import type { HomeAssistant, ContentCardLinkyConfig, LinkyAttributes, TemplateRe
  * Inline error banner shown when the entity reports a last-call error.
  * @param errorMsg - the error message (empty string = no error)
  */
-export function renderError(config: ContentCardLinkyConfig, errorMsg: string): TemplateResult | undefined {
+export function renderError(config: ContentCardLinkyConfig, errorMsg: string | undefined): TemplateResult | undefined {
   if (config.showError === true) {
-    if (errorMsg !== "") {
+    if (errorMsg) {
       return html`
         <div class="error-msg" style="color: var(--error-color, red)">
           <ha-icon id="icon" icon="mdi:alert-outline"></ha-icon>

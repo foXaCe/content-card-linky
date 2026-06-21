@@ -54,6 +54,13 @@ describe("renderHistory guards", () => {
     expect(el.textContent.trim()).toBe("");
   });
 
+  it("returns undefined when daily is absent but dailyweek is present", () => {
+    const el = renderTpl(
+      renderHistory(makeHass(), { showHistory: true }, { dailyweek: "2026-05-04,2026-05-05,2026-05-06" }),
+    );
+    expect(el.textContent.trim()).toBe("");
+  });
+
   it("caps the number of days to nbJoursAffichage", () => {
     const attrs = richAttrs();
     const el = renderTpl(renderHistory(hassWith(attrs), { ...fullConfig, nbJoursAffichage: "3" }, attrs));
