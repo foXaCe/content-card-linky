@@ -43,14 +43,18 @@ function daysSinceMondayFor(date: Date): number {
  * If kWh is missing for a day but its cost is known, estimate kWh via the
  * average kWh/cost ratio of the available days.
  */
-export function calculateWeekTotal(daily: any[] | undefined, dailyweek_cost: any, now: Date = new Date()): number {
+export function calculateWeekTotal(
+  daily: readonly (string | number)[] | undefined,
+  dailyweek_cost: unknown,
+  now: Date = new Date(),
+): number {
   if (!daily) return 0;
 
   const daysSinceMonday = daysSinceMondayFor(now);
   let weekTotal = 0;
 
   for (let i = Math.min(daysSinceMonday, daily.length - 1); i >= 1; i--) {
-    const consumption = parseFloat(daily[i]);
+    const consumption = parseFloat(String(daily[i]));
     if (!isNaN(consumption) && consumption !== -1 && consumption !== 0) {
       weekTotal += consumption;
       continue;
@@ -65,7 +69,7 @@ export function calculateWeekTotal(daily: any[] | undefined, dailyweek_cost: any
     const validRatios: number[] = [];
     for (let j = 0; j < Math.min(daily.length, dailyCostArray.length, 7); j++) {
       if (j === i) continue;
-      const kwh = parseFloat(daily[j]);
+      const kwh = parseFloat(String(daily[j]));
       const cost = parseFloat(dailyCostArray[j]?.replace(",", "."));
       if (!isNaN(kwh) && !isNaN(cost) && kwh > 0 && cost > 0 && kwh !== -1 && cost !== -1) {
         validRatios.push(kwh / cost);
@@ -86,7 +90,7 @@ export function calculateWeekTotal(daily: any[] | undefined, dailyweek_cost: any
  * Same indexing convention as calculateWeekTotal — today (`daily[0]`) is
  * excluded.
  */
-export function calculateWeekCost(dailyweek_cost: any, now: Date = new Date()): number {
+export function calculateWeekCost(dailyweek_cost: unknown, now: Date = new Date()): number {
   if (!dailyweek_cost) return 0;
 
   const daysSinceMonday = daysSinceMondayFor(now);
@@ -106,7 +110,11 @@ export function calculateWeekCost(dailyweek_cost: any, now: Date = new Date()): 
  *
  * `dayNumber` is 1-based: it indexes `dailyweek_cost[dayNumber - 1]`.
  */
-export function estimateMissingKwh(daily: any[] | undefined, dayNumber: number, dailyweek_cost: any): number {
+export function estimateMissingKwh(
+  daily: readonly (string | number)[] | undefined,
+  dayNumber: number,
+  dailyweek_cost: unknown,
+): number {
   if (!daily || !dailyweek_cost) return 0;
 
   const dailyCostArray = dailyweek_cost.toString().split(",");
@@ -118,7 +126,7 @@ export function estimateMissingKwh(daily: any[] | undefined, dayNumber: number, 
   const validRatios: number[] = [];
 
   for (let i = 0; i < Math.min(daily.length, dailyCostArray.length, 7); i++) {
-    const kwh = parseFloat(daily[i]);
+    const kwh = parseFloat(String(daily[i]));
     const cost = parseFloat(dailyCostArray[i]?.replace(",", "."));
 
     if (!isNaN(kwh) && !isNaN(cost) && kwh > 0 && cost > 0 && kwh !== -1 && cost !== -1) {

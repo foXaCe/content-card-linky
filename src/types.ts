@@ -33,8 +33,74 @@ export interface HomeAssistant {
   language?: string;
 }
 
-/** Attribute bag exposed by Linky/MyElectricalData sensors (open by design). */
-export type LinkyAttributes = Record<string, any>;
+/** A Linky attribute that arrives as a comma-string OR a list (varies by MED version/path). */
+export type LinkyCsv = string | ReadonlyArray<string | number>;
+/** A numeric attribute that arrives as a number or a (possibly French-decimal) string. */
+export type LinkyNum = number | string;
+
+/**
+ * Attribute bag exposed by Linky/MyElectricalData sensors. Honestly typed: many
+ * values are polymorphic across MED versions, so the runtime narrowing lives in
+ * the `lib/*` helpers (toFloat/dayCell/parseFrenchNumber/calculations), which
+ * accept `unknown`. The index signature covers the long tail of attributes the
+ * card does not read directly.
+ */
+export interface LinkyAttributes {
+  typeCompteur?: string;
+  serviceEnedis?: string;
+  unit_of_measurement?: string;
+
+  daily?: ReadonlyArray<LinkyNum>;
+  dailyweek?: LinkyCsv;
+  dailyweek_Tempo?: LinkyCsv;
+  dailyweek_cost?: LinkyCsv;
+  dailyweek_costHC?: LinkyCsv;
+  dailyweek_costHP?: LinkyCsv;
+  dailyweek_HC?: LinkyCsv;
+  dailyweek_HP?: LinkyCsv;
+  dailyweek_MP?: LinkyCsv;
+  dailyweek_MP_over?: LinkyCsv;
+  dailyweek_MP_time?: LinkyCsv;
+
+  daily_cost?: LinkyNum;
+  yesterday?: LinkyNum;
+  yesterday_HC?: LinkyNum;
+  yesterday_HP?: LinkyNum;
+  day_2?: LinkyNum;
+  peak_offpeak_percent?: LinkyNum;
+
+  current_month?: LinkyNum;
+  current_month_evolution?: LinkyNum;
+  current_month_last_year?: LinkyNum;
+  current_week?: LinkyNum;
+  current_week_evolution?: LinkyNum;
+  current_year?: LinkyNum;
+  current_year_last_year?: LinkyNum;
+  last_month?: LinkyNum;
+  last_month_last_year?: LinkyNum;
+  last_week?: LinkyNum;
+  monthly_evolution?: LinkyNum;
+  yearly_evolution?: LinkyNum;
+  yesterday_evolution?: LinkyNum;
+
+  errorLastCall?: string;
+  versionUpdateAvailable?: boolean;
+  versionGit?: string;
+
+  forecast?: Record<string, unknown>;
+
+  // Attributes read off Tempo / EcoWatt / detailed-comparison entities (they share this bag)
+  date?: string;
+  days_red?: LinkyNum;
+  days_white?: LinkyNum;
+  days_blue?: LinkyNum;
+  time?: ReadonlyArray<string>;
+  consumption?: ReadonlyArray<LinkyNum>;
+  Daily?: string;
+  Dailyweek?: string;
+
+  [key: string]: unknown;
+}
 
 /** Day-name display width accepted by `Intl.DateTimeFormat`'s `weekday` option. */
 export type DayNameStyle = "long" | "short" | "narrow";

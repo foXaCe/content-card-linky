@@ -202,7 +202,7 @@ export class ContentCardLinky extends LitElement {
           )}
           ${renderEcoWatt(hass, config, attributes)} ${renderTempo(hass, config, attributes)}
           ${renderError(config, attributes.errorLastCall)}
-          ${renderVersion(hass, attributes.versionUpdateAvailable, attributes.versionGit)}
+          ${renderVersion(hass, attributes.versionUpdateAvailable ?? false, attributes.versionGit ?? "")}
           ${renderInformation(hass, config, attributes)}
         </div>
       </ha-card>`;
