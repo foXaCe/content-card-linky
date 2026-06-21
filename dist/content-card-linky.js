@@ -1069,7 +1069,20 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     </div>`:O``}function xe(e,t,a){return t.showPrice?O` <div class="cout-block">
       <span class="cout" title="${pe(e,"card.daily_cost")}">${ve(a.daily_cost,2)}</span
       ><span class="cout-unit"> €</span>
-    </div>`:O``}function Ee(e){const t=new Date;return t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ye(e),{year:"numeric"})}function Ae(e){const t=new Date;return t.setMonth(t.getMonth()-1),t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ye(e),{month:"long",year:"numeric"})}function De(e){const t=new Date;return t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ye(e),{month:"long",year:"numeric"})}function Pe(e,t,a,o=new Date){if(!t.showWeekSummary&&void 0!==t.showWeekSummary)return O``;const{daily:i,unit_of_measurement:n,dailyweek_cost:s}=a,r=we(i,s,o),l=_e(s,o),c=new Date(o);c.setDate(o.getDate()-(0===o.getDay()?6:o.getDay()-1));const p=function(e=new Date){const t=e.getMonth();return t>=2&&t<=4?{primary:"#66bb6a",accent:"#81c784",icon:"mdi:flower"}:t>=5&&t<=7?{primary:"#42a5f5",accent:"#29b6f6",icon:"mdi:white-balance-sunny"}:t>=8&&t<=10?{primary:"#ff7043",accent:"#ffab40",icon:"mdi:leaf"}:{primary:"#5c6bc0",accent:"#7986cb",icon:"mdi:snowflake"}}(o);return O`
+    </div>`:O``}function Ee(e){const t=new Date;return t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ye(e),{year:"numeric"})}function Ae(e){const t=new Date;return t.setMonth(t.getMonth()-1),t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ye(e),{month:"long",year:"numeric"})}function De(e){const t=new Date;return t.setFullYear(t.getFullYear()-1),t.toLocaleDateString(ye(e),{month:"long",year:"numeric"})}function Pe(e,t,a,o){const i=fe(t);return O` <span class="variations-linky">
+    <div class="percentage-line">
+      <span class="ha-icon">
+        <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${t<0?"45":0===t?"0":"-45"}deg)"></ha-icon>
+      </span>
+      <span
+        class="percentage-value ${t>0?"percentage-positive":t<0?"percentage-negative":"percentage-neutral"}"
+        aria-label="${pe(e,a,{value:i})}"
+        role="text"
+        >${i}<span class="unit"> %</span></span
+      >
+    </div>
+    <div class="tooltip">${o}</div>
+  </span>`}function Se(e,t,a,o=new Date){if(!t.showWeekSummary&&void 0!==t.showWeekSummary)return O``;const{daily:i,unit_of_measurement:n,dailyweek_cost:s}=a,r=we(i,s,o),l=_e(s,o),c=new Date(o);c.setDate(o.getDate()-(0===o.getDay()?6:o.getDay()-1));const p=function(e=new Date){const t=e.getMonth();return t>=2&&t<=4?{primary:"#66bb6a",accent:"#81c784",icon:"mdi:flower"}:t>=5&&t<=7?{primary:"#42a5f5",accent:"#29b6f6",icon:"mdi:white-balance-sunny"}:t>=8&&t<=10?{primary:"#ff7043",accent:"#ffab40",icon:"mdi:leaf"}:{primary:"#5c6bc0",accent:"#7986cb",icon:"mdi:snowflake"}}(o);return O`
     <div class="week-summary-card">
       <div class="week-summary-header">
         <ha-icon icon="${p.icon}" class="week-summary-icon"></ha-icon>
@@ -1092,21 +1105,21 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
             `:O``}
       </div>
     </div>
-  `}function Se(e){return O`
+  `}function Ce(e){return O`
     <br /><span class="cons-val" title="${pe(e,"card.history.data_unavailable")}"
       ><ha-icon id="icon" icon="mdi:alert-outline"></ha-icon
     ></span>
-  `}function Ce(e){return O`
+  `}function Me(e){return O`
     <br /><span class="cons-val pending" title="${pe(e,"card.history.data_pending")}"
       ><ha-icon id="icon" icon="mdi:clock-outline"></ha-icon
     ></span>
-  `}function Me(e,t,a,o,i,n=new Date){if(a&&"undefined"!==a.toString()){const e=a.toString().split(",")[o-1];if(e&&"-1"!==e)return e.toLowerCase()}const s=function(e,t){const a=["sensor.rte_tempo_today","sensor.edf_tempo_today","sensor.tempo_today","sensor.rte_tempo_tomorrow","sensor.edf_tempo_tomorrow","sensor.tempo_tomorrow"],o={};for(const t of a)if(e.states[t]){const a=e.states[t];a.state&&ue.has(a.state)&&(t.includes("today")?o.today=t:t.includes("tomorrow")&&(o.tomorrow=t))}if(t.tempoEntity&&e.states[t.tempoEntity]){const a=e.states[t.tempoEntity];a.state&&ue.has(a.state)&&(o.today=t.tempoEntity)}return o}(e,t);if(i&&Object.keys(s).length>0){const t=new Date(i),a=new Date(n),o=new Date(n);if(o.setDate(a.getDate()+1),t.toDateString()===a.toDateString()&&s.today){const t=e.states[s.today];if(t&&t.state&&ue.has(t.state))return ue.get(t.state)}if(t.toDateString()===o.toDateString()&&s.tomorrow){const t=e.states[s.tomorrow];if(t&&t.state&&ue.has(t.state))return ue.get(t.state)}}return"grey"}function Te(e,t,a,o){if(t.showDayPriceHCHP){const t=a.toString().split(",")[o-1];return"-1"===t?Se(e):O` <br /><span class="cons-val">${ve(t,2)} €</span> `}}function He(e,t,a,o,i){if(t.showDayHCHP){const n=a.toString().split(",")[o-1];return"-1"===n?Se(e):O`
+  `}function Te(e,t,a,o,i,n=new Date){if(a&&"undefined"!==a.toString()){const e=a.toString().split(",")[o-1];if(e&&"-1"!==e)return e.toLowerCase()}const s=function(e,t){const a=["sensor.rte_tempo_today","sensor.edf_tempo_today","sensor.tempo_today","sensor.rte_tempo_tomorrow","sensor.edf_tempo_tomorrow","sensor.tempo_tomorrow"],o={};for(const t of a)if(e.states[t]){const a=e.states[t];a.state&&ue.has(a.state)&&(t.includes("today")?o.today=t:t.includes("tomorrow")&&(o.tomorrow=t))}if(t.tempoEntity&&e.states[t.tempoEntity]){const a=e.states[t.tempoEntity];a.state&&ue.has(a.state)&&(o.today=t.tempoEntity)}return o}(e,t);if(i&&Object.keys(s).length>0){const t=new Date(i),a=new Date(n),o=new Date(n);if(o.setDate(a.getDate()+1),t.toDateString()===a.toDateString()&&s.today){const t=e.states[s.today];if(t&&t.state&&ue.has(t.state))return ue.get(t.state)}if(t.toDateString()===o.toDateString()&&s.tomorrow){const t=e.states[s.tomorrow];if(t&&t.state&&ue.has(t.state))return ue.get(t.state)}}return"grey"}function He(e,t,a,o){if(t.showDayPriceHCHP){const t=a.toString().split(",")[o-1];return"-1"===t?Ce(e):O` <br /><span class="cons-val">${ve(t,2)} €</span> `}}function Ne(e,t,a,o,i){if(t.showDayHCHP){const n=a.toString().split(",")[o-1];return"-1"===n?Ce(e):O`
       <br /><span class="cons-val"
         >${ve(n,2)} ${t.showInTableUnit?O` ${i}`:O``}</span
       >
-    `}}function Ne(e,t,a){return!0===e?O`<span class="titre-desktop">${t}</span><span class="titre-mobile">${a}</span><br /> `:O``}function We(e,t,a,o,i,n){const{unit_of_measurement:s}=i;return O`
+    `}}function We(e,t,a){return!0===e?O`<span class="titre-desktop">${t}</span><span class="titre-mobile">${a}</span><br /> `:O``}function ze(e,t,a,o,i,n){const{unit_of_measurement:s}=i;return O`
     <div class="day">
-      ${function(e,t,a,o,i,n){const s=a.toString().split(",")[i-1];let r="grey";return t.showTempoColor&&(r=Me(e,t,o,i,s,n)),O`
+      ${function(e,t,a,o,i,n){const s=a.toString().split(",")[i-1];let r="grey";return t.showTempoColor&&(r=Te(e,t,o,i,s,n)),O`
     <span class="tempo-day-wrapper">
       <span
         class="tempoday-${r}"
@@ -1116,21 +1129,21 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       >
     </span>
   `}(e,t,i.dailyweek,i.dailyweek_Tempo,o,n)}
-      ${function(e,t,a,o,i,n){if(-1===a||0===a||"0"===a||null==a){if(!n)return Ce(e);{const a=n.toString().split(",")[o-1];if(a&&"-1"!==a&&parseFloat(a.replace(",","."))>0){const a=be(e.states[t.entity].attributes.daily,o,n);if(a>0)return O`
+      ${function(e,t,a,o,i,n){if(-1===a||0===a||"0"===a||null==a){if(!n)return Me(e);{const a=n.toString().split(",")[o-1];if(a&&"-1"!==a&&parseFloat(a.replace(",","."))>0){const a=be(e.states[t.entity].attributes.daily,o,n);if(a>0)return O`
             <br /><span class="cons-val estimated" title="${pe(e,"card.history.estimated")}"
               >${ve(a)} ${t.showInTableUnit?O` ${i}`:O``}</span
             >
-          `}else if(!a||"-1"===a)return Ce(e)}return Se(e)}return O`
+          `}else if(!a||"-1"===a)return Me(e)}return Ce(e)}return O`
     <br /><span class="cons-val"
       >${ve(a)} ${t.showInTableUnit?O` ${i}`:O``}</span
     >
   `}(e,t,a,o,s,i.dailyweek_cost)}
-      ${function(e,t,a,o,i){if(t.showDayPrice){const t=a.toString().split(",")[o-1];return"-1"===t?Se(e):O` <br /><span class="cons-val">${ve(t,2)} €</span> `}if(t.kWhPrice){const a=parseFloat(i);return isNaN(a)||a<=0?Se(e):O` <br /><span class="cons-val">${ve(a*t.kWhPrice,2)} €</span> `}}(e,t,i.dailyweek_cost,o,a)}
-      ${Te(e,t,i.dailyweek_costHC,o)}
-      ${Te(e,t,i.dailyweek_costHP,o)}
-      ${He(e,t,i.dailyweek_HC,o,s)}
-      ${He(e,t,i.dailyweek_HP,o,s)}
-      ${function(e,t,a,o,i,n){if(t.showDayMaxPower){const t=a.toString().split(",")[o-1],s=i.toString().split(",")[o-1];if("-1"===t)return Se(e);const r=new Date(n.toString().split(",")[o-1]).toLocaleTimeString(ye(e),{hour:"2-digit",minute:"2-digit"});return"true"===s?O`
+      ${function(e,t,a,o,i){if(t.showDayPrice){const t=a.toString().split(",")[o-1];return"-1"===t?Ce(e):O` <br /><span class="cons-val">${ve(t,2)} €</span> `}if(t.kWhPrice){const a=parseFloat(i);return isNaN(a)||a<=0?Ce(e):O` <br /><span class="cons-val">${ve(a*t.kWhPrice,2)} €</span> `}}(e,t,i.dailyweek_cost,o,a)}
+      ${He(e,t,i.dailyweek_costHC,o)}
+      ${He(e,t,i.dailyweek_costHP,o)}
+      ${Ne(e,t,i.dailyweek_HC,o,s)}
+      ${Ne(e,t,i.dailyweek_HP,o,s)}
+      ${function(e,t,a,o,i,n){if(t.showDayMaxPower){const t=a.toString().split(",")[o-1],s=i.toString().split(",")[o-1];if("-1"===t)return Ce(e);const r=new Date(n.toString().split(",")[o-1]).toLocaleTimeString(ye(e),{hour:"2-digit",minute:"2-digit"});return"true"===s?O`
         <br /><span class="cons-val" style="color: var(--error-color, red)">${ve(t,2)}</span> <br /><span
           class="cons-val"
           style="color: var(--error-color, red)"
@@ -1140,34 +1153,34 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       <br /><span class="cons-val">${ve(t,2)}</span> <br /><span class="cons-val">${r}</span>
     `}}(e,t,i.dailyweek_MP,o,i.dailyweek_MP_over,i.dailyweek_MP_time)}
     </div>
-  `}function ze(e,t,a,o=new Date){if(!0!==t.showHistory)return;const{daily:i,dailyweek:n}=a;if(void 0===n)return;if(!Array.isArray(i))return;let s=n.toString().split(",").length;return Number(t.nbJoursAffichage)<=s&&(s=Number(t.nbJoursAffichage)),O`
-    ${Pe(e,t,a,o)}
+  `}function Fe(e,t,a,o=new Date){if(!0!==t.showHistory)return;const{daily:i,dailyweek:n}=a;if(void 0===n)return;if(!Array.isArray(i))return;let s=n.toString().split(",").length;return Number(t.nbJoursAffichage)<=s&&(s=Number(t.nbJoursAffichage)),O`
+    ${Se(e,t,a,o)}
     <div class="week-history">
       ${function(e,t){if(!0===t.showTitleLign){const a=t=>pe(e,`card.history.${t}`);return O`
       <div class="day">
-        ${Ne(!0,"","")} ${Ne(!0,a("col_consumption"),a("col_consumption"))}
-        ${Ne(t.showDayPrice,a("col_price"),a("col_price"))}
-        ${Ne(t.showDayPriceHCHP,a("col_price_offpeak"),a("col_price_offpeak_mobile"))}
-        ${Ne(t.showDayPriceHCHP,a("col_price_peak"),a("col_price_peak_mobile"))}
-        ${Ne(t.showDayHCHP,a("col_offpeak"),a("col_offpeak"))}
-        ${Ne(t.showDayHCHP,a("col_peak"),a("col_peak"))}
-        ${Ne(t.showDayMaxPower,a("col_max_power"),a("col_max_power"))}
-        ${Ne(t.showDayMaxPowerTime,a("col_max_power_time"),a("col_max_power_time"))}
+        ${We(!0,"","")} ${We(!0,a("col_consumption"),a("col_consumption"))}
+        ${We(t.showDayPrice,a("col_price"),a("col_price"))}
+        ${We(t.showDayPriceHCHP,a("col_price_offpeak"),a("col_price_offpeak_mobile"))}
+        ${We(t.showDayPriceHCHP,a("col_price_peak"),a("col_price_peak_mobile"))}
+        ${We(t.showDayHCHP,a("col_offpeak"),a("col_offpeak"))}
+        ${We(t.showDayHCHP,a("col_peak"),a("col_peak"))}
+        ${We(t.showDayMaxPower,a("col_max_power"),a("col_max_power"))}
+        ${We(t.showDayMaxPowerTime,a("col_max_power_time"),a("col_max_power_time"))}
       </div>
     `}}(e,t)}
-      ${i.slice(-s).map((n,r)=>{const l=i.length-s+r+1;return We(e,t,n,l,a,o)}).reverse()}
+      ${i.slice(-s).map((n,r)=>{const l=i.length-s+r+1;return ze(e,t,n,l,a,o)}).reverse()}
     </div>
-  `}function Fe(e){return t=>{"Enter"!==t.key&&" "!==t.key||(t.preventDefault?.(),e(t))}}function Re(e,t){if(!0===e.showError&&t)return O`
+  `}function Re(e){return t=>{"Enter"!==t.key&&" "!==t.key||(t.preventDefault?.(),e(t))}}function Le(e,t){if(!0===e.showError&&t)return O`
         <div class="error-msg" style="color: var(--error-color, red)">
           <ha-icon id="icon" icon="mdi:alert-outline"></ha-icon>
           ${t}
         </div>
-      `}const Le=new Map([["Pas de valeur","green"],[1,"green"],[2,"yellow"],[3,"red"]]);function Ue(e,t){return O`
+      `}const Ue=new Map([["Pas de valeur","green"],[1,"green"],[2,"yellow"],[3,"red"]]);function Oe(e,t){return O`
     <tr style="line-height:80%">
       <td style="width:5%">${e}</td>
       <td style="width:95%">
         <ul class="flow-row oneHour">
-          ${$e(t,Le).map(e=>O`<li
+          ${$e(t,Ue).map(e=>O`<li
                 class="ecowatt-${e[0]}"
                 style="background: ${e[1]}"
                 title="${e[1]} - ${e[0]}"
@@ -1175,11 +1188,11 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         </ul>
       </td>
     </tr>
-  `}function Oe(e){const t=new Date(e.attributes.date),a=e.state;return[t,ue.get(a),a]}function Ye(e,t,a){if(!e||e.length<=1||0===t)return O`<svg viewBox="0 0 100 50" class="consumption-chart"></svg>`;const o=e.map((a,o)=>`${o/(e.length-1)*100},${100-a.consumption/t*100}`).join(" ");return O`
+  `}function Ye(e){const t=new Date(e.attributes.date),a=e.state;return[t,ue.get(a),a]}function Je(e,t,a){if(!e||e.length<=1||0===t)return O`<svg viewBox="0 0 100 50" class="consumption-chart"></svg>`;const o=e.map((a,o)=>`${o/(e.length-1)*100},${100-a.consumption/t*100}`).join(" ");return O`
     <svg viewBox="0 0 100 50" class="consumption-chart">
       <polyline points="${o}" fill="none" stroke="${a}" stroke-width="2" />
     </svg>
-  `}function Je(e,t,a,o,i){if(!t.showDetailedComparison)return O``;if(!t.detailedComparisonEntity)return O``;const n=e.states[t.detailedComparisonEntity];if(!n)return O`
+  `}function je(e,t,a,o,i){if(!t.showDetailedComparison)return O``;if(!t.detailedComparisonEntity)return O``;const n=e.states[t.detailedComparisonEntity];if(!n)return O`
       <div class="collapsible-section">
         <div class="collapsible-header">
           <span class="section-title">${pe(e,"card.comparison.title")}</span>
@@ -1205,7 +1218,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         tabindex="0"
         aria-expanded="${o}"
         @click="${i}"
-        @keydown="${Fe(i)}"
+        @keydown="${Re(i)}"
       >
         <ha-icon icon="${o?"mdi:chevron-up":"mdi:chevron-down"}"></ha-icon>
         <span class="section-title">${pe(e,"card.comparison.title")}</span>
@@ -1219,7 +1232,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     <div class="comparison-charts">
       <div class="chart-day">
         <h4>${pe(e,"card.comparison.today")}</h4>
-        <div class="mini-chart">${Ye(t.today,o,"#2196f3")}</div>
+        <div class="mini-chart">${Je(t.today,o,"#2196f3")}</div>
         <div class="day-stats">
           <span class="total">${t.todayTotal.toFixed(1)} ${a}</span>
           <span class="peak"
@@ -1229,7 +1242,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       </div>
       <div class="chart-day">
         <h4>${pe(e,"card.comparison.yesterday")}</h4>
-        <div class="mini-chart">${Ye(t.yesterday,o,"#666")}</div>
+        <div class="mini-chart">${Je(t.yesterday,o,"#666")}</div>
         <div class="day-stats">
           <span class="total">${t.yesterdayTotal.toFixed(1)} ${a}</span>
           <span class="peak"
@@ -1256,7 +1269,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         </div>
       </div>
     </div>
-  `}const je="1.8.0";function Ie(e){if(!e||!e.entity)throw new Error("You need to define an entity");if(void 0!==e.kWhPrice&&null!==e.kWhPrice&&isNaN(Number(e.kWhPrice)))throw new Error("kWhPrice should be a number")}window.customCards=window.customCards||[],window.customCards.push({type:"content-card-linky",name:"Carte Enedis",description:"Carte pour l'intégration MyElectricalData - Affichage moderne des données Linky avec évolutions colorées",preview:!0,documentationURL:"https://github.com/foXaCe/content-card-linky",version:je,getEntitySuggestion:(e,t)=>{const a=e.states[t];if(!a)return null;const o=a.attributes||{};return/linky/i.test(t)||"consommation"===o.typeCompteur||void 0!==o.daily&&void 0!==o.dailyweek?{config:{type:"custom:content-card-linky",entity:t}}:null}}),console.info(`%c content-card-linky %c v${je} `,"color: white; background: #4caf50; font-weight: 700;","color: white; background: #1976d2; font-weight: 700;");class Ve extends ne{static get properties(){return{config:{attribute:!1},hass:{attribute:!1},_monthlyExpanded:{state:!0},_yearlyExpanded:{state:!0},_detailedExpanded:{state:!0}}}constructor(){super(),this._monthlyExpanded=!1,this._yearlyExpanded=!1,this._detailedExpanded=!1}static async getConfigElement(){return await import("./content-card-linky-editor.js"),document.createElement("content-card-linky-editor")}static async getStubConfig(e){let t="sensor.linky_consumption";if(e&&e.states){const a=Object.keys(e.states).find(t=>{if(!t.startsWith("sensor."))return!1;const a=e.states[t].attributes||{};return/linky/i.test(t)||"consommation"===a.typeCompteur||void 0!==a.daily&&void 0!==a.dailyweek});a&&(t=a)}return{type:"custom:content-card-linky",entity:t,titleName:"LINKY",nbJoursAffichage:"7",showIcon:!0,showHistory:!0,showPrice:!0,showDayPrice:!0,showCurrentMonthRatio:!0,showWeekRatio:!0,showDayName:"long",showDayMaxPower:!0,showTitleLign:!0,showEcoWatt:!0,showTempo:!1,showMonthlyView:!0,showYearlyView:!0,showDetailedComparison:!0,detailedComparisonEntity:"sensor.linky_consumption_last5day"}}render(){if(!this.config||!this.hass)return O``;const e=this.config,t=this.hass;this.dataset.appearance=e.appearance??"premium";const a=t.states[e.entity];if(!a)return O`
+  `}const Ie="1.8.0";function Ve(e){if(!e||!e.entity)throw new Error("You need to define an entity");if(void 0!==e.kWhPrice&&null!==e.kWhPrice&&isNaN(Number(e.kWhPrice)))throw new Error("kWhPrice should be a number")}window.customCards=window.customCards||[],window.customCards.push({type:"content-card-linky",name:"Carte Enedis",description:"Carte pour l'intégration MyElectricalData - Affichage moderne des données Linky avec évolutions colorées",preview:!0,documentationURL:"https://github.com/foXaCe/content-card-linky",version:Ie,getEntitySuggestion:(e,t)=>{const a=e.states[t];if(!a)return null;const o=a.attributes||{};return/linky/i.test(t)||"consommation"===o.typeCompteur||void 0!==o.daily&&void 0!==o.dailyweek?{config:{type:"custom:content-card-linky",entity:t}}:null}}),console.info(`%c content-card-linky %c v${Ie} `,"color: white; background: #4caf50; font-weight: 700;","color: white; background: #1976d2; font-weight: 700;");class qe extends ne{static get properties(){return{config:{attribute:!1},hass:{attribute:!1},_monthlyExpanded:{state:!0},_yearlyExpanded:{state:!0},_detailedExpanded:{state:!0}}}constructor(){super(),this._monthlyExpanded=!1,this._yearlyExpanded=!1,this._detailedExpanded=!1}static async getConfigElement(){return await import("./content-card-linky-editor.js"),document.createElement("content-card-linky-editor")}static async getStubConfig(e){let t="sensor.linky_consumption";if(e&&e.states){const a=Object.keys(e.states).find(t=>{if(!t.startsWith("sensor."))return!1;const a=e.states[t].attributes||{};return/linky/i.test(t)||"consommation"===a.typeCompteur||void 0!==a.daily&&void 0!==a.dailyweek});a&&(t=a)}return{type:"custom:content-card-linky",entity:t,titleName:"LINKY",nbJoursAffichage:"7",showIcon:!0,showHistory:!0,showPrice:!0,showDayPrice:!0,showCurrentMonthRatio:!0,showWeekRatio:!0,showDayName:"long",showDayMaxPower:!0,showTitleLign:!0,showEcoWatt:!0,showTempo:!1,showMonthlyView:!0,showYearlyView:!0,showDetailedComparison:!0,detailedComparisonEntity:"sensor.linky_consumption_last5day"}}render(){if(!this.config||!this.hass)return O``;const e=this.config,t=this.hass;this.dataset.appearance=e.appearance??"premium";const a=t.states[e.entity];if(!a)return O`
         <ha-card>
           <div class="card">
             <div id="states">
@@ -1308,7 +1321,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     <span class="cout-unit">${a.unit_of_measurement}</span>
   `}(t,a.state,o)}</div>
           </div>
-          ${Re(e,o.errorLastCall)}
+          ${Le(e,o.errorLastCall)}
         </div>
       </ha-card>`:O``:O` <ha-card id="card" @click="${()=>this._showDetails(e.entity)}">
         ${function(e){if(!0===e.showTitle)return O` <div class="card">
@@ -1340,125 +1353,40 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       </div>
       ${xe(e,t,a)}
     </div>`}(t,e,o,a)} ${function(e,t,a){return O` <div class="variations">
-    ${t.showYearRatio?O` <span class="variations-linky">
-          <div class="percentage-line">
-            <span class="ha-icon">
-              <ha-icon
-                icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${a.yearly_evolution<0?"45":0===a.yearly_evolution?"0":"-45"}deg)"
-              >
-              </ha-icon>
-            </span>
-            <span
-              class="percentage-value ${a.yearly_evolution>0?"percentage-positive":a.yearly_evolution<0?"percentage-negative":"percentage-neutral"}"
-              aria-label="${pe(e,"card.aria.yearly_trend",{value:fe(a.yearly_evolution)})}"
-              role="text"
-              >${fe(a.yearly_evolution)}<span class="unit"> %</span></span
-            >
-          </div>
-          <div class="tooltip">
+    ${t.showYearRatio?Pe(e,a.yearly_evolution,"card.aria.yearly_trend",O`
             <span class="year">${pe(e,"card.previous_year",{year:Ee(e)})}</span>
             <span class="tooltiptext"
               >${pe(e,"card.tooltip.year_prev",{value:a.current_year_last_year})}<br />${pe(e,"card.tooltip.year",{value:a.current_year})}</span
             >
-          </div>
-        </span>`:O``}
-    ${t.showMonthRatio?O` <span class="variations-linky">
-          <div class="percentage-line">
-            <span class="ha-icon">
-              <ha-icon
-                icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${a.monthly_evolution<0?"45":0===a.monthly_evolution?"0":"-45"}deg)"
-              >
-              </ha-icon>
-            </span>
-            <span
-              class="percentage-value ${a.monthly_evolution>0?"percentage-positive":a.monthly_evolution<0?"percentage-negative":"percentage-neutral"}"
-              aria-label="${pe(e,"card.aria.monthly_trend",{value:fe(a.monthly_evolution)})}"
-              role="text"
-              >${fe(a.monthly_evolution)}<span class="unit"> %</span></span
-            >
-          </div>
-          <div class="tooltip">
+          `):O``}
+    ${t.showMonthRatio?Pe(e,a.monthly_evolution,"card.aria.monthly_trend",O`
             <span class="previous-month">${pe(e,"card.previous_month",{month:Ae(e)})}</span>
             <span class="tooltiptext"
               >${pe(e,"card.tooltip.prev_month_prev_year",{value:a.last_month_last_year})}<br />${pe(e,"card.tooltip.prev_month",{value:a.last_month})}</span
             >
-          </div>
-        </span>`:O``}
-    ${t.showCurrentMonthRatio?O` <span class="variations-linky">
-          <div class="percentage-line">
-            <span class="ha-icon">
-              <ha-icon
-                icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${a.current_month_evolution<0?"45":0===a.current_month_evolution?"0":"-45"}deg)"
-              >
-              </ha-icon>
-            </span>
-            <span
-              class="percentage-value ${a.current_month_evolution>0?"percentage-positive":a.current_month_evolution<0?"percentage-negative":"percentage-neutral"}"
-              aria-label="${pe(e,"card.aria.current_month_trend",{value:fe(a.current_month_evolution)})}"
-              role="text"
-              >${fe(a.current_month_evolution)}<span class="unit"> %</span></span
-            >
-          </div>
-          <div class="tooltip">
+          `):O``}
+    ${t.showCurrentMonthRatio?Pe(e,a.current_month_evolution,"card.aria.current_month_trend",O`
             <span class="current-month">${pe(e,"card.current_month",{month:De(e)})}</span>
             <span class="tooltiptext"
               >${pe(e,"card.tooltip.month_prev_year",{value:a.current_month_last_year})}<br />${pe(e,"card.tooltip.month",{value:a.current_month})}</span
             >
-          </div>
-        </span>`:O``}
-    ${t.showWeekRatio?O` <span class="variations-linky">
-          <div class="percentage-line">
-            <span class="ha-icon">
-              <ha-icon
-                icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${a.current_week_evolution<0?"45":0===a.current_week_evolution?"0":"-45"}deg)"
-              >
-              </ha-icon>
-            </span>
-            <span
-              class="percentage-value ${a.current_week_evolution>0?"percentage-positive":a.current_week_evolution<0?"percentage-negative":"percentage-neutral"}"
-              aria-label="${pe(e,"card.aria.weekly_trend",{value:fe(a.current_week_evolution)})}"
-              role="text"
-              >${fe(a.current_week_evolution)}<span class="unit"> %</span></span
-            >
-          </div>
-          <div class="tooltip">
+          `):O``}
+    ${t.showWeekRatio?Pe(e,a.current_week_evolution,"card.aria.weekly_trend",O`
             <span class="previous-month"
               >${pe(e,"card.previous_week",{week:pe(e,"card.week_noun")})}</span
             >
             <span class="tooltiptext"
               >${pe(e,"card.tooltip.last_week",{value:a.last_week})}<br />${pe(e,"card.tooltip.this_week",{value:a.current_week})}</span
             >
-          </div>
-        </span>`:O``}
-    ${t.showYesterdayRatio?O` <span class="variations-linky">
-          <div class="percentage-line">
-            <span class="ha-icon">
-              <ha-icon
-                icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${a.yesterday_evolution<0?"45":0===a.yesterday_evolution?"0":"-45"}deg)"
-              >
-              </ha-icon>
-            </span>
-            <span
-              class="percentage-value ${a.yesterday_evolution>0?"percentage-positive":a.yesterday_evolution<0?"percentage-negative":"percentage-neutral"}"
-              aria-label="${pe(e,"card.aria.daily_trend",{value:fe(a.yesterday_evolution)})}"
-              role="text"
-              >${fe(a.yesterday_evolution)}<span class="unit"> %</span></span
-            >
-          </div>
-          <div class="tooltip">
+          `):O``}
+    ${t.showYesterdayRatio?Pe(e,a.yesterday_evolution,"card.aria.daily_trend",O`
             <span class="previous-month"
               >${pe(e,"card.before_yesterday",{date:pe(e,"card.day_before_noun")})}</span
             >
             <span class="tooltiptext"
               >${pe(e,"card.tooltip.day_before_yesterday",{value:a.day_2})}<br />${pe(e,"card.tooltip.yesterday",{value:a.yesterday})}</span
             >
-          </div>
-        </span>`:O``}
+          `):O``}
     ${t.showPeakOffPeak?O` <span class="variations-linky">
           <span class="ha-icon">
             <ha-icon icon="mdi:flash"></ha-icon>
@@ -1505,7 +1433,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       </div>
     </div>
   `}(t,0,o):O``}
-          ${ze(t,e,o)}
+          ${Fe(t,e,o)}
           ${function(e,t,a,o,i){if(!t.showMonthlyView)return O``;const n=a.current_month||"N/A",s=a.last_month||"N/A",r=a.current_month_last_year||"N/A",l=a.last_month_last_year||"N/A",c=[{name:pe(e,"card.temporal.current_month"),value:n,year:(new Date).getFullYear(),evolution:"N/A"!==r&&"N/A"!==n?((parseFloat(n)-parseFloat(r))/parseFloat(r)*100).toFixed(1):null},{name:pe(e,"card.temporal.previous_month"),value:s,year:(new Date).getFullYear(),evolution:"N/A"!==l&&"N/A"!==s?((parseFloat(s)-parseFloat(l))/parseFloat(l)*100).toFixed(1):null},{name:pe(e,"card.temporal.current_month_prev_year"),value:r,year:(new Date).getFullYear()-1,evolution:null},{name:pe(e,"card.temporal.previous_month_prev_year"),value:l,year:(new Date).getFullYear()-1,evolution:null}].filter(e=>"N/A"!==e.value);return O`
     <div class="collapsible-section">
       <div
@@ -1514,7 +1442,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         tabindex="0"
         aria-expanded="${o}"
         @click="${i}"
-        @keydown="${Fe(i)}"
+        @keydown="${Re(i)}"
       >
         <ha-icon icon="${o?"mdi:chevron-up":"mdi:chevron-down"}"></ha-icon>
         <span class="section-title">${pe(e,"card.temporal.monthly")}</span>
@@ -1549,7 +1477,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         tabindex="0"
         aria-expanded="${o}"
         @click="${i}"
-        @keydown="${Fe(i)}"
+        @keydown="${Re(i)}"
       >
         <ha-icon icon="${o?"mdi:chevron-up":"mdi:chevron-down"}"></ha-icon>
         <span class="section-title">${pe(e,"card.temporal.yearly")}</span>
@@ -1576,24 +1504,24 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       </div>
     </div>
   `}(t,e,o,this._yearlyExpanded,e=>this.toggleYearlyView(e))}
-          ${Je(t,e,o,this._detailedExpanded,e=>this.toggleDetailedComparison(e))}
+          ${je(t,e,o,this._detailedExpanded,e=>this.toggleDetailedComparison(e))}
           ${function(e,t,a){if(void 0===a.serviceEnedis)return O``;if("myElectricalData"!==a.serviceEnedis)return O`${pe(e,"card.ecowatt.only_med")}`;const o=t.ewEntity?e.states[t.ewEntity]:void 0,i=t.ewEntityJ1?e.states[t.ewEntityJ1]:void 0,n=t.ewEntityJ2?e.states[t.ewEntityJ2]:void 0;return t.showEcoWatt&&!o?O`<div class="error-msg">${pe(e,"card.ecowatt.missing_today")}</div>`:!t.showEcoWattJ12||i&&n?O`
     <table style="width:100%">
-      ${t.showEcoWatt?Ue(pe(e,"card.ecowatt.today"),o):O``}
+      ${t.showEcoWatt?Oe(pe(e,"card.ecowatt.today"),o):O``}
       ${t.showEcoWattJ12?O`
-            ${Ue(pe(e,"card.ecowatt.tomorrow"),i)}
-            ${Ue(pe(e,"card.ecowatt.after_tomorrow"),n)}
+            ${Oe(pe(e,"card.ecowatt.tomorrow"),i)}
+            ${Oe(pe(e,"card.ecowatt.after_tomorrow"),n)}
             <tr style="line-height:80%">
               <td style="width:5%"></td>
               <td style="width:95%">
                 <ul class="flow-row oneHourLabel">
-                  ${$e(n,Le).map(e=>O`<li title="${e[0]}">${e[0]%2==1?e[0]:""}</li>`)}
+                  ${$e(n,Ue).map(e=>O`<li title="${e[0]}">${e[0]%2==1?e[0]:""}</li>`)}
                 </ul>
               </td>
             </tr>
           `:O``}
     </table>
-  `:O`<div class="error-msg">${pe(e,"card.ecowatt.missing_j12")}</div>`}(t,e,o)} ${function(e,t,a){if(void 0===a.serviceEnedis)return O``;if("myElectricalData"!==a.serviceEnedis)return O`${pe(e,"card.tempo.only_med")}`;if(!1===t.showTempo)return O``;const o=e.states[t.tempoEntityInfo],i=e.states[t.tempoEntityJ0],n=e.states[t.tempoEntityJ1];if(!(i&&i.state&&n&&n.state))return O`${pe(e,"card.tempo.missing_j01")}`;if(!o||!o.state)return O`${pe(e,"card.tempo.missing_info")}`;const[s,r]=Oe(i),[l,c]=Oe(n),[p,d,u]=[(h=o).attributes.days_red,h.attributes.days_white,h.attributes.days_blue];var h;const m=t=>new Date(t).toLocaleDateString(ye(e),{weekday:"long",day:"numeric"});return O`
+  `:O`<div class="error-msg">${pe(e,"card.ecowatt.missing_j12")}</div>`}(t,e,o)} ${function(e,t,a){if(void 0===a.serviceEnedis)return O``;if("myElectricalData"!==a.serviceEnedis)return O`${pe(e,"card.tempo.only_med")}`;if(!1===t.showTempo)return O``;const o=e.states[t.tempoEntityInfo],i=e.states[t.tempoEntityJ0],n=e.states[t.tempoEntityJ1];if(!(i&&i.state&&n&&n.state))return O`${pe(e,"card.tempo.missing_j01")}`;if(!o||!o.state)return O`${pe(e,"card.tempo.missing_info")}`;const[s,r]=Ye(i),[l,c]=Ye(n),[p,d,u]=[(h=o).attributes.days_red,h.attributes.days_white,h.attributes.days_blue];var h;const m=t=>new Date(t).toLocaleDateString(ye(e),{weekday:"long",day:"numeric"});return O`
     <table class="tempo-color">
       <tr>
         <td class="tempo-${r}" style="width:50%">${m(s)}</td>
@@ -1608,7 +1536,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       </tr>
     </table>
   `}(t,e,o)}
-          ${Re(e,o.errorLastCall)}
+          ${Le(e,o.errorLastCall)}
           ${function(e,t,a){return!0===t?O`
       <div class="information-msg" style="color: var(--error-color, red)">
         <ha-icon id="icon" icon="mdi:alert-outline"></ha-icon>
@@ -1622,4 +1550,4 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       </div>
     `:void 0}(t,e,o)}
         </div>
-      </ha-card>`}_showDetails(e){return((e,t,a={},o={})=>{const i=new CustomEvent(t,{bubbles:o.bubbles??!0,cancelable:Boolean(o.cancelable),composed:o.composed??!0,detail:a});return e.dispatchEvent(i),i})(this,"hass-more-info",{entityId:e})}setConfig(e){Ie(e),this.config={...he,...e}}shouldUpdate(e){return function(e,t){if(t.has("config"))return!0;const a=t.get("hass");if(!a)return!0;const o=e.config||{},i=e.hass;for(const e of de){const t=o[e];if("string"==typeof t&&a.states[t]!==i?.states[t])return!0}return!1}(this,e)}updated(e){super.updated(e);const t=this.shadowRoot?.querySelector(".week-history");t&&(t.scrollLeft=t.scrollWidth-t.clientWidth)}getCardSize(){const e=this.config||{};let t=2;return e.showHistory&&(t+=2),!1!==e.showSmartInsights&&(t+=1),e.showMonthlyView&&(t+=1),e.showYearlyView&&(t+=1),e.showDetailedComparison&&(t+=1),(e.showEcoWatt||e.showEcoWattJ12)&&(t+=1),e.showTempo&&(t+=1),t}getGridOptions(){const e=this.getCardSize();return{columns:12,rows:Math.max(3,Math.min(e,12)),min_columns:6,min_rows:3}}getLayoutOptions(){const e=this.getCardSize();return{grid_columns:4,grid_rows:Math.max(3,Math.min(e,12)),grid_min_columns:2,grid_min_rows:3}}toggleMonthlyView(e){e.stopPropagation(),e.preventDefault(),this._monthlyExpanded=!this._monthlyExpanded}toggleYearlyView(e){e.stopPropagation(),e.preventDefault(),this._yearlyExpanded=!this._yearlyExpanded}toggleDetailedComparison(e){e.stopPropagation(),e.preventDefault(),this._detailedExpanded=!this._detailedExpanded}static get styles(){return me}}customElements.define("content-card-linky",Ve);export{Ve as ContentCardLinky,Ie as assertConfig};
+      </ha-card>`}_showDetails(e){return((e,t,a={},o={})=>{const i=new CustomEvent(t,{bubbles:o.bubbles??!0,cancelable:Boolean(o.cancelable),composed:o.composed??!0,detail:a});return e.dispatchEvent(i),i})(this,"hass-more-info",{entityId:e})}setConfig(e){Ve(e),this.config={...he,...e}}shouldUpdate(e){return function(e,t){if(t.has("config"))return!0;const a=t.get("hass");if(!a)return!0;const o=e.config||{},i=e.hass;for(const e of de){const t=o[e];if("string"==typeof t&&a.states[t]!==i?.states[t])return!0}return!1}(this,e)}updated(e){super.updated(e);const t=this.shadowRoot?.querySelector(".week-history");t&&(t.scrollLeft=t.scrollWidth-t.clientWidth)}getCardSize(){const e=this.config||{};let t=2;return e.showHistory&&(t+=2),!1!==e.showSmartInsights&&(t+=1),e.showMonthlyView&&(t+=1),e.showYearlyView&&(t+=1),e.showDetailedComparison&&(t+=1),(e.showEcoWatt||e.showEcoWattJ12)&&(t+=1),e.showTempo&&(t+=1),t}getGridOptions(){const e=this.getCardSize();return{columns:12,rows:Math.max(3,Math.min(e,12)),min_columns:6,min_rows:3}}getLayoutOptions(){const e=this.getCardSize();return{grid_columns:4,grid_rows:Math.max(3,Math.min(e,12)),grid_min_columns:2,grid_min_rows:3}}toggleMonthlyView(e){e.stopPropagation(),e.preventDefault(),this._monthlyExpanded=!this._monthlyExpanded}toggleYearlyView(e){e.stopPropagation(),e.preventDefault(),this._yearlyExpanded=!this._yearlyExpanded}toggleDetailedComparison(e){e.stopPropagation(),e.preventDefault(),this._detailedExpanded=!this._detailedExpanded}static get styles(){return me}}customElements.define("content-card-linky",qe);export{qe as ContentCardLinky,Ve as assertConfig};
