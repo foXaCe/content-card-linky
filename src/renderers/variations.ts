@@ -23,6 +23,32 @@ function currentMonth(hass: HomeAssistant): string {
   return d.toLocaleDateString(localeOf(hass), { month: "long", year: "numeric" });
 }
 
+function renderEvolutionTile(
+  hass: HomeAssistant,
+  evolution: any,
+  ariaKey: string,
+  tooltip: TemplateResult,
+): TemplateResult {
+  const rounded = safeRound(evolution);
+  const rotation = evolution < 0 ? "45" : evolution === 0 ? "0" : "-45";
+  const signClass =
+    evolution > 0 ? "percentage-positive" : evolution < 0 ? "percentage-negative" : "percentage-neutral";
+  return html` <span class="variations-linky">
+    <div class="percentage-line">
+      <span class="ha-icon">
+        <ha-icon icon="mdi:arrow-right" style="display: inline-block; transform: rotate(${rotation}deg)"></ha-icon>
+      </span>
+      <span
+        class="percentage-value ${signClass}"
+        aria-label="${localize(hass, ariaKey, { value: rounded })}"
+        role="text"
+        >${rounded}<span class="unit"> %</span></span
+      >
+    </div>
+    <div class="tooltip">${tooltip}</div>
+  </span>`;
+}
+
 /**
  * Grid of consumption-evolution percentage tiles.
  */
@@ -33,33 +59,11 @@ export function renderVariations(
 ): TemplateResult {
   return html` <div class="variations">
     ${config.showYearRatio
-      ? html` <span class="variations-linky">
-          <div class="percentage-line">
-            <span class="ha-icon">
-              <ha-icon
-                icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${attributes.yearly_evolution < 0
-                  ? "45"
-                  : attributes.yearly_evolution === 0
-                    ? "0"
-                    : "-45"}deg)"
-              >
-              </ha-icon>
-            </span>
-            <span
-              class="percentage-value ${attributes.yearly_evolution > 0
-                ? "percentage-positive"
-                : attributes.yearly_evolution < 0
-                  ? "percentage-negative"
-                  : "percentage-neutral"}"
-              aria-label="${localize(hass, "card.aria.yearly_trend", {
-                value: safeRound(attributes.yearly_evolution),
-              })}"
-              role="text"
-              >${safeRound(attributes.yearly_evolution)}<span class="unit"> %</span></span
-            >
-          </div>
-          <div class="tooltip">
+      ? renderEvolutionTile(
+          hass,
+          attributes.yearly_evolution,
+          "card.aria.yearly_trend",
+          html`
             <span class="year">${localize(hass, "card.previous_year", { year: previousYear(hass) })}</span>
             <span class="tooltiptext"
               >${localize(hass, "card.tooltip.year_prev", { value: attributes.current_year_last_year })}<br />${localize(
@@ -68,111 +72,45 @@ export function renderVariations(
                 { value: attributes.current_year },
               )}</span
             >
-          </div>
-        </span>`
+          `,
+        )
       : html``}
     ${config.showMonthRatio
-      ? html` <span class="variations-linky">
-          <div class="percentage-line">
-            <span class="ha-icon">
-              <ha-icon
-                icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${attributes.monthly_evolution < 0
-                  ? "45"
-                  : attributes.monthly_evolution === 0
-                    ? "0"
-                    : "-45"}deg)"
-              >
-              </ha-icon>
-            </span>
-            <span
-              class="percentage-value ${attributes.monthly_evolution > 0
-                ? "percentage-positive"
-                : attributes.monthly_evolution < 0
-                  ? "percentage-negative"
-                  : "percentage-neutral"}"
-              aria-label="${localize(hass, "card.aria.monthly_trend", {
-                value: safeRound(attributes.monthly_evolution),
-              })}"
-              role="text"
-              >${safeRound(attributes.monthly_evolution)}<span class="unit"> %</span></span
-            >
-          </div>
-          <div class="tooltip">
+      ? renderEvolutionTile(
+          hass,
+          attributes.monthly_evolution,
+          "card.aria.monthly_trend",
+          html`
             <span class="previous-month">${localize(hass, "card.previous_month", { month: previousMonth(hass) })}</span>
             <span class="tooltiptext"
               >${localize(hass, "card.tooltip.prev_month_prev_year", {
                 value: attributes.last_month_last_year,
               })}<br />${localize(hass, "card.tooltip.prev_month", { value: attributes.last_month })}</span
             >
-          </div>
-        </span>`
+          `,
+        )
       : html``}
     ${config.showCurrentMonthRatio
-      ? html` <span class="variations-linky">
-          <div class="percentage-line">
-            <span class="ha-icon">
-              <ha-icon
-                icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${attributes.current_month_evolution < 0
-                  ? "45"
-                  : attributes.current_month_evolution === 0
-                    ? "0"
-                    : "-45"}deg)"
-              >
-              </ha-icon>
-            </span>
-            <span
-              class="percentage-value ${attributes.current_month_evolution > 0
-                ? "percentage-positive"
-                : attributes.current_month_evolution < 0
-                  ? "percentage-negative"
-                  : "percentage-neutral"}"
-              aria-label="${localize(hass, "card.aria.current_month_trend", {
-                value: safeRound(attributes.current_month_evolution),
-              })}"
-              role="text"
-              >${safeRound(attributes.current_month_evolution)}<span class="unit"> %</span></span
-            >
-          </div>
-          <div class="tooltip">
+      ? renderEvolutionTile(
+          hass,
+          attributes.current_month_evolution,
+          "card.aria.current_month_trend",
+          html`
             <span class="current-month">${localize(hass, "card.current_month", { month: currentMonth(hass) })}</span>
             <span class="tooltiptext"
               >${localize(hass, "card.tooltip.month_prev_year", {
                 value: attributes.current_month_last_year,
               })}<br />${localize(hass, "card.tooltip.month", { value: attributes.current_month })}</span
             >
-          </div>
-        </span>`
+          `,
+        )
       : html``}
     ${config.showWeekRatio
-      ? html` <span class="variations-linky">
-          <div class="percentage-line">
-            <span class="ha-icon">
-              <ha-icon
-                icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${attributes.current_week_evolution < 0
-                  ? "45"
-                  : attributes.current_week_evolution === 0
-                    ? "0"
-                    : "-45"}deg)"
-              >
-              </ha-icon>
-            </span>
-            <span
-              class="percentage-value ${attributes.current_week_evolution > 0
-                ? "percentage-positive"
-                : attributes.current_week_evolution < 0
-                  ? "percentage-negative"
-                  : "percentage-neutral"}"
-              aria-label="${localize(hass, "card.aria.weekly_trend", {
-                value: safeRound(attributes.current_week_evolution),
-              })}"
-              role="text"
-              >${safeRound(attributes.current_week_evolution)}<span class="unit"> %</span></span
-            >
-          </div>
-          <div class="tooltip">
+      ? renderEvolutionTile(
+          hass,
+          attributes.current_week_evolution,
+          "card.aria.weekly_trend",
+          html`
             <span class="previous-month"
               >${localize(hass, "card.previous_week", { week: localize(hass, "card.week_noun") })}</span
             >
@@ -183,37 +121,15 @@ export function renderVariations(
                 { value: attributes.current_week },
               )}</span
             >
-          </div>
-        </span>`
+          `,
+        )
       : html``}
     ${config.showYesterdayRatio
-      ? html` <span class="variations-linky">
-          <div class="percentage-line">
-            <span class="ha-icon">
-              <ha-icon
-                icon="mdi:arrow-right"
-                style="display: inline-block; transform: rotate(${attributes.yesterday_evolution < 0
-                  ? "45"
-                  : attributes.yesterday_evolution === 0
-                    ? "0"
-                    : "-45"}deg)"
-              >
-              </ha-icon>
-            </span>
-            <span
-              class="percentage-value ${attributes.yesterday_evolution > 0
-                ? "percentage-positive"
-                : attributes.yesterday_evolution < 0
-                  ? "percentage-negative"
-                  : "percentage-neutral"}"
-              aria-label="${localize(hass, "card.aria.daily_trend", {
-                value: safeRound(attributes.yesterday_evolution),
-              })}"
-              role="text"
-              >${safeRound(attributes.yesterday_evolution)}<span class="unit"> %</span></span
-            >
-          </div>
-          <div class="tooltip">
+      ? renderEvolutionTile(
+          hass,
+          attributes.yesterday_evolution,
+          "card.aria.daily_trend",
+          html`
             <span class="previous-month"
               >${localize(hass, "card.before_yesterday", { date: localize(hass, "card.day_before_noun") })}</span
             >
@@ -224,8 +140,8 @@ export function renderVariations(
                 { value: attributes.yesterday },
               )}</span
             >
-          </div>
-        </span>`
+          `,
+        )
       : html``}
     ${config.showPeakOffPeak
       ? html` <span class="variations-linky">

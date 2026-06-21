@@ -2,6 +2,7 @@ import { html } from "lit";
 import { toFloat, localeOf } from "../lib/format";
 import { localize } from "../lib/localize";
 import { estimateMissingKwh } from "../lib/calculations";
+import { dayCell, parseFrenchNumber } from "../lib/attributes";
 import { TEMPO_VALUES } from "../const";
 import { renderWeekSummary } from "./week-summary";
 import type { HomeAssistant, ContentCardLinkyConfig, LinkyAttributes, TemplateResult } from "../types";
@@ -69,7 +70,7 @@ function getTempoColorForDay(
 ): string {
   // Récupération depuis les données Tempo transmises (format original)
   if (valueC && valueC.toString() !== "undefined") {
-    const valeurColor = valueC.toString().split(",")[dayNumber - 1];
+    const valeurColor = dayCell(valueC, dayNumber);
     if (valeurColor && valeurColor !== "-1") {
       return valeurColor.toLowerCase();
     }
@@ -112,7 +113,7 @@ function renderDailyWeek(
   dayNumber: number,
   now: Date,
 ): TemplateResult {
-  const dayDate = dailyweek.toString().split(",")[dayNumber - 1];
+  const dayDate = dayCell(dailyweek, dayNumber);
   let finalColor = "grey";
 
   if (config.showTempoColor) {
@@ -125,7 +126,7 @@ function renderDailyWeek(
         class="tempoday-${finalColor}"
         style="display: inline-block;"
         title="${localize(hass, "card.history.tempo_day", { color: finalColor, date: dayDate })}"
-        >${new Date(dayDate).toLocaleDateString(localeOf(hass), { weekday: config.showDayName })}</span
+        >${new Date(dayDate ?? "").toLocaleDateString(localeOf(hass), { weekday: config.showDayName })}</span
       >
     </span>
   `;
@@ -143,10 +144,9 @@ function renderDailyValue(
   if (day === -1 || day === 0 || day === "0" || day === null || day === undefined) {
     // Vérifier si on a un prix mais pas de kWh pour faire une estimation
     if (dailyweek_cost) {
-      const dailyCostArray = dailyweek_cost.toString().split(",");
-      const dayPrice = dailyCostArray[dayNumber - 1];
+      const dayPrice = dayCell(dailyweek_cost, dayNumber);
 
-      if (dayPrice && dayPrice !== "-1" && parseFloat(dayPrice.replace(",", ".")) > 0) {
+      if (dayPrice && dayPrice !== "-1" && parseFrenchNumber(dayPrice) > 0) {
         // On a un prix mais pas de kWh, faire une estimation
         const estimatedKwh = estimateMissingKwh(hass.states[config.entity].attributes.daily, dayNumber, dailyweek_cost);
 
@@ -179,16 +179,21 @@ function renderDayPrice(
   config: ContentCardLinkyConfig,
   value: any,
   dayNumber: number,
+  dayKwh: any, // the day's kWh value (from renderDay's `day`); TODO plan 007 — replace with shared parse helper
 ): TemplateResult | undefined {
   if (config.showDayPrice) {
-    const valeur = value.toString().split(",")[dayNumber - 1];
+    const valeur = dayCell(value, dayNumber);
     if (valeur === "-1") {
       return renderNoData(hass);
     }
     return html` <br /><span class="cons-val">${toFloat(valeur, 2)} €</span> `;
   }
   if (config.kWhPrice) {
-    return html` <br /><span class="cons-val">${toFloat(value * config.kWhPrice, 2)} €</span> `;
+    const kwh = parseFloat(dayKwh);
+    if (isNaN(kwh) || kwh <= 0) {
+      return renderNoData(hass);
+    }
+    return html` <br /><span class="cons-val">${toFloat(kwh * config.kWhPrice, 2)} €</span> `;
   }
   return undefined;
 }
@@ -200,7 +205,7 @@ function renderDayPriceHCHP(
   dayNumber: number,
 ): TemplateResult | undefined {
   if (config.showDayPriceHCHP) {
-    const valeur = value.toString().split(",")[dayNumber - 1];
+    const valeur = dayCell(value, dayNumber);
     if (valeur === "-1") {
       return renderNoData(hass);
     }
@@ -217,7 +222,7 @@ function renderDayHCHP(
   unit_of_measurement: any,
 ): TemplateResult | undefined {
   if (config.showDayHCHP) {
-    const valeur = value.toString().split(",")[dayNumber - 1];
+    const valeur = dayCell(value, dayNumber);
     if (valeur === "-1") {
       return renderNoData(hass);
     }
@@ -239,12 +244,12 @@ function renderDayMaxPower(
   MPtime: any,
 ): TemplateResult | undefined {
   if (config.showDayMaxPower) {
-    const valeur = value.toString().split(",")[dayNumber - 1];
-    const over = overMP.toString().split(",")[dayNumber - 1];
+    const valeur = dayCell(value, dayNumber);
+    const over = dayCell(overMP, dayNumber);
     if (valeur === "-1") {
       return renderNoData(hass);
     }
-    const time = new Date(MPtime.toString().split(",")[dayNumber - 1]).toLocaleTimeString(localeOf(hass), {
+    const time = new Date(dayCell(MPtime, dayNumber) ?? "").toLocaleTimeString(localeOf(hass), {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -303,7 +308,7 @@ function renderDay(
     <div class="day">
       ${renderDailyWeek(hass, config, attributes.dailyweek, attributes.dailyweek_Tempo, dayNumber, now)}
       ${renderDailyValue(hass, config, day, dayNumber, unit_of_measurement, attributes.dailyweek_cost)}
-      ${renderDayPrice(hass, config, attributes.dailyweek_cost, dayNumber)}
+      ${renderDayPrice(hass, config, attributes.dailyweek_cost, dayNumber, day)}
       ${renderDayPriceHCHP(hass, config, attributes.dailyweek_costHC, dayNumber)}
       ${renderDayPriceHCHP(hass, config, attributes.dailyweek_costHP, dayNumber)}
       ${renderDayHCHP(hass, config, attributes.dailyweek_HC, dayNumber, unit_of_measurement)}
@@ -336,6 +341,9 @@ export function renderHistory(
 
   const { daily, dailyweek } = attributes;
   if (dailyweek === undefined) {
+    return undefined;
+  }
+  if (!Array.isArray(daily)) {
     return undefined;
   }
 

@@ -1,37 +1,30 @@
 import { html } from "lit";
 import { localize } from "../lib/localize";
-import type { HomeAssistant, ContentCardLinkyConfig, TemplateResult } from "../types";
+import { calculateWeekTotal, calculateWeekCost } from "../lib/calculations";
+import type { HomeAssistant, ContentCardLinkyConfig, TemplateResult, LinkyAttributes } from "../types";
 
 /**
  * Smart insights row: monthly prediction + week/month/year trend tiles.
  * Reads the live evolution figures straight from the main entity.
  *
- * @param weekTotal - per-day kWh series (attributes.dailyweek)
- * @param weekCost - per-day cost series (attributes.dailyweek_cost)
+ * @param attributes - the main entity's attribute bag
+ * @param now - injectable clock for deterministic tests
  */
 export function renderSmartInsights(
   hass: HomeAssistant,
-  config: ContentCardLinkyConfig,
-  weekTotal: any,
-  weekCost: any,
+  _config: ContentCardLinkyConfig,
+  attributes: LinkyAttributes,
+  now: Date = new Date(),
 ): TemplateResult {
-  // Utiliser les données réelles de l'entité si disponibles
-  const entity = hass.states[config.entity];
-  const attributes = entity ? entity.attributes : {};
-
-  // Calculer weekTotal à partir des données reçues
-  const calculatedWeekTotal =
-    weekTotal && Array.isArray(weekTotal) ? weekTotal.reduce((sum, day) => sum + parseFloat(day || 0), 0) : 0;
-  const calculatedWeekCost =
-    weekCost && Array.isArray(weekCost) ? weekCost.reduce((sum, day) => sum + parseFloat(day || 0), 0) : 0;
+  const calculatedWeekTotal = calculateWeekTotal(attributes.daily, attributes.dailyweek_cost, now);
+  const calculatedWeekCost = calculateWeekCost(attributes.dailyweek_cost, now);
 
   // Prédiction mensuelle basée sur la tendance actuelle
   const currentMonth = parseFloat((attributes["current_month"] || 0).toString().replace(",", "."));
 
   const monthlyPrediction =
     currentMonth > 0
-      ? (currentMonth / new Date().getDate()) *
-        new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate()
+      ? (currentMonth / now.getDate()) * new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
       : calculatedWeekTotal > 0
         ? (calculatedWeekTotal / 7) * 30
         : 0;

@@ -15,11 +15,12 @@ export function toFloat(value: unknown, decimals = 1): string {
 
 /**
  * Resolve the BCP-47 locale to use for date/time formatting, derived from the
- * Home Assistant frontend language. Falls back to French (the card's origin).
+ * Home Assistant frontend language. Falls back to English (matches localize's
+ * DEFAULT_LANG so text and dates share the same no-locale default).
  *
  * @param hass - the Home Assistant object
- * @returns a locale tag, e.g. "fr-FR", "en", "de"
+ * @returns a locale tag, e.g. "en", "fr-FR", "de"
  */
 export function localeOf(hass?: HomeAssistant): string {
-  return hass?.locale?.language || "fr-FR";
+  return hass?.locale?.language || "en";
 }
