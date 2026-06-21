@@ -193,9 +193,7 @@ export class ContentCardLinky extends LitElement {
         ${renderTitle(config)}
         <div class="card">
           ${renderHeader(hass, config, attributes, stateObj)} ${renderVariations(hass, config, attributes)}
-          ${config.showSmartInsights !== false
-            ? renderSmartInsights(hass, config, attributes.dailyweek, attributes.dailyweek_cost)
-            : html``}
+          ${config.showSmartInsights !== false ? renderSmartInsights(hass, config, attributes) : html``}
           ${renderHistory(hass, config, attributes)}
           ${renderMonthlyView(hass, config, attributes, this._monthlyExpanded, (e) => this.toggleMonthlyView(e))}
           ${renderYearlyView(hass, config, attributes, this._yearlyExpanded, (e) => this.toggleYearlyView(e))}
