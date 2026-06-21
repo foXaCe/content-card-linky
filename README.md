@@ -53,6 +53,8 @@ type: custom:content-card-linky
 entity: sensor.linky_<pdl>_consumption
 ```
 
+> ℹ️ Les capteurs de **production** (`sensor.linky_..._production`) sont pris en charge : ils s'affichent via la même mise en page que la consommation.
+
 ## Options principales
 
 | Clé                       | Type    | Défaut                              | Description                                                          |

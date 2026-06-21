@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, it, expect } from "vitest";
 import { makeHass, renderTpl } from "./setup";
-import { renderTitle, renderIcon, renderPrice, renderHeader, renderProductionValue } from "../../src/renderers/header";
+import { renderTitle, renderIcon, renderPrice, renderHeader } from "../../src/renderers/header";
 
 const hass = makeHass();
 const attrs = {
@@ -67,54 +67,5 @@ describe("renderHeader", () => {
   it("renders nothing when the header is disabled", () => {
     const el = renderTpl(renderHeader(hass, { showHeader: false }, attrs, { state: "12.5" }));
     expect(el.textContent.trim()).toBe("");
-  });
-});
-
-describe("renderProductionValue", () => {
-  it("renders a valid production value", () => {
-    const el = renderTpl(renderProductionValue(hass, "8.4", { unit_of_measurement: "kWh" }));
-    expect(el.textContent).toContain("8.4");
-    expect(el.textContent).toContain("kWh");
-  });
-
-  it("renders an estimate when value is missing but a price exists", () => {
-    const el = renderTpl(
-      renderProductionValue(hass, "0", {
-        unit_of_measurement: "kWh",
-        daily: ["10", "20"],
-        dailyweek_cost: "1,2",
-      }),
-    );
-    expect(el.querySelector(".cout.estimated")).toBeTruthy();
-  });
-
-  it("renders the pending state when neither value nor price is available", () => {
-    const el = renderTpl(
-      renderProductionValue(hass, "0", {
-        unit_of_measurement: "kWh",
-        daily: ["0"],
-        dailyweek_cost: "-1",
-      }),
-    );
-    expect(el.querySelector(".cout.pending")).toBeTruthy();
-  });
-
-  it("renders the pending state when there is no price data at all", () => {
-    const el = renderTpl(renderProductionValue(hass, "0", { unit_of_measurement: "kWh" }));
-    expect(el.querySelector(".cout.pending")).toBeTruthy();
-  });
-
-  it("falls through to the plain value when a price exists but the estimate is zero", () => {
-    // recentPrice > 0 but every day is zero → estimate 0 → no estimated/pending branch taken.
-    const el = renderTpl(
-      renderProductionValue(hass, "0", {
-        unit_of_measurement: "kWh",
-        daily: ["0", "0"],
-        dailyweek_cost: "1,2",
-      }),
-    );
-    expect(el.querySelector(".cout.estimated")).toBeFalsy();
-    expect(el.querySelector(".cout.pending")).toBeFalsy();
-    expect(el.textContent).toContain("kWh");
   });
 });

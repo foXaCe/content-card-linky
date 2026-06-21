@@ -59,10 +59,6 @@
       "col_max_power": "MP",
       "col_max_power_time": "MP time"
     },
-    "production": {
-      "estimate": "Production estimate based on previous data",
-      "pending": "Production data awaiting upload"
-    },
     "comparison": {
       "title": "Today vs yesterday",
       "today": "Today",
