@@ -1,20 +1,13 @@
 import { html } from "lit";
+import { TEMPO_VALUES } from "../const";
 import { localeOf } from "../lib/format";
 import { localize } from "../lib/localize";
 import type { HomeAssistant, ContentCardLinkyConfig, LinkyAttributes, HassEntity, TemplateResult } from "../types";
 
-const TEMPO_COLORS = new Map<string, string>([
-  ["unknown", "grey"],
-  ["Inconnu", "grey"],
-  ["BLUE", "blue"],
-  ["WHITE", "white"],
-  ["RED", "red"],
-]);
-
 function getTempoDateValue(tempoEntity: HassEntity): [Date, string | undefined, string] {
   const tempoDate = new Date(tempoEntity.attributes["date"]);
   const tempoValue = tempoEntity.state;
-  return [tempoDate, TEMPO_COLORS.get(tempoValue), tempoValue];
+  return [tempoDate, TEMPO_VALUES.get(tempoValue), tempoValue];
 }
 
 function getTempoRemainingDays(tempoEntity: HassEntity): [any, any, any] {

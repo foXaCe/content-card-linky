@@ -30,9 +30,9 @@ describe("localeOf", () => {
     expect(localeOf({ locale: { language: "de-DE" } })).toBe("de-DE");
   });
 
-  it("falls back to fr-FR when hass/locale is missing", () => {
-    expect(localeOf(undefined)).toBe("fr-FR");
-    expect(localeOf({})).toBe("fr-FR");
-    expect(localeOf({ locale: {} })).toBe("fr-FR");
+  it("falls back to en when hass/locale is missing (matches localize's default)", () => {
+    expect(localeOf(undefined)).toBe("en");
+    expect(localeOf({})).toBe("en");
+    expect(localeOf({ locale: {} })).toBe("en");
   });
 });
