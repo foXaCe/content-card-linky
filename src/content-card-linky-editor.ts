@@ -209,6 +209,7 @@ const DEFAULTS: Record<string, unknown> = {
   titleName: "LINKY",
   nbJoursAffichage: "7",
   showDayName: "long",
+  appearance: "premium",
   detailedComparisonEntity: "sensor.linky_consumption_last5day",
 };
 

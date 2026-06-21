@@ -9,6 +9,8 @@
 export function onActivate(handler: (event: KeyboardEvent) => void): (event: KeyboardEvent) => void {
   return (event: KeyboardEvent) => {
     if (event.key === "Enter" || event.key === " ") {
+      // Space would otherwise scroll the page on a div[role="button"].
+      event.preventDefault?.();
       handler(event);
     }
   };

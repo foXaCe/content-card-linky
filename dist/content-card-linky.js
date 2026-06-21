@@ -1157,7 +1157,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     `}}(e,t)}
       ${i.slice(-s).map((n,r)=>{const l=i.length-s+r+1;return He(e,t,n,l,a,o)}).reverse()}
     </div>
-  `}function We(e){return t=>{"Enter"!==t.key&&" "!==t.key||e(t)}}function Fe(e,t){if(!0===e.showError&&""!==t)return O`
+  `}function We(e){return t=>{"Enter"!==t.key&&" "!==t.key||(t.preventDefault?.(),e(t))}}function Fe(e,t){if(!0===e.showError&&""!==t)return O`
         <div class="error-msg" style="color: var(--error-color, red)">
           <ha-icon id="icon" icon="mdi:alert-outline"></ha-icon>
           ${t}
