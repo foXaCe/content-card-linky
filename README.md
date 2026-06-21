@@ -80,7 +80,7 @@ entity: sensor.linky_<pdl>_consumption
 
 ## Internationalisation
 
-La carte utilise désormais `hass.locale` pour choisir la langue (FR/EN inclus). Pour ajouter une langue, dépose un fichier dans `src/translations/<lang>.json` et importe-le dans `src/lib/localize.ts`.
+La carte utilise désormais `hass.locale` pour choisir la langue (FR/EN inclus). Pour ajouter une langue : créez `src/translations/<lang>.json` (parité de clés avec `en.json`), puis importez-le et ajoutez-le à la map `TRANSLATIONS` dans `src/lib/localize.ts`.
 
 ## Développement
 
