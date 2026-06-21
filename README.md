@@ -74,13 +74,13 @@ entity: sensor.linky_<pdl>_consumption
 | `showTempoColor`          | boolean | `true`                              | Colore les jours de l'historique selon Tempo.                        |
 | `ewEntity`                | string  | —                                   | Sensor EcoWatt J0 (MED ≥ 0.9.1).                                     |
 | `ewEntityJ1` / `ewEntityJ2` | string | —                                  | EcoWatt J+1 / J+2.                                                   |
-| `tempoInfo`               | string  | —                                   | Sensor Tempo (jours restants par couleur, MED ≥ 0.9.2).              |
+| `tempoEntityInfo`         | string  | —                                   | Sensor Tempo (jours restants par couleur, MED ≥ 0.9.2).              |
 | `tempoEntityJ0` / `tempoEntityJ1` | string | —                          | Tempo aujourd'hui / demain.                                          |
 | `detailedComparisonEntity` | string | `sensor.linky_consumption_last5day` | Sensor pour la comparaison détaillée.                                |
 
 ## Internationalisation
 
-La carte utilise désormais `hass.locale` pour choisir la langue (FR/EN inclus). Pour ajouter une langue, dépose un fichier dans `src/translations/<lang>.json` et importe-le dans `src/lib/localize.js`.
+La carte utilise désormais `hass.locale` pour choisir la langue (FR/EN inclus). Pour ajouter une langue, dépose un fichier dans `src/translations/<lang>.json` et importe-le dans `src/lib/localize.ts`.
 
 ## Développement
 
@@ -96,8 +96,8 @@ npm run format
 
 ### Architecture
 
-- `src/content-card-linky.js` — la carte (Lit element).
-- `src/content-card-linky-editor.js` — éditeur visuel.
+- `src/content-card-linky.ts` — la carte (Lit element).
+- `src/content-card-linky-editor.ts` — éditeur visuel.
 - `src/lib/` — helpers (`fireEvent`, `localize`).
 - `src/translations/{en,fr}.json` — chaînes traduites.
 - `rollup.config.mjs` — bundle ES, terser en prod, version injectée depuis `package.json`.
