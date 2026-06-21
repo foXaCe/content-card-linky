@@ -14,15 +14,16 @@ repos:
         name: eslint
         entry: eslint
         language: node
-        files: ^src/.*\.js$
-        types: [javascript]
+        files: ^(src|test)/.*\.ts$
         additional_dependencies:
           - eslint@10.5.0
+          - typescript@5.9.3
+          - typescript-eslint@8.46.0
 
       - id: prettier
         name: prettier
         entry: prettier --check
         language: node
-        files: ^src/.*\.(js|json)$
+        files: ^(src|test)/.*\.(ts|json)$
         additional_dependencies:
           - prettier@3.8.4
