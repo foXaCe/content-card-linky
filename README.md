@@ -1,7 +1,9 @@
 # content-card-linky
 
-[![HACS Supported](https://img.shields.io/badge/HACS-Supported-green.svg)](https://github.com/custom-components/hacs)
-[![CI](https://github.com/MyElectricalData/content-card-linky/actions/workflows/ci.yml/badge.svg)](https://github.com/MyElectricalData/content-card-linky/actions/workflows/ci.yml)
+[![HACS Supported](https://img.shields.io/badge/HACS-Supported-green.svg)](https://github.com/hacs/integration)
+[![CI](https://github.com/foXaCe/content-card-linky/actions/workflows/ci.yml/badge.svg)](https://github.com/foXaCe/content-card-linky/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/foXaCe/content-card-linky)](https://github.com/foXaCe/content-card-linky/releases)
+[![License](https://img.shields.io/github/license/foXaCe/content-card-linky)](LICENSE)
 
 > **Compatible uniquement avec l'intégration [MyElectricalData](https://github.com/MyElectricalData/myelectricaldata_import).**
 
@@ -20,7 +22,7 @@ Une question ? Un problème ? Une demande ? Le [forum HACF](https://forum.hacf.f
 
 1. Ouvre **HACS**.
 2. Menu trois-points en haut à droite → **Custom repositories**.
-3. Ajoute le dépôt `https://github.com/MyElectricalData/content-card-linky`, catégorie **Dashboard**.
+3. Ajoute le dépôt `https://github.com/foXaCe/content-card-linky`, catégorie **Dashboard**.
 4. Recherche *Linky Content Card* dans HACS, puis **Download**.
 5. Recharge la page Lovelace (ou redémarre HA si l'asset n'est pas servi).
 
@@ -28,7 +30,7 @@ Une question ? Un problème ? Une demande ? Le [forum HACF](https://forum.hacf.f
 
 ### Manuelle
 
-1. Télécharge `content-card-linky.js`, `content-card-linky-editor.js` **et le dossier `icons/`** depuis la dernière [release](https://github.com/MyElectricalData/content-card-linky/releases).
+1. Télécharge `content-card-linky.js`, `content-card-linky-editor.js` **et le dossier `icons/`** depuis la dernière [release](https://github.com/foXaCe/content-card-linky/releases).
 2. Place-les dans `<config>/www/community/content-card-linky/` (ce chemin `community/` est requis : l'icône Linky est servie depuis `/local/community/content-card-linky/icons/linky.svg`).
 3. Déclare la ressource dans **Paramètres → Tableaux de bord → Ressources** (ou en YAML) :
 
