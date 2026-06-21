@@ -17,7 +17,7 @@ repos:
         files: ^src/.*\.js$
         types: [javascript]
         additional_dependencies:
-          - eslint@9.18.0
+          - eslint@10.5.0
 
       - id: prettier
         name: prettier
@@ -25,4 +25,4 @@ repos:
         language: node
         files: ^src/.*\.(js|json)$
         additional_dependencies:
-          - prettier@3.4.0
+          - prettier@3.8.4

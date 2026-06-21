@@ -1,3 +1,19 @@
-.idea
+# IDE
+.idea/
+.vscode/
+
+# Dependencies
 node_modules/
+
+# Test / coverage output
 coverage/
+.vitest/
+.eslintcache
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs / local
+*.log
+*.local
