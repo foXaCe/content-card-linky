@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-06-21
+
+### Added
+
+- **`showDayMaxPowerTime`** is now a real, editable option: it toggles the
+  max-power time value and its column header (defaults on, so existing cards are
+  unchanged), exposed in the visual editor with EN/FR labels.
+- **`AGENTS.md`** documenting the repo conventions (verify loop, the
+  `dist/`-is-generated rule, the config-key stability contract, the pure-renderer
+  pattern).
+- Local **pre-commit hooks** (`tsc --noEmit` typecheck + a `dist/`-sync rebuild
+  check) so local checks match CI.
+
+### Changed
+
+- **Production meters** now render the full card (history, trends, costs) via the
+  standard layout instead of a minimal value-only view. The dedicated production
+  branch keyed on a `typeCompteur` value MyElectricalData no longer sets, so it
+  was unreachable; production sensors now get the rich card.
+- **Types**: the Home Assistant attribute bag (`LinkyAttributes`) is now a real
+  typed interface instead of `Record<string, any>`, restoring strict-mode coverage
+  over attribute reads (no runtime change).
+- The no-locale fallback for date/number formatting is now English, matching the
+  text-localization fallback (previously dates fell back to French while text fell
+  back to English).
+- **Docs**: README/ARCHITECTURE realigned with the TypeScript file layout; the
+  i18n "add a language" instructions now describe the real process.
+
+### Fixed
+
+- **`kWhPrice`**: the day-price column now computes each day's price from that
+  day's kWh instead of multiplying the comma-separated cost string, which produced
+  `– €` for every day.
+- **Smart insights**: the monthly prediction now reads the daily kWh series via
+  the vetted week-total helpers (with an injectable clock) instead of summing the
+  `dailyweek` date strings.
+- Hardened against absent attributes: a missing `daily` no longer throws and
+  blanks the whole card; an absent `errorLastCall` no longer renders a phantom
+  empty error banner.
+- **README**: corrected the Tempo sensor option key (`tempoInfo` →
+  `tempoEntityInfo`) that silently broke Tempo for anyone following the docs, plus
+  stale `.js` source references left over from the TypeScript migration.
+
 ## [1.8.0] - 2026-06-16
 
 ### Added
