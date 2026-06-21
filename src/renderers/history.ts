@@ -179,6 +179,7 @@ function renderDayPrice(
   config: ContentCardLinkyConfig,
   value: any,
   dayNumber: number,
+  dayKwh: any, // the day's kWh value (from renderDay's `day`); TODO plan 007 — replace with shared parse helper
 ): TemplateResult | undefined {
   if (config.showDayPrice) {
     const valeur = value.toString().split(",")[dayNumber - 1];
@@ -188,7 +189,11 @@ function renderDayPrice(
     return html` <br /><span class="cons-val">${toFloat(valeur, 2)} €</span> `;
   }
   if (config.kWhPrice) {
-    return html` <br /><span class="cons-val">${toFloat(value * config.kWhPrice, 2)} €</span> `;
+    const kwh = parseFloat(dayKwh);
+    if (isNaN(kwh) || kwh <= 0) {
+      return renderNoData(hass);
+    }
+    return html` <br /><span class="cons-val">${toFloat(kwh * config.kWhPrice, 2)} €</span> `;
   }
   return undefined;
 }
@@ -303,7 +308,7 @@ function renderDay(
     <div class="day">
       ${renderDailyWeek(hass, config, attributes.dailyweek, attributes.dailyweek_Tempo, dayNumber, now)}
       ${renderDailyValue(hass, config, day, dayNumber, unit_of_measurement, attributes.dailyweek_cost)}
-      ${renderDayPrice(hass, config, attributes.dailyweek_cost, dayNumber)}
+      ${renderDayPrice(hass, config, attributes.dailyweek_cost, dayNumber, day)}
       ${renderDayPriceHCHP(hass, config, attributes.dailyweek_costHC, dayNumber)}
       ${renderDayPriceHCHP(hass, config, attributes.dailyweek_costHP, dayNumber)}
       ${renderDayHCHP(hass, config, attributes.dailyweek_HC, dayNumber, unit_of_measurement)}

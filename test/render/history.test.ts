@@ -153,7 +153,7 @@ describe("renderHistory cell fallbacks", () => {
   });
 
   it("uses kWhPrice to compute the price column when showDayPrice is off", () => {
-    const attrs = richAttrs();
+    const attrs = richAttrs(); // daily: ["10",..,"16"]
     const el = renderTpl(
       renderHistory(
         hassWith(attrs),
@@ -161,7 +161,22 @@ describe("renderHistory cell fallbacks", () => {
         attrs,
       ),
     );
-    expect(el.innerHTML).toContain("€");
+    // Real computed prices (kWh * 0.2), NOT the "– €" the old bug produced.
+    expect(el.innerHTML).toContain("2.00 €"); // 10 kWh * 0.2
+    expect(el.innerHTML).toContain("3.20 €"); // 16 kWh * 0.2
+    expect(el.innerHTML).not.toContain("– €"); // regression guard
+  });
+
+  it("shows no-data in the kWhPrice column for a missing-kWh day", () => {
+    const attrs = richAttrs({ daily: ["0", "11", "12", "13", "14", "15", "16"] });
+    const el = renderTpl(
+      renderHistory(
+        hassWith(attrs),
+        { showHistory: true, nbJoursAffichage: "7", entity: "sensor.x", showDayPrice: false, kWhPrice: 0.2 },
+        attrs,
+      ),
+    );
+    expect(el.innerHTML).toContain("mdi:alert-outline"); // no-data marker for the 0 day
   });
 
   it("falls back to no-data when an estimate cannot be computed (zero ratios)", () => {

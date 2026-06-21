@@ -1125,7 +1125,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       >${ve(a)} ${t.showInTableUnit?O` ${i}`:O``}</span
     >
   `}(e,t,a,o,s,i.dailyweek_cost)}
-      ${function(e,t,a,o){if(t.showDayPrice){const t=a.toString().split(",")[o-1];return"-1"===t?De(e):O` <br /><span class="cons-val">${ve(t,2)} €</span> `}if(t.kWhPrice)return O` <br /><span class="cons-val">${ve(a*t.kWhPrice,2)} €</span> `}(e,t,i.dailyweek_cost,o)}
+      ${function(e,t,a,o,i){if(t.showDayPrice){const t=a.toString().split(",")[o-1];return"-1"===t?De(e):O` <br /><span class="cons-val">${ve(t,2)} €</span> `}if(t.kWhPrice){const a=parseFloat(i);return isNaN(a)||a<=0?De(e):O` <br /><span class="cons-val">${ve(a*t.kWhPrice,2)} €</span> `}}(e,t,i.dailyweek_cost,o,a)}
       ${Ce(e,t,i.dailyweek_costHC,o)}
       ${Ce(e,t,i.dailyweek_costHP,o)}
       ${Me(e,t,i.dailyweek_HC,o,s)}
