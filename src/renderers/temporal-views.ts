@@ -32,7 +32,8 @@ export function renderMonthlyView(
       evolution:
         currentMonthLastYear !== "N/A" && currentMonth !== "N/A"
           ? (
-              ((parseFloat(currentMonth) - parseFloat(currentMonthLastYear)) / parseFloat(currentMonthLastYear)) *
+              ((parseFloat(String(currentMonth)) - parseFloat(String(currentMonthLastYear))) /
+                parseFloat(String(currentMonthLastYear))) *
               100
             ).toFixed(1)
           : null,
@@ -43,7 +44,11 @@ export function renderMonthlyView(
       year: new Date().getFullYear(),
       evolution:
         lastMonthLastYear !== "N/A" && lastMonth !== "N/A"
-          ? (((parseFloat(lastMonth) - parseFloat(lastMonthLastYear)) / parseFloat(lastMonthLastYear)) * 100).toFixed(1)
+          ? (
+              ((parseFloat(String(lastMonth)) - parseFloat(String(lastMonthLastYear))) /
+                parseFloat(String(lastMonthLastYear))) *
+              100
+            ).toFixed(1)
           : null,
     },
     {
@@ -128,7 +133,8 @@ export function renderYearlyView(
       evolution:
         currentYearLastYear !== "N/A" && currentYear !== "N/A"
           ? (
-              ((parseFloat(currentYear) - parseFloat(currentYearLastYear)) / parseFloat(currentYearLastYear)) *
+              ((parseFloat(String(currentYear)) - parseFloat(String(currentYearLastYear))) /
+                parseFloat(String(currentYearLastYear))) *
               100
             ).toFixed(1)
           : null,

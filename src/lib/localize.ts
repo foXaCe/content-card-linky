@@ -1,3 +1,5 @@
+// To add a language: (1) create src/translations/<lang>.json with full key parity
+// against en.json, (2) import it below, (3) add it to the TRANSLATIONS map.
 import en from "../translations/en.json";
 import fr from "../translations/fr.json";
 import type { HomeAssistant } from "../types";

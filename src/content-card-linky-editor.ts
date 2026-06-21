@@ -154,7 +154,15 @@ const SCHEMA: HaFormSchema[] = [
   {
     type: "expandable",
     title: "section.max_power",
-    schema: [{ name: "showDayMaxPower", selector: BOOL }],
+    schema: [
+      {
+        type: "grid",
+        schema: [
+          { name: "showDayMaxPower", selector: BOOL },
+          { name: "showDayMaxPowerTime", selector: BOOL },
+        ],
+      },
+    ],
   },
   {
     type: "expandable",

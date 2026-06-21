@@ -3,7 +3,7 @@ import { fireEvent } from "./lib/fire-event";
 import { localize } from "./lib/localize";
 import { ENTITY_CONFIG_KEYS, DEFAULT_CONFIG } from "./const";
 import { styles } from "./styles";
-import { renderTitle, renderHeader, renderProductionValue } from "./renderers/header";
+import { renderTitle, renderHeader } from "./renderers/header";
 import { renderVariations } from "./renderers/variations";
 import { renderSmartInsights } from "./renderers/smart-insights";
 import { renderHistory } from "./renderers/history";
@@ -188,7 +188,7 @@ export class ContentCardLinky extends LitElement {
     const attributes = stateObj.attributes;
     const modeCompteur = attributes["typeCompteur"];
 
-    if (modeCompteur === "consommation" || !modeCompteur) {
+    if (modeCompteur === "consommation" || modeCompteur === "production" || !modeCompteur) {
       return html` <ha-card id="card" @click="${() => this._showDetails(config.entity)}">
         ${renderTitle(config)}
         <div class="card">
@@ -202,26 +202,8 @@ export class ContentCardLinky extends LitElement {
           )}
           ${renderEcoWatt(hass, config, attributes)} ${renderTempo(hass, config, attributes)}
           ${renderError(config, attributes.errorLastCall)}
-          ${renderVersion(hass, attributes.versionUpdateAvailable, attributes.versionGit)}
+          ${renderVersion(hass, attributes.versionUpdateAvailable ?? false, attributes.versionGit ?? "")}
           ${renderInformation(hass, config, attributes)}
-        </div>
-      </ha-card>`;
-    }
-    if (modeCompteur === "production") {
-      return html` <ha-card>
-        <div class="card">
-          <div class="main-info">
-            ${config.showIcon
-              ? html` <div class="icon-block">
-                  <span
-                    class="linky-icon bigger"
-                    style="background: none, url('/local/community/content-card-linky/icons/linky.svg') no-repeat; background-size: contain;"
-                  ></span>
-                </div>`
-              : html``}
-            <div class="cout-block">${renderProductionValue(hass, stateObj.state, attributes)}</div>
-          </div>
-          ${renderError(config, attributes.errorLastCall)}
         </div>
       </ha-card>`;
     }

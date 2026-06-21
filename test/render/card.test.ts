@@ -102,17 +102,12 @@ describe("content-card-linky render", () => {
     expect(text).toMatch(/Annuel/);
   });
 
-  it("renders the production layout for a production meter", async () => {
-    const hass = makeHass({
-      states: {
-        [baseConfig.entity]: makeLinkyEntity({ typeCompteur: "production" }),
-      },
-    });
-    const card = await mountCard({ ...baseConfig, showIcon: true }, hass);
+  it("renders the full card for a production meter (routed through the standard layout)", async () => {
+    const hass = makeHass({ states: { [baseConfig.entity]: makeLinkyEntity({ typeCompteur: "production" }) } });
+    const card = await mountCard(baseConfig, hass);
     const root = card.shadowRoot;
-    // Production branch shows the main value, no week-history table
-    expect(root.querySelector(".main-info")).toBeTruthy();
-    expect(root.querySelector(".week-history")).toBeFalsy();
+    expect(root.querySelector("ha-card")).toBeTruthy();
+    expect(root.querySelector(".week-history")).toBeTruthy(); // full layout, not the old minimal view
   });
 
   it("renders the consumption header for a normal entity", async () => {
@@ -208,12 +203,10 @@ describe("content-card-linky render", () => {
     expect(card.shadowRoot.querySelector("ha-card")).toBeTruthy();
   });
 
-  it("renders the production layout without the icon when showIcon is off", async () => {
-    const hass = makeHass({
-      states: { [baseConfig.entity]: makeLinkyEntity({ typeCompteur: "production" }) },
-    });
+  it("routes a production meter through the full layout and honors showIcon:false", async () => {
+    const hass = makeHass({ states: { [baseConfig.entity]: makeLinkyEntity({ typeCompteur: "production" }) } });
     const card = await mountCard({ ...baseConfig, showIcon: false }, hass);
-    expect(card.shadowRoot.querySelector(".main-info")).toBeTruthy();
+    expect(card.shadowRoot.querySelector("ha-card")).toBeTruthy();
     expect(card.shadowRoot.querySelector(".linky-icon")).toBeFalsy();
   });
 

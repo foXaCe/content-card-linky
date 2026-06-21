@@ -1,7 +1,6 @@
 import { html } from "lit";
 import { localize } from "../lib/localize";
 import { toFloat } from "../lib/format";
-import { estimateMissingKwh } from "../lib/calculations";
 import type { HomeAssistant, ContentCardLinkyConfig, LinkyAttributes, HassEntity, TemplateResult } from "../types";
 
 /**
@@ -88,63 +87,4 @@ export function renderHeader(
     </div>`;
   }
   return undefined;
-}
-
-/**
- * Production-mode value with estimation/pending fallbacks.
- */
-export function renderProductionValue(
-  hass: HomeAssistant,
-  state: string | null | undefined,
-  attributes: LinkyAttributes,
-): TemplateResult {
-  const value = parseFloat(state as string);
-
-  // Traiter les cas de données manquantes ou invalides pour la production
-  if (isNaN(value) || value === -1 || value === 0 || state === "0" || state === null || state === undefined) {
-    // Vérifier si on a des prix pour faire une estimation
-    if (attributes.dailyweek_cost && attributes.daily) {
-      const costArray = attributes.dailyweek_cost.toString().split(",");
-      const recentPrice = parseFloat(costArray[0]?.replace(",", "."));
-
-      if (!isNaN(recentPrice) && recentPrice > 0) {
-        // On a un prix, faire une estimation
-        const estimatedProduction = estimateMissingKwh(attributes.daily, 1, attributes.dailyweek_cost);
-
-        if (estimatedProduction > 0) {
-          return html`
-            <span class="cout estimated" title="${localize(hass, "card.production.estimate")}"
-              >${toFloat(estimatedProduction)}</span
-            >
-            <span class="cout-unit">${attributes.unit_of_measurement}</span>
-          `;
-        }
-      } else if (recentPrice === 0 || isNaN(recentPrice) || !costArray[0] || costArray[0] === "-1") {
-        // Ni prix ni production - données en attente
-        return html`
-          <span class="cout pending" title="${localize(hass, "card.production.pending")}">
-            <ha-icon icon="mdi:clock-outline"></ha-icon>
-          </span>
-          <span class="cout-unit">${attributes.unit_of_measurement}</span>
-        `;
-      }
-    } else {
-      // Pas de données de prix - en attente
-      return html`
-        <span
-          class="cout pending"
-          title="${localize(hass, "card.production.pending")}"
-          style="color: #ff9800; font-style: italic;"
-        >
-          <ha-icon icon="mdi:clock-outline"></ha-icon>
-        </span>
-        <span class="cout-unit">${attributes.unit_of_measurement}</span>
-      `;
-    }
-  }
-
-  return html`
-    <span class="cout">${toFloat(state)}</span>
-    <span class="cout-unit">${attributes.unit_of_measurement}</span>
-  `;
 }
