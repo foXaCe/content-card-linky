@@ -142,6 +142,7 @@
       "showPeakOffPeak": "Show off-peak / peak ratio",
       "showDayHCHP": "Show off-peak / peak per day",
       "showDayMaxPower": "Show daily max power",
+      "showDayMaxPowerTime": "Show daily max power time",
       "showSmartInsights": "Show smart insights",
       "showYearRatio": "Yearly trend",
       "showCurrentMonthRatio": "Current-month trend",

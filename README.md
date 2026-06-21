@@ -68,6 +68,7 @@ entity: sensor.linky_<pdl>_consumption
 | `showWeekRatio`           | boolean | `false`                             | Affiche l'évolution hebdomadaire.                                    |
 | `showDayName`             | string  | `long`                              | Format des jours : `narrow`, `short`, `long`.                        |
 | `showDayMaxPower`         | boolean | `false`                             | Affiche la puissance max et l'éventuel dépassement.                  |
+| `showDayMaxPowerTime`     | boolean | `true`                              | Affiche l'heure de la puissance max (avec `showDayMaxPower`).        |
 | `showEcoWatt`             | boolean | `false`                             | Indicateur EcoWatt J0.                                               |
 | `showEcoWattJ12`          | boolean | `false`                             | EcoWatt J+1 et J+2.                                                  |
 | `showTempo`               | boolean | `false`                             | Bandeau Tempo.                                                       |

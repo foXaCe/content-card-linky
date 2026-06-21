@@ -142,6 +142,7 @@
       "showPeakOffPeak": "Afficher le ratio HC/HP",
       "showDayHCHP": "Afficher les jours HC/HP",
       "showDayMaxPower": "Afficher la puissance max quotidienne",
+      "showDayMaxPowerTime": "Afficher l'heure de la puissance max",
       "showSmartInsights": "Afficher les insights intelligents",
       "showYearRatio": "Évolution annuelle",
       "showCurrentMonthRatio": "Évolution mois courant",

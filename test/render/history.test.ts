@@ -126,6 +126,13 @@ describe("renderHistory full render", () => {
     expect(el.querySelector(".tempoday-red")).toBeTruthy(); // tomorrow
   });
 
+  it("hides the max-power time when showDayMaxPowerTime is false", () => {
+    const attrs = richAttrs(); // dailyweek_MP "3,3,..."; MP_time 18:30
+    const el = renderTpl(renderHistory(hassWith(attrs), { ...fullConfig, showDayMaxPowerTime: false }, attrs));
+    expect(el.textContent).not.toMatch(/18:30/); // time hidden
+    expect(el.textContent).toContain("3.00"); // max-power value still shown
+  });
+
   it("respects the HA locale for weekday names (EN)", () => {
     const attrs = richAttrs();
     const enHass = makeHass({ locale: { language: "en" }, states: { "sensor.x": { attributes: attrs } } });

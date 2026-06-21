@@ -249,22 +249,17 @@ function renderDayMaxPower(
     if (valeur === "-1") {
       return renderNoData(hass);
     }
-    const time = new Date(dayCell(MPtime, dayNumber) ?? "").toLocaleTimeString(localeOf(hass), {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    if (over === "true") {
-      return html`
-        <br /><span class="cons-val" style="color: var(--error-color, red)">${toFloat(valeur, 2)}</span> <br /><span
-          class="cons-val"
-          style="color: var(--error-color, red)"
-          >${time}</span
-        >
-      `;
-    }
-    return html`
-      <br /><span class="cons-val">${toFloat(valeur, 2)}</span> <br /><span class="cons-val">${time}</span>
-    `;
+    const overStyle = over === "true" ? "color: var(--error-color, red)" : "";
+    const timeHtml =
+      config.showDayMaxPowerTime !== false
+        ? html`<br /><span class="cons-val" style="${overStyle}"
+              >${new Date(dayCell(MPtime, dayNumber) ?? "").toLocaleTimeString(localeOf(hass), {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}</span
+            >`
+        : html``;
+    return html`<br /><span class="cons-val" style="${overStyle}">${toFloat(valeur, 2)}</span>${timeHtml}`;
   }
   return undefined;
 }
@@ -288,7 +283,11 @@ function renderTitreLigne(hass: HomeAssistant, config: ContentCardLinkyConfig): 
         ${renderDailyWeekTitre(config.showDayHCHP, t("col_offpeak"), t("col_offpeak"))}
         ${renderDailyWeekTitre(config.showDayHCHP, t("col_peak"), t("col_peak"))}
         ${renderDailyWeekTitre(config.showDayMaxPower, t("col_max_power"), t("col_max_power"))}
-        ${renderDailyWeekTitre(config.showDayMaxPowerTime, t("col_max_power_time"), t("col_max_power_time"))}
+        ${renderDailyWeekTitre(
+          config.showDayMaxPower === true && config.showDayMaxPowerTime !== false,
+          t("col_max_power_time"),
+          t("col_max_power_time"),
+        )}
       </div>
     `;
   }

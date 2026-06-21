@@ -44,6 +44,7 @@ export const DEFAULT_CONFIG: Partial<ContentCardLinkyConfig> = {
   showDayPrice: false,
   showDayPriceHCHP: false,
   showDayMaxPower: false,
+  showDayMaxPowerTime: true,
   showDayHCHP: false,
   showDayName: "long",
   showError: true,
