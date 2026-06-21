@@ -3,7 +3,7 @@
 # already enforced by the GitHub CI (`npm run lint` / `npm run format:check`), so
 # we skip them in the cloud runner while keeping them for local `prek`/pre-commit.
 ci:
-  skip: [eslint, prettier]
+  skip: [eslint, prettier, typecheck, dist-sync]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -34,3 +34,16 @@ repos:
         files: ^(src|test)/.*\.(ts|json)$
         additional_dependencies:
           - prettier@3.8.4
+
+      - id: typecheck
+        name: typecheck (tsc --noEmit)
+        entry: npm run typecheck
+        language: system
+        pass_filenames: false
+        files: \.ts$
+      - id: dist-sync
+        name: dist/ up to date (rebuild + verify)
+        entry: bash -c 'npm run build && git diff --quiet -- dist/'
+        language: system
+        pass_filenames: false
+        files: ^src/.*\.ts$
