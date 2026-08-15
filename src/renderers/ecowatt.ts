@@ -57,23 +57,25 @@ export function renderEcoWatt(
   return html`
     <table style="width:100%">
       ${config.showEcoWatt ? renderRow(localize(hass, "card.ecowatt.today"), ew) : html``}
-      ${config.showEcoWattJ12
-        ? html`
-            ${renderRow(localize(hass, "card.ecowatt.tomorrow"), ewJ1)}
-            ${renderRow(localize(hass, "card.ecowatt.after_tomorrow"), ewJ2)}
-            <tr style="line-height:80%">
-              <td style="width:5%"></td>
-              <td style="width:95%">
-                <ul class="flow-row oneHourLabel">
-                  ${getOneDayNextEcoWatt(ewJ2, ECOWATT_COLORS).map(
+      ${
+        config.showEcoWattJ12
+          ? html`
+              ${renderRow(localize(hass, "card.ecowatt.tomorrow"), ewJ1)}
+              ${renderRow(localize(hass, "card.ecowatt.after_tomorrow"), ewJ2)}
+              <tr style="line-height:80%">
+                <td style="width:5%"></td>
+                <td style="width:95%">
+                  <ul class="flow-row oneHourLabel">
+                    ${getOneDayNextEcoWatt(ewJ2, ECOWATT_COLORS).map(
                     (forecast) =>
                       html`<li title="${forecast[0]}">${(forecast[0] as any) % 2 === 1 ? forecast[0] : ""}</li>`,
                   )}
-                </ul>
-              </td>
-            </tr>
-          `
-        : html``}
+                  </ul>
+                </td>
+              </tr>
+            `
+          : html``
+      }
     </table>
   `;
 }
