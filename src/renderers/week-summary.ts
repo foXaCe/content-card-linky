@@ -45,14 +45,16 @@ export function renderWeekSummary(
           <span class="week-summary-value">${toFloat(weekTotal, 1)}</span>
           <span class="week-summary-unit">${unit_of_measurement}</span>
         </div>
-        ${weekCost > 0
-          ? html`
-              <div class="week-summary-cost">
-                <span class="week-summary-cost-value">${weekCost.toFixed(2).replace(/\.00$/, "")}</span>
-                <span class="week-summary-cost-unit">€</span>
-              </div>
-            `
-          : html``}
+        ${
+          weekCost > 0
+            ? html`
+                <div class="week-summary-cost">
+                  <span class="week-summary-cost-value">${weekCost.toFixed(2).replace(/\.00$/, "")}</span>
+                  <span class="week-summary-cost-unit">€</span>
+                </div>
+              `
+            : html``
+        }
       </div>
     </div>
   `;

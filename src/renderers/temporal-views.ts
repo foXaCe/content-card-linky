@@ -78,9 +78,11 @@ export function renderMonthlyView(
         <ha-icon icon="${expanded ? "mdi:chevron-up" : "mdi:chevron-down"}"></ha-icon>
         <span class="section-title">${localize(hass, "card.temporal.monthly")}</span>
         <span class="section-summary">
-          ${monthData.length > 0
-            ? localize(hass, "card.temporal.months_count", { count: monthData.length })
-            : localize(hass, "card.temporal.no_data")}
+          ${
+            monthData.length > 0
+              ? localize(hass, "card.temporal.months_count", { count: monthData.length })
+              : localize(hass, "card.temporal.no_data")
+          }
         </span>
       </div>
       <div class="collapsible-content ${expanded ? "expanded" : "collapsed"}">
@@ -91,13 +93,15 @@ export function renderMonthlyView(
                 <div class="month-name">${item.name} (${item.year})</div>
                 <div class="month-value">${toFloat(item.value)} ${attributes.unit_of_measurement}</div>
                 <div class="month-evolution">
-                  ${item.evolution !== null
-                    ? html`
-                        <span class="evolution-percent ${parseFloat(item.evolution) >= 0 ? "positive" : "negative"}">
-                          ${parseFloat(item.evolution) >= 0 ? "+" : ""}${item.evolution}%
-                        </span>
-                      `
-                    : "-"}
+                  ${
+                    item.evolution !== null
+                      ? html`
+                          <span class="evolution-percent ${parseFloat(item.evolution) >= 0 ? "positive" : "negative"}">
+                            ${parseFloat(item.evolution) >= 0 ? "+" : ""}${item.evolution}%
+                          </span>
+                        `
+                      : "-"
+                  }
                 </div>
               </div>
             `,
@@ -159,9 +163,11 @@ export function renderYearlyView(
         <ha-icon icon="${expanded ? "mdi:chevron-up" : "mdi:chevron-down"}"></ha-icon>
         <span class="section-title">${localize(hass, "card.temporal.yearly")}</span>
         <span class="section-summary">
-          ${yearData.length > 0
-            ? localize(hass, "card.temporal.years_count", { count: yearData.length })
-            : localize(hass, "card.temporal.no_data")}
+          ${
+            yearData.length > 0
+              ? localize(hass, "card.temporal.years_count", { count: yearData.length })
+              : localize(hass, "card.temporal.no_data")
+          }
         </span>
       </div>
       <div class="collapsible-content ${expanded ? "expanded" : "collapsed"}">
@@ -172,13 +178,15 @@ export function renderYearlyView(
                 <div class="year-name">${item.name}</div>
                 <div class="year-value">${toFloat(item.value)} ${attributes.unit_of_measurement}</div>
                 <div class="year-evolution">
-                  ${item.evolution !== null
-                    ? html`
-                        <span class="evolution-percent ${parseFloat(item.evolution) >= 0 ? "positive" : "negative"}">
-                          ${parseFloat(item.evolution) >= 0 ? "+" : ""}${item.evolution}%
-                        </span>
-                      `
-                    : "-"}
+                  ${
+                    item.evolution !== null
+                      ? html`
+                          <span class="evolution-percent ${parseFloat(item.evolution) >= 0 ? "positive" : "negative"}">
+                            ${parseFloat(item.evolution) >= 0 ? "+" : ""}${item.evolution}%
+                          </span>
+                        `
+                      : "-"
+                  }
                 </div>
               </div>
             `,
