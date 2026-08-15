@@ -67,9 +67,9 @@ export function renderEcoWatt(
                 <td style="width:95%">
                   <ul class="flow-row oneHourLabel">
                     ${getOneDayNextEcoWatt(ewJ2, ECOWATT_COLORS).map(
-                      (forecast) =>
-                        html`<li title="${forecast[0]}">${(forecast[0] as any) % 2 === 1 ? forecast[0] : ""}</li>`,
-                    )}
+                    (forecast) =>
+                      html`<li title="${forecast[0]}">${(forecast[0] as any) % 2 === 1 ? forecast[0] : ""}</li>`,
+                  )}
                   </ul>
                 </td>
               </tr>

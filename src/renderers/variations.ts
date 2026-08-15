@@ -68,10 +68,10 @@ export function renderVariations(
               <span class="year">${localize(hass, "card.previous_year", { year: previousYear(hass) })}</span>
               <span class="tooltiptext"
                 >${localize(hass, "card.tooltip.year_prev", { value: attributes.current_year_last_year })}<br />${localize(
-                  hass,
-                  "card.tooltip.year",
-                  { value: attributes.current_year },
-                )}</span
+                hass,
+                "card.tooltip.year",
+                { value: attributes.current_year },
+              )}</span
               >
             `,
           )
@@ -89,8 +89,8 @@ export function renderVariations(
               >
               <span class="tooltiptext"
                 >${localize(hass, "card.tooltip.prev_month_prev_year", {
-                  value: attributes.last_month_last_year,
-                })}<br />${localize(hass, "card.tooltip.prev_month", { value: attributes.last_month })}</span
+                value: attributes.last_month_last_year,
+              })}<br />${localize(hass, "card.tooltip.prev_month", { value: attributes.last_month })}</span
               >
             `,
           )
@@ -106,8 +106,8 @@ export function renderVariations(
               <span class="current-month">${localize(hass, "card.current_month", { month: currentMonth(hass) })}</span>
               <span class="tooltiptext"
                 >${localize(hass, "card.tooltip.month_prev_year", {
-                  value: attributes.current_month_last_year,
-                })}<br />${localize(hass, "card.tooltip.month", { value: attributes.current_month })}</span
+                value: attributes.current_month_last_year,
+              })}<br />${localize(hass, "card.tooltip.month", { value: attributes.current_month })}</span
               >
             `,
           )
@@ -125,10 +125,10 @@ export function renderVariations(
               >
               <span class="tooltiptext"
                 >${localize(hass, "card.tooltip.last_week", { value: attributes.last_week })}<br />${localize(
-                  hass,
-                  "card.tooltip.this_week",
-                  { value: attributes.current_week },
-                )}</span
+                hass,
+                "card.tooltip.this_week",
+                { value: attributes.current_week },
+              )}</span
               >
             `,
           )
@@ -146,10 +146,10 @@ export function renderVariations(
               >
               <span class="tooltiptext"
                 >${localize(hass, "card.tooltip.day_before_yesterday", { value: attributes.day_2 })}<br />${localize(
-                  hass,
-                  "card.tooltip.yesterday",
-                  { value: attributes.yesterday },
-                )}</span
+                hass,
+                "card.tooltip.yesterday",
+                { value: attributes.yesterday },
+              )}</span
               >
             `,
           )
