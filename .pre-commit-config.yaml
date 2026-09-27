@@ -23,9 +23,9 @@ repos:
         language: node
         files: ^(src|test)/.*\.ts$
         additional_dependencies:
-          - eslint@10.9.1
+          - eslint@10.11.0
           - typescript@6.0.3
-          - typescript-eslint@8.68.0
+          - typescript-eslint@8.70.1
 
       - id: prettier
         name: prettier
@@ -33,7 +33,7 @@ repos:
         language: node
         files: ^(src|test)/.*\.(ts|json)$
         additional_dependencies:
-          - prettier@3.9.6
+          - prettier@3.9.9
 
       - id: typecheck
         name: typecheck (tsc --noEmit)
