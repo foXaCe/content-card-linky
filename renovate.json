@@ -12,9 +12,15 @@
     ":timezone(Europe/Paris)",
     "schedule:nonOfficeHours"
   ],
-  "labels": ["dependencies"],
-  "reviewers": ["foXaCe"],
-  "assignees": ["foXaCe"],
+  "labels": [
+    "dependencies"
+  ],
+  "reviewers": [
+    "foXaCe"
+  ],
+  "assignees": [
+    "foXaCe"
+  ],
   "prConcurrentLimit": 10,
   "prHourlyLimit": 4,
   "rangeStrategy": "bump",
@@ -27,49 +33,104 @@
   },
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": ["before 6am on monday"],
+    "schedule": [
+      "before 6am on monday"
+    ],
     "automerge": true
   },
   "vulnerabilityAlerts": {
-    "labels": ["security", "dependencies"],
-    "schedule": ["at any time"],
+    "labels": [
+      "security",
+      "dependencies"
+    ],
+    "schedule": [
+      "at any time"
+    ],
     "prCreation": "immediate"
   },
   "packageRules": [
     {
+      "description": "Pause majors: typescript-eslint n'a pas de version compatible TS7",
+      "matchPackageNames": [
+        "typescript"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
       "description": "Automerge non-major dev dependencies once CI is green",
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
       "automerge": true,
       "platformAutomerge": true,
-      "labels": ["dependencies", "javascript", "auto-merge"]
+      "labels": [
+        "dependencies",
+        "javascript",
+        "auto-merge"
+      ]
     },
     {
       "description": "GitHub Actions updates",
-      "matchManagers": ["github-actions"],
-      "labels": ["dependencies", "github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
+      "labels": [
+        "dependencies",
+        "github-actions"
+      ],
       "automerge": true,
       "platformAutomerge": true
     },
     {
       "description": "pre-commit hook updates",
-      "matchManagers": ["pre-commit"],
-      "labels": ["dependencies", "pre-commit"]
+      "matchManagers": [
+        "pre-commit"
+      ],
+      "labels": [
+        "dependencies",
+        "pre-commit"
+      ]
     },
     {
       "description": "lit is the only runtime dependency — review majors manually",
-      "matchDepNames": ["lit"],
-      "matchUpdateTypes": ["major"],
-      "labels": ["dependencies", "javascript", "needs-review"],
+      "matchDepNames": [
+        "lit"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "labels": [
+        "dependencies",
+        "javascript",
+        "needs-review"
+      ],
       "automerge": false
     },
     {
       "description": "Major updates always need manual review",
-      "matchUpdateTypes": ["major"],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "automerge": false,
-      "labels": ["dependencies", "major", "needs-review"],
+      "labels": [
+        "dependencies",
+        "major",
+        "needs-review"
+      ],
       "minimumReleaseAge": "7 days"
     }
   ],
-  "ignorePaths": ["**/node_modules/**", "**/dist/**"]
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/dist/**"
+  ]
 }
