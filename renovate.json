@@ -26,7 +26,7 @@
   "rangeStrategy": "bump",
   "minimumReleaseAge": "3 days",
   "internalChecksFilter": "strict",
-  "dependencyDashboardTitle": "📦 Renovate Dependency Dashboard",
+  "dependencyDashboardTitle": "\ud83d\udce6 Renovate Dependency Dashboard",
   "configMigration": true,
   "pre-commit": {
     "enabled": true
@@ -101,7 +101,7 @@
       ]
     },
     {
-      "description": "lit is the only runtime dependency — review majors manually",
+      "description": "lit is the only runtime dependency \u2014 review majors manually",
       "matchDepNames": [
         "lit"
       ],
@@ -127,10 +127,20 @@
         "needs-review"
       ],
       "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Tout ce qui monte se fusionne seul quand la CI est verte (op\u00e9rateur, 2026-10-14)",
+      "matchUpdateTypes": [
+        "minor",
+        "major"
+      ],
+      "automerge": true,
+      "platformAutomerge": true
     }
   ],
   "ignorePaths": [
     "**/node_modules/**",
     "**/dist/**"
-  ]
+  ],
+  "rollbackPrs": false
 }
