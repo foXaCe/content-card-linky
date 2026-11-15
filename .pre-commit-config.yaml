@@ -33,7 +33,7 @@ repos:
         language: node
         files: ^(src|test)/.*\.(ts|json)$
         additional_dependencies:
-          - prettier@3.10.0
+          - prettier@3.10.1
 
       - id: typecheck
         name: typecheck (tsc --noEmit)
